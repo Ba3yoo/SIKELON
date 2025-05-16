@@ -27,4 +27,8 @@ class UserRepository {
     suspend fun updateCartDetail(cartDetailId: Int, updatedDetail: CartDetail): CartDetail {
         return apiService.updateCartDetail(cartDetailId, updatedDetail)
     }
+
+    suspend fun deleteCartDetail(cartDetailId: Int, updatedDetail: CartDetail): CartDetail {
+        return apiService.updateCartDetail(cartDetailId, updatedDetail)
+    }
 }

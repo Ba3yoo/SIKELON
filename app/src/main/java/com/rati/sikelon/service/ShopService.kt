@@ -1,6 +1,7 @@
 package com.rati.sikelon.service
 
 import com.rati.sikelon.model.*
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ShopService {
@@ -26,9 +27,14 @@ interface ShopService {
     @GET("cartdetail")
     suspend fun getCartDetails(): List<CartDetail>
 
-    @PUT("cartdetail{id}")
+    @PUT("cartdetail/{id}")
     suspend fun updateCartDetail(
         @Path("id") cartDetailId: Int,
         @Body updatedDetail: CartDetail
     ): CartDetail
+
+    @DELETE("cartdetail/{id}")
+    suspend fun deleteCartDetail(
+        @Path("id") cartDetailId: Int
+    ): Response<Unit>
 }

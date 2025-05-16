@@ -59,6 +59,25 @@ app.get('/cartdetail/:id', (req, res) => {
     });
 }) 
 
+app.put('/cartdetail/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("UPDATE cartdetail SET item_id = ?, quantity = ? WHERE cartDetail_id = ?", [req.body.item_id, req.body.quantity, req.params.id],function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
+app.delete('/cartdetail/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("DELETE FROM cartdetail WHERE cartDetail_id = ?", [req.params.id],function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
+
 app.get('/item', (req, res) => { 
     res.setHeader('Content-Type', 'application/json')
     conn.con.query("SELECT * FROM item", function (err, result, fields) {

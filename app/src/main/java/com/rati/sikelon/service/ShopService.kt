@@ -5,28 +5,28 @@ import retrofit2.http.*
 
 interface ShopService {
 
-    @GET("users")
+    @GET("user")
     suspend fun getUsers(): List<User>
 
-    @GET("users/{id}")
+    @GET("user/{id}")
     suspend fun getUserById(@Path("id") id: Int): User
 
-    @GET("stores")
+    @GET("store")
     suspend fun getStores(): List<Store>
 
-    @GET("stores/{id}")
+    @GET("store/{id}")
     suspend fun getStoreById(@Path("id") id: Int): Store
 
-    @GET("carts")
+    @GET("cart")
     suspend fun getCartsByUserId(@Query("userId") userId: Int): List<Cart>
 
-    @GET("items")
+    @GET("item")
     suspend fun getItems(): List<Item>
 
-    @GET("cartDetails")
+    @GET("cartdetail")
     suspend fun getCartDetails(): List<CartDetail>
 
-    @PUT("cartDetails/{id}")
+    @PUT("cartdetails{id}")
     suspend fun updateCartDetail(
         @Path("id") cartDetailId: Int,
         @Body updatedDetail: CartDetail

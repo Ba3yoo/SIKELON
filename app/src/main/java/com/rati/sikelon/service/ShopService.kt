@@ -21,16 +21,26 @@ interface ShopService {
     @GET("cart")
     suspend fun getCartsByUserId(@Query("userId") userId: Int): List<Cart>
 
+    @GET("cart/{id}")
+    suspend fun getCartById(@Path("id") id: Int): Cart
+
     @GET("item")
     suspend fun getItems(): List<Item>
+
+    @GET("item/{id}")
+    suspend fun getItemById(@Path("id") id: Int): Item
 
     @GET("cartdetail")
     suspend fun getCartDetails(): List<CartDetail>
 
+    @GET("cartdetail/{id}")
+    suspend fun getCartDetailById(@Path("id") id: Int): CartDetail
+
     @PUT("cartdetail/{id}")
     suspend fun updateCartDetail(
         @Path("id") cartDetailId: Int,
-        @Body updatedDetail: CartDetail
+        @Query("itemId") itemId: Int,
+        @Query("quantity") quantity: Int
     ): CartDetail
 
     @DELETE("cartdetail/{id}")

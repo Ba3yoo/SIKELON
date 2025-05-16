@@ -1,4 +1,4 @@
-package com.rati.sikelon.search
+package com.rati.sikelon.view.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

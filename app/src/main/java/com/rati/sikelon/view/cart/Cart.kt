@@ -19,8 +19,6 @@ import androidx.compose.ui.layout.*
 import com.skydoves.landscapist.*
 import com.skydoves.landscapist.coil.CoilImage
 
-//import com.skydoves.landscapist.coil3.*
-
 @Composable
 fun Cart() {
     val textField1 = remember { mutableStateOf("") }
@@ -197,7 +195,7 @@ fun Cart() {
                 TextField(
                     value = textField1.value,
                     onValueChange = { newText -> textField1.value = newText },
-                    placeholder = { Text("Kode Promo") }, // ✅ wrap string in a composable Text
+                    placeholder = { Text("Kode Promo") },
                     textStyle = TextStyle(
                         color = Color(0xFF252525),
                         fontSize = 14.sp,

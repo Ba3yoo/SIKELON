@@ -1,4 +1,4 @@
-package com.example.sikelon.navigate
+package com.rati.sikelon.navigate
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

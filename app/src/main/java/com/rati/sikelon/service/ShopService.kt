@@ -1,8 +1,4 @@
-package com.example.mvvm2.service
-
-import com.example.sikelon.model.Model
-import retrofit2.http.GET
-import retrofit2.http.Path
+package com.rati.sikelon.service
 
 interface ShopService {
 //    @GET("users")

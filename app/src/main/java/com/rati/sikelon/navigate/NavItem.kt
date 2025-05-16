@@ -1,4 +1,4 @@
-package com.example.sikelon.navigate
+package com.rati.sikelon.navigate
 
 enum class State {
     HOME,

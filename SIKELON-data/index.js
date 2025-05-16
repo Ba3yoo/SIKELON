@@ -14,9 +14,27 @@ app.get('/user', (req, res) => {
     });
 }) 
 
+app.get('/user/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("SELECT * FROM user WHERE user_id = ?", req.params.id,function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
 app.get('/cart', (req, res) => { 
     res.setHeader('Content-Type', 'application/json')
     conn.con.query("SELECT * FROM cart", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
+app.get('/cart/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("SELECT * FROM cart WHERE cart_id = ?", req.params.id,function (err, result, fields) {
         if (err) throw err;
         console.log(result);
         res.end(JSON.stringify(result)) 
@@ -32,6 +50,15 @@ app.get('/cartdetail', (req, res) => {
     });
 }) 
 
+app.get('/cartdetail/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("SELECT * FROM cartdetail WHERE cartDetail_id = ?", req.params.id,function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
 app.get('/item', (req, res) => { 
     res.setHeader('Content-Type', 'application/json')
     conn.con.query("SELECT * FROM item", function (err, result, fields) {
@@ -41,9 +68,27 @@ app.get('/item', (req, res) => {
     });
 }) 
 
+app.get('/item/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("SELECT * FROM item WHERE item_id = ?", req.params.id,function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
 app.get('/store', (req, res) => { 
     res.setHeader('Content-Type', 'application/json')
     conn.con.query("SELECT * FROM store", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+        res.end(JSON.stringify(result)) 
+    });
+}) 
+
+app.get('/store/:id', (req, res) => { 
+    res.setHeader('Content-Type', 'application/json')
+    conn.con.query("SELECT * FROM store WHERE store_id = ?", req.params.id,function (err, result, fields) {
         if (err) throw err;
         console.log(result);
         res.end(JSON.stringify(result)) 

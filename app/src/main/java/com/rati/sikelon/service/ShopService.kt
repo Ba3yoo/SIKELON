@@ -26,7 +26,7 @@ interface ShopService {
     @GET("cartdetail")
     suspend fun getCartDetails(): List<CartDetail>
 
-    @PUT("cartdetails{id}")
+    @PUT("cartdetail{id}")
     suspend fun updateCartDetail(
         @Path("id") cartDetailId: Int,
         @Body updatedDetail: CartDetail

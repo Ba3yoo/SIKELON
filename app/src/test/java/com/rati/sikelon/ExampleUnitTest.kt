@@ -1,4 +1,4 @@
-package com.example.sikelon
+package com.rati.sikelon
 
 import org.junit.Test
 

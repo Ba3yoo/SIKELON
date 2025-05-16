@@ -1,10 +1,6 @@
 package com.rati.sikelon.data
 
-import com.rati.sikelon.model.Cart
-import com.rati.sikelon.model.CartDetail
-import com.rati.sikelon.model.Item
-import com.rati.sikelon.model.Store
-import com.rati.sikelon.model.User
+import com.rati.sikelon.model.*
 import com.rati.sikelon.service.RetrofitInstance
 import com.rati.sikelon.service.ShopService
 
@@ -19,17 +15,17 @@ class UserRepository {
     suspend fun getStoreById(id: Int): Store = apiService.getStoreById(id)
 
     suspend fun getCartsByUserId(userId: Int): List<Cart> = apiService.getCartsByUserId(userId)
+    suspend fun getCartById(id: Int): Cart = apiService.getCartById(id)
 
     suspend fun getItems(): List<Item> = apiService.getItems()
+    suspend fun getItemById(id: Int): Item = apiService.getItemById(id)
 
     suspend fun getCartDetails(): List<CartDetail> = apiService.getCartDetails()
+    suspend fun getCartDetailById(id: Int): CartDetail = apiService.getCartDetailById(id)
 
-    suspend fun updateCartDetail(cartDetailId: Int, updatedDetail: CartDetail): CartDetail {
-        return apiService.updateCartDetail(cartDetailId, updatedDetail)
-    }
+    suspend fun updateCartDetail(cartDetailId: Int, itemId: Int, quantity: Int): CartDetail =
+        apiService.updateCartDetail(cartDetailId, itemId, quantity)
 
-    suspend fun deleteCartDetail(cartDetailId: Int): Boolean {
-        val response = apiService.deleteCartDetail(cartDetailId)
-        return response.isSuccessful
-    }
+    suspend fun deleteCartDetail(cartDetailId: Int): Boolean =
+        apiService.deleteCartDetail(cartDetailId).isSuccessful
 }

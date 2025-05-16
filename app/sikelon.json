@@ -1,0 +1,31 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"sikelon"},
+{"type":"table","name":"cart","database":"sikelon","data":
+[
+{"cart_id":"1","user_id":"1"},
+{"cart_id":"2","user_id":"2"}
+]
+}
+,{"type":"table","name":"cartdetail","database":"sikelon","data":
+[
+{"cartDetail_id":"1","cart_id":"1","store_id":"1","item_id":"1","quantity":"3"}
+]
+}
+,{"type":"table","name":"item","database":"sikelon","data":
+[
+{"item_id":"1","item_name":"bengbeng maxx","price":"3000","store_id":"1"}
+]
+}
+,{"type":"table","name":"store","database":"sikelon","data":
+[
+{"store_id":"1","store_name":"test store","address":"35th Ran St."}
+]
+}
+,{"type":"table","name":"user","database":"sikelon","data":
+[
+{"user_id":"1","username":"TheMan","name":"John Man","join_date":"2025-05-16 10:56:03"},
+{"user_id":"2","username":"Two","name":"Test Two","join_date":"2025-05-16 10:57:14"}
+]
+}
+]

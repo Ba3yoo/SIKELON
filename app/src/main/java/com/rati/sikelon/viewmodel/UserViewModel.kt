@@ -10,6 +10,9 @@ import kotlinx.coroutines.launch
 
 class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
+    private val _cartDetailDeleted = MutableStateFlow<Boolean?>(null)
+    val cartDetailDeleted: StateFlow<Boolean?> = _cartDetailDeleted
+
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users: StateFlow<List<User>> = _users
 
@@ -64,5 +67,10 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun updateCartDetail(cartDetailId: Int, updatedDetail: CartDetail) = viewModelScope.launch {
         _updatedCartDetail.value = repository.updateCartDetail(cartDetailId, updatedDetail)
+    }
+
+    fun deleteCartDetail(cartDetailId: Int) = viewModelScope.launch {
+        _cartDetailDeleted.value = repository.deleteCartDetail(cartDetailId)
+        loadCartDetails()
     }
 }

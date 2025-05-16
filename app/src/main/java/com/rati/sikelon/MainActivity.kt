@@ -1,4 +1,4 @@
-package com.rati.sikelon
+package com.example.sikelon
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

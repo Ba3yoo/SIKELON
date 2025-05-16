@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sikelon"
+    namespace = "com.rati.sikelon"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.sikelon"
+        applicationId = "com.rati.sikelon"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

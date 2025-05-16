@@ -1,4 +1,4 @@
-package com.example.sikelon.ui.theme
+package com.rati.sikelon.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,7 +1,7 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-DROP DATABASE IF EXISTS sikelon
+DROP DATABASE sikelon
 CREATE DATABASE sikelon
 USE sikelon
 CREATE TABLE IF NOT EXISTS `cart` (`cart_id` int(11) NOT NULL, `user_id` int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

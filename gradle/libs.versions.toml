@@ -1,6 +1,7 @@
 [versions]
 # Core & UI Libraries
 agp = "8.8.0"
+foundation = "<compose_version>"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 appcompat = "1.6.1"
@@ -31,11 +32,13 @@ espressoCore = "3.6.1"
 
 # Image Loading
 landscapistCoil = "2.4.7"
+ui = "<compose_version>"
 
 [libraries]
 # Core & UI
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
@@ -73,6 +76,7 @@ landscapist-coil = { module = "com.github.skydoves:landscapist-coil", version.re
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 
 
 [plugins]

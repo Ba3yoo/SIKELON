@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val repository: UserRepository) : ViewModel() {
-
+class UserViewModel() : ViewModel() {
+    private val repository = UserRepository()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users: StateFlow<List<User>> = _users
 
@@ -69,8 +69,8 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
     private val _cartDetails = MutableStateFlow<List<CartDetail>>(emptyList())
     val cartDetails: StateFlow<List<CartDetail>> = _cartDetails
 
-    private val _selectedCartDetail = MutableStateFlow<CartDetail?>(null)
-    val selectedCartDetail: StateFlow<CartDetail?> = _selectedCartDetail
+    private val _selectedCartDetail = MutableStateFlow<List<CartDetail>>(emptyList())
+    val selectedCartDetail: StateFlow<List<CartDetail>> = _selectedCartDetail
 
     private val _updatedCartDetail = MutableStateFlow<CartDetail?>(null)
     val updatedCartDetail: StateFlow<CartDetail?> = _updatedCartDetail

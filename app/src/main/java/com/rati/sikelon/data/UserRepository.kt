@@ -6,7 +6,7 @@ import com.rati.sikelon.service.ShopService
 
 class UserRepository {
 
-    private val apiService: ShopService = RetrofitInstance.ShopService
+    private val apiService: ShopService = RetrofitInstance.shopService
 
     suspend fun getUsers(): List<User> = apiService.getUsers()
     suspend fun getUserById(id: Int): User = apiService.getUserById(id)
@@ -21,7 +21,7 @@ class UserRepository {
     suspend fun getItemById(id: Int): Item = apiService.getItemById(id)
 
     suspend fun getCartDetails(): List<CartDetail> = apiService.getCartDetails()
-    suspend fun getCartDetailById(id: Int): CartDetail = apiService.getCartDetailById(id)
+    suspend fun getCartDetailById(id: Int): List<CartDetail> = apiService.getCartDetailById(id)
 
     suspend fun updateCartDetail(cartDetailId: Int, itemId: Int, quantity: Int): CartDetail =
         apiService.updateCartDetail(cartDetailId, itemId, quantity)

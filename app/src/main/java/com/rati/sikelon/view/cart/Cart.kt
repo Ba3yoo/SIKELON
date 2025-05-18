@@ -1,8 +1,11 @@
 package com.rati.sikelon.view.cart
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.*
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -16,11 +19,17 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.layout.*
+import com.rati.sikelon.viewmodel.UserViewModel
 import com.skydoves.landscapist.*
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
-fun Cart() {
+fun Cart(viewModel: UserViewModel) {
+    val cartDetails = viewModel.selectedCartDetail.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.loadCartDetailById(1)
+    }
+    Log.d("det", cartDetails.value.toString())
     val textField1 = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
@@ -37,7 +46,6 @@ fun Cart() {
                 .background(
                     color = Color(0xFFFFFFFF),
                 )
-                .verticalScroll(rememberScrollState())
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -60,7 +68,7 @@ fun Cart() {
                     fontWeight = FontWeight.Bold,
                 )
             }
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(bottom = 51.dp,start = 35.dp,end = 35.dp,)
                     .border(
@@ -72,109 +80,112 @@ fun Cart() {
                     .fillMaxWidth()
                     .padding(vertical = 15.dp,)
             ){
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(bottom = 15.dp,start = 15.dp,end = 15.dp,)
-                        .fillMaxWidth()
-                ){
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(end = 12.dp,)
-                            .weight(1f)
-                    ){
-                        CoilImage(
-                            imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/1pnkw3o8_expires_30_days.png"},
-                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                            modifier = Modifier
-                                .padding(end = 8.dp,)
-                                .width(60.dp)
-                                .height(60.dp)
-                        )
-                        Column(
-                        ){
-                            Text("Beng-Beng Maxx  Cokelat 32 g",
-                                color = Color(0xFF252525),
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(bottom = 8.dp,)
-                                    .width(113.dp)
-                            )
-                            Text("x 5",
-                                color = Color(0xFF252525),
-                                fontSize = 10.sp,
-                                modifier = Modifier
-                                    .padding(bottom = 8.dp,)
-                            )
-                            Text("Rp24.500",
-                                color = Color(0xFF252525),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
-                    }
-
-                    CoilImage(
-                        imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/9j3fkp2h_expires_30_days.png"},
-                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                        modifier = Modifier
-                            .width(77.dp)
-                            .height(30.dp)
-                    )
+                items(cartDetails.value!!){
+                    cartDetail -> CartItem(cartDetail)
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp,)
-                        .fillMaxWidth()
-                ){
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(end = 12.dp,)
-                            .weight(1f)
-                    ){
-                        CoilImage(
-                            imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/tmwwt1d9_expires_30_days.png"},
-                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                            modifier = Modifier
-                                .padding(end = 8.dp,)
-                                .width(60.dp)
-                                .height(60.dp)
-                        )
-                        Column(
-                        ){
-                            Text("Beng-Beng Nuts Karamel Almond 35 g ",
-                                color = Color(0xFF252525),
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(bottom = 8.dp,)
-                                    .width(108.dp)
-                            )
-                            Text("x 3",
-                                color = Color(0xFF252525),
-                                fontSize = 10.sp,
-                                modifier = Modifier
-                                    .padding(bottom = 8.dp,)
-                            )
-                            Text("Rp25.200",
-                                color = Color(0xFF252525),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
-                    }
-                    CoilImage(
-                        imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/vnzt4qlu_expires_30_days.png"},
-                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-                        modifier = Modifier
-                            .width(77.dp)
-                            .height(30.dp)
-                    )
-                }
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier
+//                        .padding(bottom = 15.dp,start = 15.dp,end = 15.dp,)
+//                        .fillMaxWidth()
+//                ){
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        modifier = Modifier
+//                            .padding(end = 12.dp,)
+//                            .weight(1f)
+//                    ){
+//                        CoilImage(
+//                            imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/1pnkw3o8_expires_30_days.png"},
+//                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+//                            modifier = Modifier
+//                                .padding(end = 8.dp,)
+//                                .width(60.dp)
+//                                .height(60.dp)
+//                        )
+//                        Column(
+//                        ){
+//                            Text("Beng-Beng Maxx  Cokelat 32 g",
+//                                color = Color(0xFF252525),
+//                                fontSize = 18.sp,
+//                                fontWeight = FontWeight.Bold,
+//                                modifier = Modifier
+//                                    .padding(bottom = 8.dp,)
+//                                    .width(113.dp)
+//                            )
+//                            Text("x 5",
+//                                color = Color(0xFF252525),
+//                                fontSize = 10.sp,
+//                                modifier = Modifier
+//                                    .padding(bottom = 8.dp,)
+//                            )
+//                            Text("Rp24.500",
+//                                color = Color(0xFF252525),
+//                                fontSize = 12.sp,
+//                                fontWeight = FontWeight.Bold,
+//                            )
+//                        }
+//                    }
+//
+//                    CoilImage(
+//                        imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/9j3fkp2h_expires_30_days.png"},
+//                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+//                        modifier = Modifier
+//                            .width(77.dp)
+//                            .height(30.dp)
+//                    )
+//                }
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier
+//                        .padding(horizontal = 15.dp,)
+//                        .fillMaxWidth()
+//                ){
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        modifier = Modifier
+//                            .padding(end = 12.dp,)
+//                            .weight(1f)
+//                    ){
+//                        CoilImage(
+//                            imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/tmwwt1d9_expires_30_days.png"},
+//                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+//                            modifier = Modifier
+//                                .padding(end = 8.dp,)
+//                                .width(60.dp)
+//                                .height(60.dp)
+//                        )
+//                        Column(
+//                        ){
+//                            Text("Beng-Beng Nuts Karamel Almond 35 g ",
+//                                color = Color(0xFF252525),
+//                                fontSize = 18.sp,
+//                                fontWeight = FontWeight.Bold,
+//                                modifier = Modifier
+//                                    .padding(bottom = 8.dp,)
+//                                    .width(108.dp)
+//                            )
+//                            Text("x 3",
+//                                color = Color(0xFF252525),
+//                                fontSize = 10.sp,
+//                                modifier = Modifier
+//                                    .padding(bottom = 8.dp,)
+//                            )
+//                            Text("Rp25.200",
+//                                color = Color(0xFF252525),
+//                                fontSize = 12.sp,
+//                                fontWeight = FontWeight.Bold,
+//                            )
+//                        }
+//                    }
+//                    CoilImage(
+//                        imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/vnzt4qlu_expires_30_days.png"},
+//                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+//                        modifier = Modifier
+//                            .width(77.dp)
+//                            .height(30.dp)
+//                    )
+//                }
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,

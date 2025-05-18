@@ -59,7 +59,7 @@ const getCartDetails = async (req, res) => {
 const getCartDetail = async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   conn.con.query(
-    "SELECT * FROM cartdetail WHERE cartDetail_id = ?",
+    "SELECT * FROM cartdetail WHERE cart_id = ?",
     req.params.id,
     function (err, result, fields) {
       if (err) throw err;

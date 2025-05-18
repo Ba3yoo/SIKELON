@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.rati.sikelon.navigate.AppNavHost
 import com.rati.sikelon.ui.theme.SIKELONTheme
 import com.rati.sikelon.view.cart.Cart
 import com.rati.sikelon.view.search.Search
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Search()
+                    AppNavHost()
                 }
             }
         }

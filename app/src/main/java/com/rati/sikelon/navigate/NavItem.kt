@@ -5,7 +5,9 @@ enum class State {
     SEARCHED,
     STORE_DETAIL,
     PAYMENT,
-    STATUS
+    PAYMENT_STATUS,
+    STATUS,
+    TRACK_STATUS
 
 }
 
@@ -15,4 +17,6 @@ sealed class NavItem(val route: String) {
     object Store_Detail : NavItem(State.STORE_DETAIL.name)
     object Payment : NavItem(State.PAYMENT.name)
     object Status : NavItem(State.STATUS.name)
+    object TrackStatus : NavItem(State.TRACK_STATUS.name)
+    object PaymentSuccess : NavItem(State.PAYMENT_STATUS.name)
 }

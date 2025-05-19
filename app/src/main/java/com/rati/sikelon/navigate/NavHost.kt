@@ -6,6 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.rati.sikelon.view.HomePage
+import com.rati.sikelon.view.cart.TrackStatus
+import com.rati.sikelon.view.payment.PaymentScreen
+import com.rati.sikelon.view.payment.PaymentSuccessScreen
+import com.rati.sikelon.view.payment.ProductItem
 
 @Composable
 fun AppNavHost(
@@ -16,10 +21,11 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable(NavItem.Home.route) {
-//            HomeScreen(
-//                onNavigateToSearch = { navController.navigate(NavItem.Searched.route) }
-//            )
+            HomePage(
+                navController = navController
+            )
         }
+
 
         composable(NavItem.Searched.route) {
 //            SearchScreen(
@@ -40,10 +46,44 @@ fun AppNavHost(
 //            )
         }
 
-        composable(NavItem.Payment.route) {
-//            PaymentScreen(
-//                onPaymentComplete = { navController.navigate(NavItem.Status.route) }
-//            )
+        composable(
+            "${NavItem.Payment.route}/{name}/{quantity}/{price}/{imageId}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("quantity") { type = NavType.IntType },
+                navArgument("price") { type = NavType.StringType },
+                navArgument("imageId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val quantity = backStackEntry.arguments?.getInt("quantity") ?: 0
+            val price = backStackEntry.arguments?.getString("price") ?: ""
+            val imageId = backStackEntry.arguments?.getInt("imageId") ?: 0
+
+            val product = ProductItem(name, quantity, price, imageId)
+
+            PaymentScreen(
+                item = product,
+                navController = navController,
+                onPaymentComplete = {
+                    navController.navigate(NavItem.PaymentSuccess.route)
+                }
+            )
+        }
+
+        composable(NavItem.PaymentSuccess.route) {
+            PaymentSuccessScreen(
+                navController = navController,
+                onPaymentComplete = {
+                    navController.navigate(NavItem.TrackStatus.route)
+                }
+            )
+        }
+
+        composable(NavItem.TrackStatus.route) {
+            TrackStatus(
+
+            )
         }
 
         composable(NavItem.Status.route) {

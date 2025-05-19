@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.rati.sikelon.navigate.AppNavHost
 import com.rati.sikelon.ui.theme.SIKELONTheme
 import com.rati.sikelon.view.cart.Cart
 import com.rati.sikelon.view.search.Search
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,29 +24,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SIKELONTheme {
-                Surface (
+                Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Search()
+                    val navController = rememberNavController()
+                    AppNavHost(navController = navController)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SIKELONTheme {
-        Greeting("Android")
     }
 }

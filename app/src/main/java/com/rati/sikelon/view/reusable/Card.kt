@@ -111,7 +111,7 @@ fun Card(cardData: CardData,
 @Composable
 fun ReusableCardPreview() {
     val sampleData = CardData(
-        imageId = R.drawable.sate,
+        imageId = R.drawable.ic_launcher_background,
         price = "Rp4.900",
         description = "Beng-Beng Maxx Cokelat 32 g",
         buttonText = "Beli Cepat"

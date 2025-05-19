@@ -30,5 +30,9 @@ data class CartDetail(
     val cart_id: Int,
     val store_id: Int,
     val item_id: Int,
-    val quantity: Int
+    val quantity: Int,
+    val store_name: String,
+    val address: String,
+    val item_name: String,
+    val price: Int
 )

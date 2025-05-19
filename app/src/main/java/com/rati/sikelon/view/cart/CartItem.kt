@@ -58,7 +58,7 @@ fun CartItem(detail: CartDetail) {
                 )
                 Column(
                 ){
-                    Text("Beng-Beng Maxx  Cokelat 32 g",
+                    Text(detail.item_name,
                         color = Color(0xFF252525),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
@@ -72,7 +72,7 @@ fun CartItem(detail: CartDetail) {
                         modifier = Modifier
                             .padding(bottom = 8.dp,)
                     )
-                    Text("Rp. 22,000",
+                    Text("Rp. "+ (detail.price * detail.quantity),
                         color = Color(0xFF252525),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,

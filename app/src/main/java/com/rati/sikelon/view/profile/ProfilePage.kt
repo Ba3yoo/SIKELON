@@ -31,7 +31,7 @@ fun ProfilePage() {
     ) {
         // Profile Image
         Image(
-            painter = painterResource(id = R.drawable.sate), // Replace with your actual profile image resource
+            painter = painterResource(id = R.drawable.ic_launcher_background), // Replace with your actual profile image resource
             contentDescription = "Profile Image",
             modifier = Modifier
                 .size(120.dp)

@@ -1,34 +1,38 @@
 package com.rati.sikelon.model
 
 data class User(
-    val userId: Int,
+    val user_id: Int,
     val username: String,
     val name: String,
-    val joinDate: String
+    val join_date: String
 )
 
 data class Store(
-    val storeId: Int,
-    val storeName: String,
+    val store_id: Int,
+    val store_name: String,
     val address: String
 )
 
 data class Item(
-    val itemId: Int,
-    val itemName: String,
+    val item_id: Int,
+    val item_name: String,
     val price: Int,
-    val storeId: Int
+    val store_id: Int
 )
 
 data class Cart(
-    val cartId: Int,
-    val userId: Int
+    val cart_id: Int,
+    val user_id: Int
 )
 
 data class CartDetail(
-    val cartDetailId: Int,
-    val cartId: Int,
-    val storeId: Int,
-    val itemId: Int,
-    val quantity: Int
+    val cartDetail_id: Int,
+    val cart_id: Int,
+    val store_id: Int,
+    val item_id: Int,
+    val quantity: Int,
+    val store_name: String,
+    val address: String,
+    val item_name: String,
+    val price: Int
 )

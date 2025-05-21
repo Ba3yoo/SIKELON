@@ -1,31 +1,37 @@
 package com.rati.sikelon.navigate
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.rati.sikelon.view.cart.Cart
+import com.rati.sikelon.viewmodel.UserViewModel
 import com.rati.sikelon.view.HomePage
 import com.rati.sikelon.view.cart.TrackStatus
 import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
 import com.rati.sikelon.view.payment.ProductItem
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun AppNavHost(
-    navController: NavHostController,
 //    userViewModel: UserViewModel,
     startDestination: String = NavItem.Home.route
 ) {
+    val navController = rememberNavController()
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable(NavItem.Home.route) {
+            Cart(viewModel = UserViewModel())
             HomePage(
                 navController = navController
             )
-        }
 
+        }
 
         composable(NavItem.Searched.route) {
 //            SearchScreen(

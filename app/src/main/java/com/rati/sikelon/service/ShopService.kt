@@ -6,44 +6,44 @@ import retrofit2.http.*
 
 interface ShopService {
 
-    @GET("user")
+    @GET("/func/user")
     suspend fun getUsers(): List<User>
 
-    @GET("user/{id}")
+    @GET("/func/user/{id}")
     suspend fun getUserById(@Path("id") id: Int): User
 
-    @GET("store")
+    @GET("/func/store")
     suspend fun getStores(): List<Store>
 
-    @GET("store/{id}")
+    @GET("/func/store/{id}")
     suspend fun getStoreById(@Path("id") id: Int): Store
 
-    @GET("cart")
+    @GET("/func/cart")
     suspend fun getCartsByUserId(@Query("userId") userId: Int): List<Cart>
 
-    @GET("cart/{id}")
+    @GET("/func/cart/{id}")
     suspend fun getCartById(@Path("id") id: Int): Cart
 
-    @GET("item")
+    @GET("/func/item")
     suspend fun getItems(): List<Item>
 
-    @GET("item/{id}")
+    @GET("/func/item/{id}")
     suspend fun getItemById(@Path("id") id: Int): Item
 
-    @GET("cartdetail")
+    @GET("/func/cartdetail")
     suspend fun getCartDetails(): List<CartDetail>
 
-    @GET("cartdetail/{id}")
-    suspend fun getCartDetailById(@Path("id") id: Int): CartDetail
+    @GET("/func/cartdetail/{id}")
+    suspend fun getCartDetailById(@Path("id") id: Int): List<CartDetail>
 
-    @PUT("cartdetail/{id}")
+    @PUT("/func/cartdetail/{id}")
     suspend fun updateCartDetail(
         @Path("id") cartDetailId: Int,
         @Query("itemId") itemId: Int,
         @Query("quantity") quantity: Int
     ): CartDetail
 
-    @DELETE("cartdetail/{id}")
+    @DELETE("/func/cartdetail/{id}")
     suspend fun deleteCartDetail(
         @Path("id") cartDetailId: Int
     ): Response<Unit>

@@ -24,8 +24,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SIKELONTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavHost()

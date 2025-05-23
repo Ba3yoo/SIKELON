@@ -1,6 +1,7 @@
 package com.rati.sikelon.navigate
 
 import android.annotation.SuppressLint
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -26,10 +27,7 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable(NavItem.Home.route) {
-            Cart(viewModel = UserViewModel())
-            HomePage(
-                navController = navController
-            )
+            HomePage(navController = navController)
 
         }
 
@@ -39,6 +37,10 @@ fun AppNavHost(
 //                    navController.navigate("${NavItem.Store_Detail.route}/$storeId")
 //                }
 //            )
+        }
+
+        composable(NavItem.Cart.route) {
+
         }
 
         composable(

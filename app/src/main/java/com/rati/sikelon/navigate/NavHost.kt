@@ -1,7 +1,11 @@
 package com.rati.sikelon.navigate
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,9 +16,22 @@ import com.rati.sikelon.view.cart.Cart
 import com.rati.sikelon.viewmodel.UserViewModel
 import com.rati.sikelon.view.HomePage
 import com.rati.sikelon.view.cart.TrackStatus
+import com.rati.sikelon.view.payment.EditDetailsScreen
 import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
 import com.rati.sikelon.view.payment.ProductItem
+
+// Enum to define different detail types for navigation
+// This should ideally be in its own file (e.g., DetailType.kt in a common package)
+enum class DetailType {
+    ADDRESS, SHIPPING, PAYMENT
+}
+
+@Composable fun HomeScreen() { Text("Home Screen") }
+@Composable fun CartScreen() { Text("Cart Screen") }
+@Composable fun ChatScreen() { Text("Chat Screen") }
+@Composable fun ProfileScreen() { Text("Profile Screen") }
+
 
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable
@@ -92,6 +109,24 @@ fun AppNavHost(
             )
         }
 
+        composable(
+            route = NavItem.EditDetails.route,
+            arguments = listOf(navArgument("detailType") { type = NavType.StringType })
+        ) { backStackEntry ->
+            // Extract the 'detailType' string from the navigation arguments
+            val detailTypeString = backStackEntry.arguments?.getString("detailType")
+            // Convert the string to the DetailType enum
+            val detailType = detailTypeString?.let { DetailType.valueOf(it) }
+
+            if (detailType != null) {
+                // If detailType is valid, call EditDetailsScreen and pass the navController and detailType
+                EditDetailsScreen(navController = navController, detailType = detailType)
+            } else {
+                // Null for now
+                Text("Error: Detail type not found or invalid.", modifier = Modifier.padding(16.dp))
+            }
+        }
+
         composable(NavItem.Status.route) {
 //            StatusScreen(
 //                onBackToHome = {
@@ -100,6 +135,19 @@ fun AppNavHost(
 //                    }
 //                }
 //            )
+        }
+
+        composable(NavItem.MainHome.route) {
+            HomeScreen()
+        }
+        composable(NavItem.MainCart.route) {
+            CartScreen()
+        }
+        composable(NavItem.MainChat.route) {
+            ChatScreen()
+        }
+        composable(NavItem.MainProfile.route) {
+            ProfileScreen()
         }
     }
 }

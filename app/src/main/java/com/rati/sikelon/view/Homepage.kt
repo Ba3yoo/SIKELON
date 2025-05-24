@@ -1,6 +1,7 @@
 package com.rati.sikelon.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -44,7 +45,7 @@ data class CardData(
 @Composable
 fun HomePage(navController: NavHostController) {
     val flashSaleItems = listOf(
-        CardData(R.drawable.sate, "Rp34.000", "Prenagen Lacta Mom 180 Gr", R.drawable.ic_launcher_foreground),
+        CardData(R.drawable.sate, "Rp34.000", "Prenagen Lacta Mom 180 Gr", R.drawable.add_button),
         CardData(R.drawable.sate, "Rp46.900", "Shinzu'i Sabun Mandi Refill 725 ml"),
         CardData(R.drawable.sate, "Rp52.217", "Kopi Kapal Api 350 Gr")
     )
@@ -164,8 +165,13 @@ fun ProductSection(
             Text(title, style = MaterialTheme.typography.titleMedium)
             Text(
                 "Lihat Semua",
-                modifier = Modifier.clickable { onSeeAllClick() },
-                color = Color(0xFF9F2BFF)
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFF9F2BFF))
+                    .clickable { onSeeAllClick() }
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                color = Color.White,
+                style = MaterialTheme.typography.bodySmall
             )
         }
 
@@ -183,6 +189,7 @@ fun ProductSection(
         }
     }
 }
+
 
 @Composable
 fun LocationBar(

@@ -1,5 +1,5 @@
 const express = require('express');
-const execs = require("../controller/functionController").default;
+const execs = require("../controller/functionController");
 const router = express.Router();
 
 router.get("/user", execs.getUsers);

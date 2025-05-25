@@ -1,28 +1,31 @@
 package com.rati.sikelon.navigate
 
+import com.rati.sikelon.view.loginRegister.LoginScreen
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.rati.sikelon.view.cart.Cart
-import com.rati.sikelon.viewmodel.UserViewModel
+import com.rati.sikelon.view.OnboardingPage1
+import com.rati.sikelon.view.OnboardingPage2
 import com.rati.sikelon.view.HomePage
 import com.rati.sikelon.view.cart.TrackStatus
-import com.rati.sikelon.view.payment.EditDetailsScreen
 import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
 import com.rati.sikelon.view.payment.ProductItem
+import com.rati.sikelon.view.search.SearchPage
+import kotlinx.coroutines.launch
 
-// Enum to define different detail types for navigation
-// This should ideally be in its own file (e.g., DetailType.kt in a common package)
 enum class DetailType {
     ADDRESS, SHIPPING, PAYMENT
 }
@@ -31,42 +34,80 @@ enum class DetailType {
 @Composable fun CartScreen() { Text("Cart Screen") }
 @Composable fun ChatScreen() { Text("Chat Screen") }
 @Composable fun ProfileScreen() { Text("Profile Screen") }
+@Composable fun SearchScreen() { Text("Search Screen") }
 
-
-@SuppressLint("ViewModelConstructorInComposable")
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun AppNavHost(
-//    userViewModel: UserViewModel,
-    startDestination: String = NavItem.Home.route
-) {
+fun AppNavHost() {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    var startDestination by remember { mutableStateOf("onboarding1") }
+    val scope = rememberCoroutineScope()
+
+    // Dijalankan saat pertama kali
+    LaunchedEffect(Unit) {
+        val isOnboardingShown = OnboardingPreferences.isOnboardingShown(context)
+        val isLoggedIn = LoginPreferences.isLoggedIn(context)
+
+        startDestination = when {
+            !isOnboardingShown -> "onboarding1"
+            !isLoggedIn -> NavItem.Login.route
+            else -> NavItem.MainHome.route
+        }
+    }
+
     NavHost(navController = navController, startDestination = startDestination) {
+        // ONBOARDING
+        composable("onboarding1") {
+            OnboardingPage1(
+                onNextClicked = {
+                    navController.navigate("onboarding2")
+                }
+            )
+        }
+
+        composable("onboarding2") {
+            OnboardingPage2(
+                context = context,
+                onMasukClicked = { userType ->
+                    println("User selected type: $userType")
+                    scope.launch {
+                        OnboardingPreferences.setOnboardingShown(context)
+                    }
+
+                    navController.navigate(NavItem.Login.route) {
+                        popUpTo("onboarding1") { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // LOGIN
+        composable(NavItem.Login.route) {
+            val context = LocalContext.current
+
+            LoginScreen(
+                onLoginSuccess = {
+                    LoginPreferences.setLoggedIn(context, true)
+                    navController.navigate(NavItem.Home.route) {
+                        popUpTo(NavItem.Login.route) { inclusive = true }
+                    }
+                },
+                onSignUpClicked = {
+                    navController.navigate(NavItem.Register.route)
+                }
+            )
+        }
 
         composable(NavItem.Home.route) {
-//            Cart(viewModel = UserViewModel())
-//            HomePage(
-//                navController = navController
-//            )
-
+            HomePage(navController = navController)
         }
 
-        composable(NavItem.Searched.route) {
-//            SearchScreen(
-//                onStoreClick = { storeId ->
-//                    navController.navigate("${NavItem.Store_Detail.route}/$storeId")
-//                }
-//            )
-        }
-
-        composable(
-            "${NavItem.Store_Detail.route}/{storeId}",
-            arguments = listOf(navArgument("storeId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val storeId = backStackEntry.arguments?.getInt("storeId") ?: 0
-//            StoreDetailScreen(
-//                storeId = storeId,
-//                onPayClick = { navController.navigate(NavItem.Payment.route) }
-//            )
+        composable(NavItem.Search.route) {
+            SearchPage(
+                navController = navController,
+                initialQuery = ""
+            )
         }
 
         composable(
@@ -104,50 +145,13 @@ fun AppNavHost(
         }
 
         composable(NavItem.TrackStatus.route) {
-            TrackStatus(
-
-            )
+            TrackStatus()
         }
 
-        composable(
-            route = NavItem.EditDetails.route,
-            arguments = listOf(navArgument("detailType") { type = NavType.StringType })
-        ) { backStackEntry ->
-            // Extract the 'detailType' string from the navigation arguments
-            val detailTypeString = backStackEntry.arguments?.getString("detailType")
-            // Convert the string to the DetailType enum
-            val detailType = detailTypeString?.let { DetailType.valueOf(it) }
-
-            if (detailType != null) {
-                // If detailType is valid, call EditDetailsScreen and pass the navController and detailType
-                EditDetailsScreen(navController = navController, detailType = detailType)
-            } else {
-                // Null for now
-                Text("Error: Detail type not found or invalid.", modifier = Modifier.padding(16.dp))
-            }
-        }
-
-        composable(NavItem.Status.route) {
-//            StatusScreen(
-//                onBackToHome = {
-//                    navController.navigate(NavItem.Home.route) {
-//                        popUpTo(NavItem.Home.route) { inclusive = true }
-//                    }
-//                }
-//            )
-        }
-
-        composable(NavItem.MainHome.route) {
-            HomeScreen()
-        }
-        composable(NavItem.MainCart.route) {
-            CartScreen()
-        }
-        composable(NavItem.MainChat.route) {
-            ChatScreen()
-        }
-        composable(NavItem.MainProfile.route) {
-            ProfileScreen()
-        }
+        // Bottom Nav Pages
+        composable(NavItem.MainHome.route) { HomeScreen() }
+        composable(NavItem.MainCart.route) { CartScreen() }
+        composable(NavItem.MainChat.route) { ChatScreen() }
+        composable(NavItem.MainProfile.route) { ProfileScreen() }
     }
 }

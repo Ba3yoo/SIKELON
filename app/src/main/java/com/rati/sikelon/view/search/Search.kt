@@ -31,7 +31,7 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(
+fun SearchPage(
     navController: NavController,
     initialQuery: String? = null
 ) {
@@ -204,7 +204,7 @@ fun RecentSearchItem(
 @Composable
 fun SearchScreenWithInitialQueryPreview() {
     MaterialTheme(colorScheme = lightColorScheme()) {
-        SearchScreen(navController = rememberNavController(), initialQuery = "Kopi Susu")
+        SearchPage(navController = rememberNavController(), initialQuery = "Kopi Susu")
     }
 }
 
@@ -212,6 +212,6 @@ fun SearchScreenWithInitialQueryPreview() {
 @Composable
 fun SearchScreenNoInitialQueryPreview() {
     MaterialTheme(colorScheme = lightColorScheme()) {
-        SearchScreen(navController = rememberNavController())
+        SearchPage(navController = rememberNavController())
     }
 }

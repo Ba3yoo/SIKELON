@@ -325,7 +325,7 @@ fun SearchResultTopAppBar(
                     .background(Color.Black, CircleShape)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    imageVector = Icons.Filled.Clear,
                     contentDescription = "Kembali",
                     tint = Color.White,
                     modifier = Modifier.size(18.dp)

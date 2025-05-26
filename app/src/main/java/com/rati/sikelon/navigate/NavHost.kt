@@ -44,10 +44,10 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable(NavItem.Home.route) {
-            Cart(viewModel = UserViewModel())
-            HomePage(
-                navController = navController
-            )
+//            Cart(viewModel = UserViewModel())
+//            HomePage(
+//                navController = navController
+//            )
 
         }
 

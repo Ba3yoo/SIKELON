@@ -73,7 +73,8 @@ fun Card(
                         contentDescription = "Icon",
                         modifier = Modifier
                             .size(32.dp)
-                            .align(Alignment.BottomEnd),
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp),
                     )
                 }
             }

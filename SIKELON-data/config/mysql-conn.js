@@ -3,7 +3,7 @@ var fs = require("fs");
 var readline = require("readline");
 
 var con = mysql.createConnection({
-  host: "localhost",
+  host: "127.0.0.1",
   user: "root",
   password: "",
 });

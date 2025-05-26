@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.navigate.AppNavHost
 import com.rati.sikelon.ui.theme.SIKELONTheme
 import com.rati.sikelon.view.cart.Cart
+import com.rati.sikelon.view.search.Search
 
 
 class MainActivity : ComponentActivity() {

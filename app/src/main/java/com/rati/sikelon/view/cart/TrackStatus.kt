@@ -34,8 +34,18 @@ data class OrderStatus(val status: String, val time: String, val isCompleted: Bo
 fun TrackStatus() {
     // Contoh data item produk
     val orderItems = listOf(
-        OrderItem("Beng-Beng Maxx Cokelat 32 g", 5, "Rp24.500", R.drawable.sate), // Ganti dengan ID gambar yang sesuai
-        OrderItem("Beng-Beng Nuts Karamel Almond 35 g", 3, "Rp25.200", R.drawable.sate)  // Ganti dengan ID gambar yang sesuai
+        OrderItem(
+            "Beng-Beng Maxx Cokelat 32 g",
+            5,
+            "Rp24.500",
+            R.drawable.sate
+        ), // Ganti dengan ID gambar yang sesuai
+        OrderItem(
+            "Beng-Beng Nuts Karamel Almond 35 g",
+            3,
+            "Rp25.200",
+            R.drawable.sate
+        )  // Ganti dengan ID gambar yang sesuai
     )
 
     // Contoh data status pesanan
@@ -162,12 +172,15 @@ fun TrackStatus() {
                     ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                Column {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
                     orderStatusList.forEach { orderStatus ->
                         OrderStatusItem(orderStatus = orderStatus)
                     }
                 }
             }
+
         }
     }
 }
@@ -231,40 +244,44 @@ fun OrderStatusItem(orderStatus: OrderStatus) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // Check Icon or Bullet
-            if (orderStatus.isCompleted) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_background), // Replace dengan ikon centang hijau
-                    contentDescription = "Completed",
-                    modifier = Modifier.size(24.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 8.dp) // spasi antar status
+        ) {
+            // Ikon status
+            val icon = if (orderStatus.isCompleted) R.drawable.ic_launcher_background else R.drawable.sate
+            val description = if (orderStatus.isCompleted) "Completed" else "In Progress"
+
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = description,
+                modifier = Modifier.size(32.dp)
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Kolom untuk status dan waktu
+            Column {
+                Text(
+                    text = orderStatus.status,
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontSize = 16.sp,
+                        color = if (orderStatus.isCompleted) Color.Black else Color.Gray
+                    )
                 )
-            } else {
-                Image(
-                    painter = painterResource(id = R.drawable.sate), // Replace dengan ikon lingkaran abu-abu
-                    contentDescription = "In Progress",
-                    modifier = Modifier.size(24.dp)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = orderStatus.time,
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
                 )
             }
-
-            Text(
-                text = orderStatus.status,
-                style = TextStyle(
-                    fontFamily = FontFamily.Default,
-                    fontSize = 16.sp,
-                    color = if (orderStatus.isCompleted) Color.Black else Color.Gray
-                ),
-                modifier = Modifier.padding(start = 8.dp)
-            )
         }
-        Text(
-            text = orderStatus.time,
-            style = TextStyle(
-                fontFamily = FontFamily.Default,
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-        )
+
     }
 }
 

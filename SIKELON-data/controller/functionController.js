@@ -164,7 +164,24 @@ const searchStore = async (req, res) => {
   );
 };
 
-export default {
+//export default {
+//  getUsers,
+//  getUser,
+//  getCarts,
+//  getCart,
+//  getCartDetails,
+//  getCartDetail,
+//  getItems,
+//  getItem,
+//  getStores,
+//  getStore,
+//  updateCartDetails,
+//  deleteCartDetail,
+//  searchItem,
+//  searchStore
+//};
+
+module.exports = {
   getUsers,
   getUser,
   getCarts,

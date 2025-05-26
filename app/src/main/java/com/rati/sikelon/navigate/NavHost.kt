@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.rati.sikelon.authentication.LoginScreen
 import com.rati.sikelon.view.cart.Cart
 import com.rati.sikelon.viewmodel.UserViewModel
 import com.rati.sikelon.view.HomePage
@@ -150,8 +149,8 @@ fun AppNavHost(
         composable(NavItem.MainProfile.route) {
             ProfileScreen()
         }
-        composable(NavItem.Login.route) {
-            LoginScreen(navController = navController)
-        }
+//        composable(NavItem.Login.route) {
+//            LoginScreen(navController = navController)
+//        }
     }
 }

@@ -16,8 +16,7 @@ enum class State {
     MAIN_HOME,       // Rute untuk tab Home
     MAIN_CART,       // Rute untuk tab Cart
     MAIN_CHAT,       // Rute untuk tab Chat
-    MAIN_PROFILE,    // Rute untuk tab Profile
-    LOGIN
+    MAIN_PROFILE    // Rute untuk tab Profile
 }
 
 interface BottomNavAware {
@@ -54,8 +53,6 @@ sealed class NavItem(val route: String) {
         override val icon: ImageVector = Icons.Filled.Person
         override val label: String = "Profile"
     }
-
-    object Login : NavItem(State.LOGIN.name)
 
     companion object {
         fun getBottomNavItems(): List<BottomNavAware> {

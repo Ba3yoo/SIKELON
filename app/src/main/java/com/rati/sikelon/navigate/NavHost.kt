@@ -19,7 +19,10 @@ import androidx.navigation.navArgument
 import com.rati.sikelon.view.OnboardingPage1
 import com.rati.sikelon.view.OnboardingPage2
 import com.rati.sikelon.view.HomePage
+import com.rati.sikelon.view.cart.CartStatusScreen
 import com.rati.sikelon.view.cart.TrackStatus
+import com.rati.sikelon.view.loginRegister.RegisterScreen
+import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
 import com.rati.sikelon.view.payment.ProductItem
@@ -99,6 +102,10 @@ fun AppNavHost() {
             )
         }
 
+        composable(NavItem.Register.route){
+            RegisterScreen()
+        }
+
         composable(NavItem.Home.route) {
             HomePage(navController = navController)
         }
@@ -149,9 +156,11 @@ fun AppNavHost() {
         }
 
         // Bottom Nav Pages
-        composable(NavItem.MainHome.route) { HomeScreen() }
-        composable(NavItem.MainCart.route) { CartScreen() }
-        composable(NavItem.MainChat.route) { ChatScreen() }
+        composable(NavItem.MainHome.route) { HomePage(
+            navController = navController
+        ) }
+        composable(NavItem.MainCart.route) { CartStatusScreen(navController = navController) }
+        composable(NavItem.MainChat.route) { MessageScreen() }
         composable(NavItem.MainProfile.route) { ProfileScreen() }
     }
 }

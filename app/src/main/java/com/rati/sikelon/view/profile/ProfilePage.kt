@@ -3,8 +3,10 @@ package com.rati.sikelon.view.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,69 +21,58 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
+import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 
 @Composable
-fun ProfilePage() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Profile Image
-        Image(
-            painter = painterResource(id = R.drawable.avatar_image), // Replace with your actual profile image resource
-            contentDescription = "Profile Image",
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // User Name
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "User", // Replace with actual user name
-                style = TextStyle(
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    color = Color.Black
-                )
-            )
-            // You can add an edit icon here if needed
+fun ProfilePage(navController: NavController) {
+    Scaffold(
+        bottomBar = {
+            AppBottomNavigationBar(navController = navController)
         }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Profile Options
-        ProfileOptionItem(text = "Profil")
-        ProfileOptionItem(text = "Ubah Password")
-        ProfileOptionItem(text = "Metode Pembayaran")
-        ProfileOptionItem(text = "Pusat Bantuan")
-        ProfileOptionItem(text = "Keluar")
-
-        Spacer(modifier = Modifier.weight(1f)) // Pushes bottom navigation to the bottom
-
-        // Bottom Navigation (Simplified for demonstration)
-        Row(
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp), // Height of bottom navigation
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // In a real app, you would use a BottomNavigation composable
-            // and BottomNavigationItem for each item.  For this example,
-            // we'll just use simple Text elements.
-            Text("Home")
-            Text("Cart")
-            Text("Chat")
-            Text("Profile")
+            // Profile Image
+            Image(
+                painter = painterResource(id = R.drawable.avatar_image),
+                contentDescription = "Profile Image",
+                modifier = Modifier
+                    .size(120.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // User Name
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "User",
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Color.Black
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Profile Options
+            ProfileOptionItem(text = "Profil")
+            ProfileOptionItem(text = "Ubah Password")
+            ProfileOptionItem(text = "Metode Pembayaran")
+            ProfileOptionItem(text = "Pusat Bantuan")
+            ProfileOptionItem(text = "Keluar")
         }
     }
 }
@@ -115,11 +106,9 @@ fun ProfileOptionItem(text: String) {
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun ProfilePagePreview() {
-    ProfilePage()
+    ProfilePage(navController = rememberNavController())
 }
 

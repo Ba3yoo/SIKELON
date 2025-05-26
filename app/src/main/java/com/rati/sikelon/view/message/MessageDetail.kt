@@ -3,7 +3,6 @@ package com.rati.sikelon.view.message
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -358,7 +357,7 @@ fun PreviewChatDetailScreen() {
                 ),
                 Message(
                     id = "3",
-                    imageResId = R.drawable.sate,
+                    imageResId = R.drawable.stock_beng_beng,
                     imageOverlayText = "Produk terbaru",
                     senderType = SenderType.USER,
                     timestamp = "5:12 PM"

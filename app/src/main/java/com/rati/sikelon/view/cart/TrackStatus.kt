@@ -1,6 +1,5 @@
 package com.rati.sikelon.view.cart
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.CardDefaults
-import androidx.compose.ui.layout.ContentScale
 import com.rati.sikelon.R // Import file R
 
 // Data class untuk item produk
@@ -38,13 +36,13 @@ fun TrackStatus() {
             "Beng-Beng Maxx Cokelat 32 g",
             5,
             "Rp24.500",
-            R.drawable.sate
+            R.drawable.beng_beng_max
         ), // Ganti dengan ID gambar yang sesuai
         OrderItem(
             "Beng-Beng Nuts Karamel Almond 35 g",
             3,
             "Rp25.200",
-            R.drawable.sate
+            R.drawable.beng_beng_nuts
         )  // Ganti dengan ID gambar yang sesuai
     )
 
@@ -203,7 +201,10 @@ fun OrderItemCard(item: OrderItem) {
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = androidx.compose.ui.layout.ContentScale.Crop
             )
-            Column(modifier = Modifier.padding(start = 16.dp)) {
+            Column(modifier = Modifier
+                .padding(start = 16.dp)
+                .fillMaxWidth(0.7f)
+            ) {
                 Text(
                     text = item.name,
                     style = TextStyle(
@@ -249,7 +250,7 @@ fun OrderStatusItem(orderStatus: OrderStatus) {
             modifier = Modifier.padding(vertical = 8.dp) // spasi antar status
         ) {
             // Ikon status
-            val icon = if (orderStatus.isCompleted) R.drawable.ic_launcher_background else R.drawable.sate
+            val icon = if (orderStatus.isCompleted) R.drawable.make_order else R.drawable.unmake_order
             val description = if (orderStatus.isCompleted) "Completed" else "In Progress"
 
             Image(

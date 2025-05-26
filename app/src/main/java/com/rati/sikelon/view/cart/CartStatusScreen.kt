@@ -28,7 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
-import com.rati.sikelon.view.cart.CartItem
 import com.rati.sikelon.viewmodel.UserViewModel
 
 enum class OrderTab(val title: String) {

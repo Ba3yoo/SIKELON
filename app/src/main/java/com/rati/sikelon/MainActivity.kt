@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.rati.sikelon.navigate.AppNavHost
 import com.rati.sikelon.ui.theme.SIKELONTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

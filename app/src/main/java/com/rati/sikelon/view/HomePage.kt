@@ -290,7 +290,7 @@ fun SearchDisplayField(
         modifier = modifier
             .height(50.dp)
             .clickable {
-                navController.navigate(NavItem.Search.route)
+                navController.navigate(NavItem.Searched.route)
             },
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,

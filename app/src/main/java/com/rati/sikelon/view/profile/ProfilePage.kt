@@ -31,7 +31,7 @@ fun ProfilePage() {
     ) {
         // Profile Image
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background), // Replace with your actual profile image resource
+            painter = painterResource(id = R.drawable.avatar_image), // Replace with your actual profile image resource
             contentDescription = "Profile Image",
             modifier = Modifier
                 .size(120.dp)
@@ -108,7 +108,7 @@ fun ProfileOptionItem(text: String) {
             )
         )
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background), // Ganti dengan icon arrow kanan kamu
+            painter = painterResource(id = R.drawable.enter), // Ganti dengan icon arrow kanan kamu
             contentDescription = "Right Arrow",
             modifier = Modifier.size(24.dp)
         )

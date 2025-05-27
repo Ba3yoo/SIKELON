@@ -26,6 +26,7 @@ import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
 import com.rati.sikelon.view.payment.ProductItem
+import com.rati.sikelon.view.profile.ProfilePage
 import com.rati.sikelon.view.search.SearchPage
 import kotlinx.coroutines.launch
 
@@ -33,11 +34,11 @@ enum class DetailType {
     ADDRESS, SHIPPING, PAYMENT
 }
 
-@Composable fun HomeScreen() { Text("Home Screen") }
-@Composable fun CartScreen() { Text("Cart Screen") }
-@Composable fun ChatScreen() { Text("Chat Screen") }
-@Composable fun ProfileScreen() { Text("Profile Screen") }
-@Composable fun SearchScreen() { Text("Search Screen") }
+//@Composable fun HomeScreen() { Text("Home Screen") }
+//@Composable fun CartScreen() { Text("Cart Screen") }
+//@Composable fun MessageScreen() { Text("Chat Screen") }
+//@Composable fun ProfileScreen() { Text("Profile Screen") }
+//@Composable fun SearchScreen() { Text("Search Screen") }
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -156,11 +157,9 @@ fun AppNavHost() {
         }
 
         // Bottom Nav Pages
-        composable(NavItem.MainHome.route) { HomePage(
-            navController = navController
-        ) }
+        composable(NavItem.MainHome.route) { HomePage(navController = navController) }
         composable(NavItem.MainCart.route) { CartStatusScreen(navController = navController) }
-        composable(NavItem.MainChat.route) { MessageScreen() }
-        composable(NavItem.MainProfile.route) { ProfileScreen() }
+        composable(NavItem.MainChat.route) { MessageScreen(navController = navController) }
+        composable(NavItem.MainProfile.route) { ProfilePage(navController = navController) }
     }
 }

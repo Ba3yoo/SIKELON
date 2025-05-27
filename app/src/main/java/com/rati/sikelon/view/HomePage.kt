@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
@@ -250,7 +251,7 @@ fun SearchDisplayField(
         modifier = modifier
             .height(50.dp)
             .clickable {
-                navController.navigate(NavItem.Searched.route)
+                navController.navigate(NavItem.Search.route)
             },
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -292,7 +293,7 @@ fun TopSearchAndFilterBar(
             )
         ) {
             Icon(
-                imageVector = Icons.Filled.List,
+                imageVector = Icons.AutoMirrored.Default.List,
                 contentDescription = "Filter"
             )
         }

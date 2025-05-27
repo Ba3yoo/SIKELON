@@ -1,8 +1,7 @@
 package com.rati.sikelon.navigate
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.vector.ImageVector
+//import androidx.compose.ui.graphics.vector.ImageVector
+import com.rati.sikelon.R
 
 enum class State {
     ONBOARDING,
@@ -81,22 +80,26 @@ sealed class NavItem(val route: String) {
 
     // Main Tabs (Bottom Navigation)
     object MainHome : NavItem(State.MAIN_HOME.name), BottomNavAware {
-        override val icon: ImageVector = Icons.Filled.Home
+        override val selectedIcon: Int = R.drawable.selected_home
+        override val unselectedIcon: Int = R.drawable.home_unselected
         override val label: String = "Home"
     }
 
     object MainCart : NavItem(State.MAIN_CART.name), BottomNavAware {
-        override val icon: ImageVector = Icons.Filled.ShoppingCart
+        override val selectedIcon: Int = R.drawable.selected_cart
+        override val unselectedIcon: Int = R.drawable.cart_unselected
         override val label: String = "Cart"
     }
 
     object MainChat : NavItem(State.MAIN_CHAT.name), BottomNavAware {
-        override val icon: ImageVector = Icons.Filled.Email
+        override val selectedIcon: Int = R.drawable.selected_chat
+        override val unselectedIcon: Int = R.drawable.chat_unselected
         override val label: String = "Chat"
     }
 
     object MainProfile : NavItem(State.MAIN_PROFILE.name), BottomNavAware {
-        override val icon: ImageVector = Icons.Filled.Person
+        override val selectedIcon: Int = R.drawable.selected_profile
+        override val unselectedIcon: Int = R.drawable.profile_unselected
         override val label: String = "Profile"
     }
 
@@ -114,6 +117,7 @@ sealed class NavItem(val route: String) {
 
 interface BottomNavAware {
     val route: String
-    val icon: ImageVector
+    val selectedIcon: Int
+    val unselectedIcon: Int
     val label: String
 }

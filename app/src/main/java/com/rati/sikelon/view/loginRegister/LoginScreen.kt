@@ -8,8 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,8 +37,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rati.sikelon.navigate.LoginPreferences
 
+enum class UserRole(val displayName: String) {
+    BUYER("Buyer"),
+    SELLER("Seller"),
+    DRIVER("Driver")
+}
+
 @Composable
 fun LoginScreen(
+    userRole: UserRole,
     onLoginSuccess: () -> Unit,
     onSignUpClicked: () -> Unit
 ) {
@@ -75,14 +86,6 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
-//            colors = TextFieldDefaults.colors(
-//                focusedTextColor = Color.Black,
-//                unfocusedTextColor = Color.Black,
-//                focusedIndicatorColor = Color(0xFF9F2BFF),
-//                unfocusedIndicatorColor = Color.Gray,
-//                placeholderColor = Color.Gray,
-//                containerColor = Color.White,
-//            ),
             shape = RoundedCornerShape(32.dp)
         )
 
@@ -97,10 +100,10 @@ fun LoginScreen(
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-//                    Icon(
-//                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-//                        contentDescription = null
-//                    )
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = null
+                    )
                 }
             },
             shape = RoundedCornerShape(32.dp)
@@ -183,7 +186,8 @@ fun PreviewLoginScreen() {
     MaterialTheme {
         LoginScreen(
             onLoginSuccess = TODO(),
-            onSignUpClicked = TODO()
+            onSignUpClicked = TODO(),
+            userRole = TODO()
         )
     }
 }

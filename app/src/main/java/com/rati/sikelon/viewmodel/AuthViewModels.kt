@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import com.rati.sikelon.data.Result
 import com.rati.sikelon.model.requestResponse.*
 
-class BuyerAuthViewModel(private val repository: AuthRepository) : ViewModel() {
-
+class BuyerAuthViewModel() : ViewModel() {
+    private val repository = AuthRepository()
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
 

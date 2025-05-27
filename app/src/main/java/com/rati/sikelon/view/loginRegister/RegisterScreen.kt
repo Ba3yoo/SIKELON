@@ -179,11 +179,12 @@ fun RegisterScreen() {
         Button(
             onClick = {
                 // Handle sign up logic here
-                println(
-                    "Sign Up button clicked with name: $name, email: $email, password: $password, " +
-                            "agreeTerms: $agreeTerms"
-                )
+//                println(
+//                    "Sign Up button clicked with name: $name, email: $email, password: $password, " +
+//                            "agreeTerms: $agreeTerms"
+//                )
                 // You would typically validate the input fields and create a new account.
+
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             colors = ButtonDefaults.buttonColors(

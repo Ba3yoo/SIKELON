@@ -34,6 +34,7 @@ const loginBuyer = (req,res) => {
             process.env.JWT_SECRET, {
                 expiresIn: "1h",
             });
+        console.log("in");    
         res.json({token});
     });
 }

@@ -38,8 +38,8 @@ class UserRepository {
         apiService.deleteCartDetail(cartDetailId).isSuccessful
 }
 
-class AuthRepository(private val loginService: LoginService) {
-
+class AuthRepository() {
+    private val loginService = RetrofitInstance.loginService
     suspend fun registerBuyer(request: RegisterRequest): Result<AuthResponse> {
         return safeApiCall { loginService.registerBuyer(request) }
     }

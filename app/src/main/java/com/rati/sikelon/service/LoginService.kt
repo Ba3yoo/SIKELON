@@ -8,21 +8,21 @@ import retrofit2.http.POST
 
 interface LoginService {
 
-    @POST("/register/buyer")
+    @POST("/auth/register/buyer")
     suspend fun registerBuyer(@Body request: RegisterRequest): AuthResponse
 
-    @POST("/login/buyer")
+    @POST("/auth/login/buyer")
     suspend fun loginBuyer(@Body request: LoginRequest): AuthResponse
 
-    @POST("/register/seller")
+    @POST("/auth/register/seller")
     suspend fun registerSeller(@Body request: RegisterRequest): AuthResponse
 
-    @POST("/login/seller")
+    @POST("/auth/login/seller")
     suspend fun loginSeller(@Body request: LoginRequest): AuthResponse
 
-    @POST("/register/driver")
+    @POST("/auth/register/driver")
     suspend fun registerDriver(@Body request: RegisterRequest): AuthResponse
 
-    @POST("/login/driver")
+    @POST("/auth/login/driver")
     suspend fun loginDriver(@Body request: LoginRequest): AuthResponse
 }

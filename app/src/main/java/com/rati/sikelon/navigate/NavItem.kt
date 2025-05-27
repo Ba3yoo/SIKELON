@@ -42,6 +42,8 @@ enum class State {
     MAIN_CART,
     MAIN_CHAT,
     MAIN_PROFILE,
+    DASHBOARD,
+
 }
 
 sealed class NavItem(val route: String) {
@@ -49,9 +51,12 @@ sealed class NavItem(val route: String) {
     // General Navigation
     object Onboarding : NavItem(State.ONBOARDING.name)
     object Home : NavItem(State.HOMEPAGE.name)
+    object Dashboard : NavItem(State.DASHBOARD.name)
 
     // Login/Register
-    object Login : NavItem(State.LOGIN.name)
+    object Login : NavItem("${State.LOGIN.name}/{userRole}") {
+        fun createRoute(userRole: String) = "${State.LOGIN.name}/$userRole"
+    }
     object Register : NavItem(State.REGISTER.name)
     object VerifyCode : NavItem(State.VERIFY_CODE.name)
     object NewPassword : NavItem(State.NEW_PASSWORD.name)

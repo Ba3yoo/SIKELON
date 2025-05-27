@@ -1,5 +1,6 @@
 package com.rati.sikelon.view
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,6 +49,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,6 +77,7 @@ import com.rati.sikelon.R
 import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
+import com.rati.sikelon.viewmodel.UserViewModel
 
 data class CardData(
     val imageId: Int,
@@ -83,9 +87,14 @@ data class CardData(
 )
 
 @Composable
-fun HomePage(navController: NavHostController) {
+fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
+    val frontItems = viewModel.items.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.loadItems()
+    }
+    Log.d("item", frontItems.value.toString())
     val flashSaleItems = listOf(
-        CardData(R.drawable.sate, "Rp34.000", "Prenagen Lacta Mom 180 Gr", R.drawable.add_button),
+        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
         CardData(R.drawable.sate, "Rp46.900", "Shinzu'i Sabun Mandi Refill 725 ml"),
         CardData(R.drawable.sate, "Rp52.217", "Kopi Kapal Api 350 Gr")
     )
@@ -290,7 +299,7 @@ fun SearchDisplayField(
         modifier = modifier
             .height(50.dp)
             .clickable {
-                navController.navigate(NavItem.Searched.route)
+                navController.navigate(NavItem.SearchResult.route)
             },
         colors = OutlinedTextFieldDefaults.colors(
             disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -624,9 +633,9 @@ fun DashboardPreview() {
     DashboardScreen(userName = "Kurnia")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun HomePagePreview() {
-    val navController = rememberNavController()
-    HomePage(navController = navController)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun HomePagePreview() {
+//    val navController = rememberNavController()
+//    HomePage(navController = navController)
+//}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2025 at 10:41 AM
+-- Generation Time: May 27, 2025 at 09:45 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -38,7 +38,9 @@ CREATE TABLE `cart` (
 
 INSERT INTO `cart` (`cart_id`, `user_id`) VALUES
 (1, 1),
-(2, 2);
+(2, 2),
+(3, 6),
+(4, 7);
 
 -- --------------------------------------------------------
 
@@ -113,6 +115,7 @@ CREATE TABLE `user` (
   `role` enum('buyer','seller','driver','') NOT NULL,
   `username` varchar(200) NOT NULL,
   `name` varchar(200) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `join_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -120,9 +123,12 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `email`, `role`, `username`, `name`, `join_date`) VALUES
-(1, 'man@man.com', 'buyer', 'TheMan', 'John Man', '2025-05-16 03:56:03'),
-(2, 'two@two.com', 'buyer', 'Two', 'Test Two', '2025-05-16 03:57:14');
+INSERT INTO `user` (`user_id`, `email`, `role`, `username`, `name`, `password`, `join_date`) VALUES
+(1, 'man@man.com', 'buyer', 'TheMan', 'John Man', '', '2025-05-16 03:56:03'),
+(2, 'two@two.com', 'buyer', 'Two', 'Test Two', '', '2025-05-16 03:57:14'),
+(4, 'yan@yan.com', 'buyer', 'Joni', 'Johnny Yan', '$2b$10$/8qmRPF8YvveQfa3fOzNW.iUQtxvSLgd6/vvbwUH6cV.0nrhP01C2', '2025-05-26 09:06:21'),
+(6, 'yan4@yan.com', 'buyer', 'Yanfour', 'Yan Four', '$2b$10$wCa/kABsZg2Z/ZKlkJKA7e/rH7jYLiabEdGBPUu19v8ODa8R88V8K', '2025-05-26 09:32:34'),
+(7, 'yan5@yan.com', 'seller', 'Yanfive', 'Yan Five', '$2b$10$/acABLcyUHvhJAfwB4a7ku6c5obJc2Gmei7O/C.5nW9kn1ZwhgUeK', '2025-05-27 07:44:31');
 
 --
 -- Indexes for dumped tables
@@ -161,7 +167,8 @@ ALTER TABLE `store`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -171,7 +178,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cartdetail`
@@ -195,7 +202,7 @@ ALTER TABLE `store`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

@@ -39,12 +39,10 @@ data class ChatItemData(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessageScreen(
-//    navController: NavController
-) {
+fun MessageScreen(navController: NavController) {
     val chatList = remember {
         listOf(
-            ChatItemData("1", "Toko Kurnia", "Apakah produk ini masih tersedia?", R.drawable.ic_launcher_foreground, false),
+            ChatItemData("1", "Toko Kurnia", "Apakah produk ini masih tersedia?", R.drawable.toko_kurnia, false),
             ChatItemData("2", "Toko Sumber Makmur 2", "Stoknya masih banyak, Kak!", R.drawable.ic_launcher_foreground, true)
         )
     }
@@ -168,5 +166,5 @@ fun ChatItemRow(
 @Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
 @Composable
 fun MessageScreenPreview() {
-    MessageScreen()
+    MessageScreen(navController = rememberNavController())
 }

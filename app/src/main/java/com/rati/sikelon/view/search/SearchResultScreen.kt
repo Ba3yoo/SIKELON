@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -67,22 +66,22 @@ fun SearchResultScreen(
             StoreSearchResult(
                 "s1", R.drawable.ic_launcher_foreground, "SRC Raya", "Sigura-Gura", "50m",
                 listOf(
-                    ProductResult("p1_1", R.drawable.sate, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
+                    ProductResult("p1_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
                 )
             ),
             StoreSearchResult(
                 "s2", R.drawable.ic_launcher_foreground, "SRC Berkah Selalu", "Sigura-Gura", "150m",
                 listOf(
-                    ProductResult("p2_1", R.drawable.sate, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
-                    ProductResult("p2_2", R.drawable.sate, "Rp14.900", "Beng-beng Share It 10 x 8.5 g"),
-                    ProductResult("p2_3", R.drawable.sate, "Rp8.700", "Beng-Beng Wafer Rice Crispy Cokelat 3 x 20 g")
+                    ProductResult("p2_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
+                    ProductResult("p2_2", R.drawable.beng_beng_share, "Rp14.900", "Beng-beng Share It 10 x 8.5 g"),
+                    ProductResult("p2_3", R.drawable.beng_beng_wafer_rice, "Rp8.700", "Beng-Beng Wafer Rice Crispy Cokelat 3 x 20 g")
                 )
             ),
             StoreSearchResult(
                 "s3", R.drawable.ic_launcher_foreground, "Toko Kurnia", "Bend. Sutami", "200m",
                 listOf(
-                    ProductResult("p3_1", R.drawable.sate, "Rp8.400", "Beng-Beng Nuts Karamel Almond 35 g"),
-                    ProductResult("p3_2", R.drawable.sate, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
+                    ProductResult("p3_1", R.drawable.beng_beng_nuts, "Rp8.400", "Beng-Beng Nuts Karamel Almond 35 g"),
+                    ProductResult("p3_2", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
                 )
             )
         )

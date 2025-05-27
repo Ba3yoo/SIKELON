@@ -18,6 +18,10 @@ import com.rati.sikelon.view.cart.TrackStatus
 import com.rati.sikelon.view.loginRegister.LoginScreen
 import com.rati.sikelon.view.loginRegister.RegisterScreen
 import com.rati.sikelon.view.message.MessageScreen
+import com.rati.sikelon.view.payment.PaymentScreen
+import com.rati.sikelon.view.payment.PaymentSuccessScreen
+import com.rati.sikelon.view.payment.ProductItem
+import com.rati.sikelon.view.profile.ProfilePage
 import com.rati.sikelon.view.payment.*
 import com.rati.sikelon.view.profile.ProfilePage
 import com.rati.sikelon.view.search.SearchPage

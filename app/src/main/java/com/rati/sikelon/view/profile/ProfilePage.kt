@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,9 +25,12 @@ import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
 import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
+import com.rati.sikelon.view.reusable.EmptyPopOutDialog
 
 @Composable
 fun ProfilePage(navController: NavController) {
+    val showLogOutDialog = remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
             AppBottomNavigationBar(navController = navController)
@@ -70,8 +75,22 @@ fun ProfilePage(navController: NavController) {
             ProfileOptionItem(text = "Ubah Password", onClick = { navController.navigate(NavItem.ProfileSettings.route) })
             ProfileOptionItem(text = "Metode Pembayaran", onClick = { navController.navigate(NavItem.ProfilePaymentMethod.route) })
             ProfileOptionItem(text = "Pusat Bantuan", onClick = { navController.navigate(NavItem.ProfileHelpDesk.route) })
-            ProfileOptionItem(text = "Keluar", onClick = { navController.navigate(NavItem.Login.route) })
+            ProfileOptionItem(text = "Keluar", onClick = { showLogOutDialog.value = true })
         }
+    }
+
+    if (showLogOutDialog.value) {
+        EmptyPopOutDialog(
+            title = "Keluar",
+            message = "Apakah Anda yakin ingin keluar dari akun Anda sekarang?",
+            onDismiss = { showLogOutDialog.value = false },
+            onConfirm = {
+                showLogOutDialog.value = false
+                navController.navigate(NavItem.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
+        )
     }
 }
 

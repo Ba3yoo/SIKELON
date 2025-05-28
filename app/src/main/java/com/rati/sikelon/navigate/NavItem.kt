@@ -31,6 +31,10 @@ enum class State {
 
     // Profile
     PROFILE,
+    PROFILE_SETTINGS,
+    PROFILE_PAYMENT_METHOD,
+    PROFILE_HELPDESK,
+    EDIT_PROFILE,
 
     // Search
     SEARCH,
@@ -73,6 +77,10 @@ sealed class NavItem(val route: String) {
 
     // Profile
     object Profile : NavItem(State.PROFILE.name)
+    object ProfileSettings : NavItem(State.PROFILE_SETTINGS.name)
+    object ProfilePaymentMethod : NavItem(State.PROFILE_PAYMENT_METHOD.name)
+    object ProfileHelpDesk : NavItem(State.PROFILE_HELPDESK.name)
+    object EditProfile : NavItem(State.EDIT_PROFILE.name)
 
     // Search
     object Search : NavItem(State.SEARCH.name)

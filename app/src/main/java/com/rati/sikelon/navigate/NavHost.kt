@@ -34,12 +34,6 @@ enum class DetailType {
     ADDRESS, SHIPPING, PAYMENT
 }
 
-//@Composable fun HomeScreen() { Text("Home Screen") }
-//@Composable fun CartScreen() { Text("Cart Screen") }
-//@Composable fun MessageScreen() { Text("Chat Screen") }
-//@Composable fun ProfileScreen() { Text("Profile Screen") }
-//@Composable fun SearchScreen() { Text("Search Screen") }
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun AppNavHost() {

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
+import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 
 @Composable
@@ -65,17 +66,17 @@ fun ProfilePage(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             // Profile Options
-            ProfileOptionItem(text = "Profil")
-            ProfileOptionItem(text = "Ubah Password")
-            ProfileOptionItem(text = "Metode Pembayaran")
-            ProfileOptionItem(text = "Pusat Bantuan")
-            ProfileOptionItem(text = "Keluar")
+            ProfileOptionItem(text = "Profil", onClick = { navController.navigate(NavItem.EditProfile.route) })
+            ProfileOptionItem(text = "Ubah Password", onClick = { navController.navigate(NavItem.ProfileSettings.route) })
+            ProfileOptionItem(text = "Metode Pembayaran", onClick = { navController.navigate(NavItem.ProfilePaymentMethod.route) })
+            ProfileOptionItem(text = "Pusat Bantuan", onClick = { navController.navigate(NavItem.ProfileHelpDesk.route) })
+            ProfileOptionItem(text = "Keluar", onClick = { navController.navigate(NavItem.Login.route) })
         }
     }
 }
 
 @Composable
-fun ProfileOptionItem(text: String) {
+fun ProfileOptionItem(text: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

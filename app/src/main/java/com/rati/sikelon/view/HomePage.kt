@@ -94,17 +94,17 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
         viewModel.loadItems()
     }
     Log.d("item", frontItems.value.toString())
-    val flashSaleItems = listOf(
-//        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
-        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
-        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg")   
-    )
-
-    val quickBuyItems = listOf(
-        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
-        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
-        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg")
-    )
+//    val flashSaleItems = listOf(
+////        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
+//        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
+//        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg")
+//    )
+//
+//    val quickBuyItems = listOf(
+//        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
+//        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
+//        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg")
+//    )
 
     Scaffold(
         bottomBar = {
@@ -182,14 +182,14 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
 
             ProductSection(
                 title = "Flash Sale",
-                items = flashSaleItems,
+                items = frontItems.value.take(3),
                 navController = navController,
                 onSeeAllClick = { /* navigasi lihat semua flash sale */ }
             )
 
             ProductSection(
                 title = "Beli Cepat",
-                items = quickBuyItems,
+                items = frontItems.value.take(5),
                 navController = navController,
                 onSeeAllClick = { /* navigasi lihat semua quick buy */ }
             )

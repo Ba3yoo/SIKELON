@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2025 at 09:45 AM
+-- Generation Time: May 29, 2025 at 02:34 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -53,15 +53,16 @@ CREATE TABLE `cartdetail` (
   `cart_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL
+  `quantity` int(11) NOT NULL,
+  `status` enum('in cart','paid','complete','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cartdetail`
 --
 
-INSERT INTO `cartdetail` (`cartDetail_id`, `cart_id`, `store_id`, `item_id`, `quantity`) VALUES
-(1, 1, 1, 1, 3);
+INSERT INTO `cartdetail` (`cartDetail_id`, `cart_id`, `store_id`, `item_id`, `quantity`, `status`) VALUES
+(1, 1, 1, 1, 3, 'in cart');
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,11 @@ CREATE TABLE `item` (
 --
 
 INSERT INTO `item` (`item_id`, `item_name`, `price`, `store_id`, `img_link`) VALUES
-(1, 'bengbeng maxx', 3000, 1, 'https://cdn.discordapp.com/attachments/1121436652380897352/1376479650112606208/sate.jpeg?ex=68357a12&is=68342892&hm=d8281882e88cdd6911aa401f8872457a496b2b0075ad5804a10b3330610e1e62&');
+(1, 'bengbeng maxx', 3000, 1, 'https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg'),
+(4, 'Kitkat 4F', 5000, 1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZn71Yl9oNpGONAhAqYbm3ONmN6RUM1JES9w&s'),
+(5, 'Mentos Roll Mint', 3500, 1, 'https://arti-assets.sgp1.cdn.digitaloceanspaces.com/renyswalayanku/products/a1a880d6-76d8-4a82-8208-9b1092601946.jpg'),
+(6, 'Pocky Chocolate', 6000, 3, 'https://image.astronauts.cloud/product-images/2024/4/PockyChocolateStickRegularSize1_6f3cb1e5-ca1e-4dbb-82ff-60c069100291_900x900.jpg'),
+(7, 'Pocky Strawberry', 6000, 3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxHcAenNRbr5vJxTTHu4Thqv8jEUNbhi1DlA&s');
 
 -- --------------------------------------------------------
 
@@ -101,7 +106,8 @@ CREATE TABLE `store` (
 --
 
 INSERT INTO `store` (`store_id`, `store_name`, `address`) VALUES
-(1, 'test store', '35th Ran St.');
+(1, 'test store', '35th Ran St.'),
+(3, 'Toko Kawan', 'Jl. Apasaja 44');
 
 -- --------------------------------------------------------
 
@@ -154,8 +160,7 @@ ALTER TABLE `cartdetail`
 -- Indexes for table `item`
 --
 ALTER TABLE `item`
-  ADD PRIMARY KEY (`item_id`),
-  ADD UNIQUE KEY `store_id` (`store_id`);
+  ADD PRIMARY KEY (`item_id`);
 
 --
 -- Indexes for table `store`
@@ -190,13 +195,13 @@ ALTER TABLE `cartdetail`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `store`
 --
 ALTER TABLE `store`
-  MODIFY `store_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `store_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user`

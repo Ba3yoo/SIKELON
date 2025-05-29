@@ -94,7 +94,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
     }
     Log.d("item", frontItems.value.toString())
     val flashSaleItems = listOf(
-        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
+//        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
         CardData(R.drawable.sate, "Rp46.900", "Shinzu'i Sabun Mandi Refill 725 ml"),
         CardData(R.drawable.sate, "Rp52.217", "Kopi Kapal Api 350 Gr")
     )

@@ -1,5 +1,7 @@
 package com.rati.sikelon.view.loginRegister
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -26,20 +28,40 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
+import androidx.navigation.NavController
+import com.rati.sikelon.data.AuthState
+import com.rati.sikelon.model.requestResponse.LoginRequest
+import com.rati.sikelon.model.requestResponse.RegisterRequest
+import com.rati.sikelon.navigate.LoginPreferences
+import com.rati.sikelon.navigate.NavItem
+import com.rati.sikelon.viewmodel.BuyerAuthViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(
+    navController: NavController,
+    viewModel: BuyerAuthViewModel
+) {
     // State variables for input fields
+    val context = LocalContext.current
+    val authState = viewModel.authState.collectAsState()
+    var username by rememberSaveable { mutableStateOf("") }
     var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var agreeTerms by rememberSaveable { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
 
     // Column to hold the entire layout
     Column(
@@ -75,6 +97,26 @@ fun RegisterScreen() {
         )
 
         // Name TextField
+        TextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Nama") },
+            placeholder = { Text("masukkan nama Anda disini") },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+//            colors = TextFieldDefaults.colors(
+//                focusedTextColor = Color.Black,
+//                unfocusedTextColor = Color.Black,
+//                focusedIndicatorColor = Color(0xFF9F2BFF),
+//                unfocusedIndicatorColor = Color.Gray,
+//                placeholderColor = Color.Gray,
+//                containerColor = Color.White,
+//            ),
+            shape = RoundedCornerShape(32.dp),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+        )// Name TextField
         TextField(
             value = name,
             onValueChange = { name = it },
@@ -184,7 +226,30 @@ fun RegisterScreen() {
 //                            "agreeTerms: $agreeTerms"
 //                )
                 // You would typically validate the input fields and create a new account.
+                val request = RegisterRequest(username, name, email, password)
+                viewModel.registerBuyer(request)
+                Log.d("state", (authState is AuthState.Success).toString())
 
+                coroutineScope.launch {
+                    delay(300)
+                    when (val state = viewModel.authState.value) {
+                        is AuthState.Success -> {
+                            LoginPreferences.setLoggedIn(context, true)
+                            Toast.makeText(context, "Register berhasil!", Toast.LENGTH_SHORT).show()
+                            navController.navigate(NavItem.Home.route) {
+                                popUpTo("register/pembeli") { inclusive = true }
+                            }
+                        }
+
+                        is AuthState.Error -> {
+                            Toast.makeText(context, "Register gagal: ${state.error}", Toast.LENGTH_LONG).show()
+                        }
+
+                        else -> {
+                            Log.d("RegState", "Belum selesai register.")
+                        }
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
             colors = ButtonDefaults.buttonColors(
@@ -299,5 +364,8 @@ fun RegisterScreen() {
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
-    RegisterScreen()
+    RegisterScreen(
+        navController = TODO(),
+        viewModel = TODO()
+    )
 }

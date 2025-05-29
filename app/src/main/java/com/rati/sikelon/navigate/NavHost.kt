@@ -120,7 +120,10 @@ fun AppNavHost() {
 
         // REGISTER
         composable(NavItem.Register.route) {
-            RegisterScreen()
+            RegisterScreen(
+                navController = navController,
+                viewModel = buyerViewModel
+            )
         }
 
         // HOME
@@ -181,11 +184,11 @@ fun AppNavHost() {
         }
 
         composable(NavItem.MainChat.route) {
-            MessageScreen()
+            MessageScreen(navController = navController)
         }
 
         composable(NavItem.MainProfile.route) {
-            ProfilePage()
+            ProfilePage(navController = navController)
         }
     }
 }

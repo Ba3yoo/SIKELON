@@ -74,17 +74,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
+import com.rati.sikelon.model.Item
 import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
 import com.rati.sikelon.viewmodel.UserViewModel
 
-data class CardData(
-    val imageId: Int,
-    val price: String,
-    val description: String,
-    val iconId: Int? = null
-)
+//data class CardData(
+//    val imageId: Int,
+//    val price: String,
+//    val description: String,
+//    val iconId: Int? = null
+//)
 
 @Composable
 fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
@@ -95,14 +96,14 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
     Log.d("item", frontItems.value.toString())
     val flashSaleItems = listOf(
 //        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
-        CardData(R.drawable.sate, "Rp46.900", "Shinzu'i Sabun Mandi Refill 725 ml"),
-        CardData(R.drawable.sate, "Rp52.217", "Kopi Kapal Api 350 Gr")
+        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
+        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg")   
     )
 
     val quickBuyItems = listOf(
-        CardData(R.drawable.sate, "Rp3.700", "Le Minerale Air Mineral Botol 600 ml"),
-        CardData(R.drawable.sate, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
-        CardData(R.drawable.sate, "Rp10.800", "Bear Brand Susu Steril 189 ml")
+        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
+        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"),
+        Item(1, "beng max", 4900,1, "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg")
     )
 
     Scaffold(
@@ -199,7 +200,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
 @Composable
 fun ProductSection(
     title: String,
-    items: List<CardData>,
+    items: List<Item>,
     navController: NavHostController,
     onSeeAllClick: () -> Unit = {}
 ) {
@@ -230,8 +231,7 @@ fun ProductSection(
         ) {
             items(items) { item ->
                 Card(cardData = item, modifier = Modifier, onClick = {
-                    val priceCleaned = item.price.replace("Rp", "").replace(".", "")
-                    val route = "${NavItem.Payment.route}/${item.description}/1/$priceCleaned/${item.imageId}"
+                    val route = "${NavItem.Payment.route}/${item.item_name}/1/$item.price/"
                     navController.navigate(route)
                 })
             }

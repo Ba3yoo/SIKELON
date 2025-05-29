@@ -17,7 +17,8 @@ data class Item(
     val item_id: Int,
     val item_name: String,
     val price: Int,
-    val store_id: Int
+    val store_id: Int,
+    val img_link: String
 )
 
 data class Cart(
@@ -34,5 +35,6 @@ data class CartDetail(
     val store_name: String,
     val address: String,
     val item_name: String,
-    val price: Int
+    val price: Int,
+    val img_link: String
 )

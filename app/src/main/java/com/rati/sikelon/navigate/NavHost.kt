@@ -12,6 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.rati.sikelon.data.AuthRepository
+import com.rati.sikelon.model.Item
 import com.rati.sikelon.view.*
 import com.rati.sikelon.view.cart.CartStatusScreen
 import com.rati.sikelon.view.cart.TrackStatus
@@ -138,7 +139,7 @@ fun AppNavHost() {
 
         // PAYMENT
         composable(
-            "${NavItem.Payment.route}/{name}/{quantity}/{price}/{imageId}",
+            "${NavItem.Payment.route}/{name}/{quantity}/{price}",
             arguments = listOf(
 //                navArgument("name") { type = NavType.StringType },
 //                navArgument("quantity") { type = NavType.IntType },
@@ -146,11 +147,19 @@ fun AppNavHost() {
 //                navArgument("imageId") { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val id = backStackEntry.arguments?.getInt("item_id") ?: 0
+            val name = backStackEntry.arguments?.getString("item_name") ?: ""
             val quantity = backStackEntry.arguments?.getInt("quantity") ?: 0
-            val price = backStackEntry.arguments?.getString("price") ?: ""
-            val imageId = backStackEntry.arguments?.getInt("imageId") ?: 0
-            val product = ProductItem(name, quantity, price, imageId)
+            val price = backStackEntry.arguments?.getInt("price") ?: 0
+            val store_id = backStackEntry.arguments?.getInt("store_id") ?: 0
+            val image = backStackEntry.arguments?.getString("img_link") ?: ""
+            val product = Item(
+                item_id = id,
+                item_name = name,
+                price = price,
+                store_id = store_id,
+                img_link = image
+            )
 
             PaymentScreen(
                 item = product,

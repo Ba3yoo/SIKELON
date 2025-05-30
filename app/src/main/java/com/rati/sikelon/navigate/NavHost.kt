@@ -11,18 +11,17 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.mvvm2.view.VerifyCodeScreen
+import com.rati.sikelon.model.Item
 import com.rati.sikelon.view.*
 import com.rati.sikelon.view.cart.*
-import com.rati.sikelon.view.cart.TrackStatus
 import com.rati.sikelon.view.loginRegister.ForgetPasswordPage
 import com.rati.sikelon.view.loginRegister.LoginScreen
 import com.rati.sikelon.view.loginRegister.LoginScreenPenjual
 import com.rati.sikelon.view.loginRegister.RegisterScreen
-import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.message.MessageDetailScreen
+import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.payment.*
 import com.rati.sikelon.view.profile.ProfilePage
-import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.view.search.SearchPage
 import com.rati.sikelon.viewmodel.BuyerAuthViewModel
 import com.rati.sikelon.viewmodel.SellerAuthViewModel
@@ -191,7 +190,7 @@ fun AppNavHost() {
 
             // PAYMENT
             composable(
-                "${NavItem.Payment.route}/{name}/{quantity}/{price}/{imageId}",
+                "${NavItem.Payment.route}/{name}/{quantity}/{price}",
                 arguments = listOf(
 //                navArgument("name") { type = NavType.StringType },
 //                navArgument("quantity") { type = NavType.IntType },
@@ -199,11 +198,19 @@ fun AppNavHost() {
 //                navArgument("imageId") { type = NavType.IntType }
                 )
             ) { backStackEntry ->
-                val name = backStackEntry.arguments?.getString("name") ?: ""
+                val id = backStackEntry.arguments?.getInt("item_id") ?: 0
+                val name = backStackEntry.arguments?.getString("item_name") ?: ""
                 val quantity = backStackEntry.arguments?.getInt("quantity") ?: 0
-                val price = backStackEntry.arguments?.getString("price") ?: ""
-                val imageId = backStackEntry.arguments?.getInt("imageId") ?: 0
-                val product = ProductItem(name, quantity, price, imageId)
+                val price = backStackEntry.arguments?.getInt("price") ?: 0
+                val store_id = backStackEntry.arguments?.getInt("store_id") ?: 0
+                val image = backStackEntry.arguments?.getString("img_link") ?: ""
+                val product = Item(
+                    item_id = id,
+                    item_name = name,
+                    price = price,
+                    store_id = store_id,
+                    img_link = image
+                )
 
                 PaymentScreen(
                     item = product,
@@ -214,14 +221,14 @@ fun AppNavHost() {
                 )
             }
 
-            composable(NavItem.PaymentSuccess.route) {
-                PaymentSuccessScreen(
-                    navController = navController,
-                    onPaymentComplete = {
-                        navController.navigate(NavItem.TrackStatus.route)
-                    }
-                )
-            }
+        composable(NavItem.PaymentSuccess.route) {
+            PaymentSuccessScreen(
+                navController = navController,
+                onPaymentComplete = {
+                    navController.navigate(NavItem.TrackStatus.route)
+                }
+            )
+        }
 
             // BOTTOM NAVIGATION
             composable(NavItem.MainHome.route) {
@@ -239,7 +246,7 @@ fun AppNavHost() {
             composable(NavItem.MainProfile.route) {
                 ProfilePage(navController = navController)
             }
-            
+
             composable(NavItem.TrendSale.route){
                 TrendDetailScreen(
                     navController = navController

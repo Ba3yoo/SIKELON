@@ -80,18 +80,14 @@ import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
-import com.rati.sikelon.view.reusable.CardData
 import com.rati.sikelon.viewmodel.UserViewModel
 
-fun Item.toCardData(): CardData {
-    return CardData(
-        imageUrl = "https://via.placeholder.com/150",
-        price = "Rp${price}",
-        description = item_name,
-        buttonText = "Beli Sekarang",
-        iconUrl = null
-    )
-}
+//data class CardData(
+//    val imageId: Int,
+//    val price: String,
+//    val description: String,
+//    val iconId: Int? = null
+//)
 
 @Composable
 fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
@@ -182,14 +178,14 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
 
             ProductSection(
                 title = "Flash Sale",
-                items = frontItems.value.map { it.toCardData() },
+                items = frontItems.value.take(3),
                 navController = navController,
                 onSeeAllClick = { /* navigasi lihat semua flash sale */ }
             )
 
             ProductSection(
                 title = "Beli Cepat",
-                items = frontItems.value.map { it.toCardData() },
+                items = frontItems.value.take(5),
                 navController = navController,
                 onSeeAllClick = { /* navigasi lihat semua quick buy */ }
             )
@@ -200,7 +196,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
 @Composable
 fun ProductSection(
     title: String,
-    items: List<CardData>,
+    items: List<Item>,
     navController: NavHostController,
     onSeeAllClick: () -> Unit = {}
 ) {
@@ -231,8 +227,7 @@ fun ProductSection(
         ) {
             items(items) { item ->
                 Card(cardData = item, modifier = Modifier, onClick = {
-                    val priceCleaned = item.price.replace("Rp", "").replace(".", "")
-                    val route = "${NavItem.Payment.route}/${item.description}/1/$priceCleaned/${item.imageUrl}"
+                    val route = "${NavItem.Payment.route}/${item.item_name}/1/$item.price/"
                     navController.navigate(route)
                 })
             }
@@ -367,14 +362,7 @@ val mockSalesTrendItems = listOf(
 )
 
 @Composable
-fun DashboardScreen(userName: String = "Kurnia", navController: NavHostController) {
-    val points = listOf(0.5f, 0.8f, 0.6f, 0.2f, 0.5f)
-    val monthLabels = listOf("Jan", "Feb", "Mar", "Apr", "Mei")
-    val years = listOf("Tahun", "2024", "2023", "2022")
-    val mockSalesTrendItems = listOf<SalesTrendItem>() // Ganti dengan data nyata
-    var selectedYear by remember { mutableStateOf("Tahun") }
-    var expanded by remember { mutableStateOf(false) }
-
+fun DashboardScreen(userName: String = "Kurnia") {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -420,31 +408,33 @@ fun DashboardScreen(userName: String = "Kurnia", navController: NavHostControlle
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Statistik Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
-                    Box {
-                        Button(
-                            onClick = { expanded = true },
-                            shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = colorResource(id = R.color.purple_500),
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(selectedYear, fontSize = 14.sp)
-                            Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
-                        }
-                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                            years.forEach { year ->
-                                DropdownMenuItem(
-                                    text = { Text(year) },
-                                    onClick = {
-                                        selectedYear = year
-                                        expanded = false
-                                    }
-                                )
-                            }
-                        }
-                    }
+//                    Box {
+//                        Button(
+//                            onClick = {
+//                                expanded = true
+//                                      },
+//                            shape = RoundedCornerShape(8.dp),
+//                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+//                            colors = ButtonDefaults.buttonColors(
+//                                containerColor = colorResource(id = R.color.purple_500),
+//                                contentColor = Color.White
+//                            )
+//                        ) {
+//                            Text(selectedYear, fontSize = 14.sp)
+//                            Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
+//                        }
+//                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+//                            years.forEach { year ->
+//                                DropdownMenuItem(
+//                                    text = { Text(year) },
+//                                    onClick = {
+//                                        selectedYear = year
+//                                        expanded = false
+//                                    }
+//                                )
+//                            }
+//                        }
+//                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -456,30 +446,30 @@ fun DashboardScreen(userName: String = "Kurnia", navController: NavHostControlle
                         .padding(12.dp)
                 ) {
                     Canvas(modifier = Modifier.fillMaxSize()) {
-                        val path = Path()
-                        val stepX = size.width / (points.size - 1)
-                        val heightOffset = size.height * 0.8f
-                        val verticalOffset = size.height * 0.1f
-
-                        points.forEachIndexed { index, point ->
-                            val x = index * stepX
-                            val y = size.height - (point * heightOffset + verticalOffset)
-                            if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
-                            drawCircle(color = Color.Red, radius = 8f, center = Offset(x, y))
-                        }
-
-                        drawPath(path = path, color = Color.Black, style = Stroke(width = 5f))
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        monthLabels.forEach {
-                            Text(it, fontSize = 10.sp, color = Color.Gray, textAlign = TextAlign.Center)
-                        }
+//                        val path = Path()
+//                        val stepX = size.width / (points.size - 1)
+//                        val heightOffset = size.height * 0.8f
+//                        val verticalOffset = size.height * 0.1f
+//
+//                        points.forEachIndexed { index, point ->
+//                            val x = index * stepX
+//                            val y = size.height - (point * heightOffset + verticalOffset)
+//                            if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
+//                            drawCircle(color = Color.Red, radius = 8f, center = Offset(x, y))
+//                        }
+//
+//                        drawPath(path = path, color = Color.Black, style = Stroke(width = 5f))
+//                    }
+//
+//                    Row(
+//                        modifier = Modifier
+//                            .align(Alignment.BottomCenter)
+//                            .fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.SpaceAround
+//                    ) {
+//                        monthLabels.forEach {
+//                            Text(it, fontSize = 10.sp, color = Color.Gray, textAlign = TextAlign.Center)
+//                        }
                     }
 
                     Column(
@@ -512,7 +502,7 @@ fun DashboardScreen(userName: String = "Kurnia", navController: NavHostControlle
                     Text("Tren Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
                     TextButton(
                         onClick = {
-                            navController.navigate(NavItem.TrendSale.route)
+//                            navController.navigate(NavItem.TrendSale.route)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(id = R.color.purple_500),
@@ -584,7 +574,7 @@ fun DashboardScreen(userName: String = "Kurnia", navController: NavHostControlle
 @Preview(showBackground = true)
 @Composable
 fun DashboardPreview() {
-    DashboardScreen(navController = rememberNavController())
+    DashboardScreen(userName = "Kurnia")
 }
 
 //@Preview(showBackground = true)

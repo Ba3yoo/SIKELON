@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
+import com.rati.sikelon.model.Item
 import com.rati.sikelon.navigate.DetailType
 import com.rati.sikelon.navigate.NavItem
 
@@ -42,7 +43,7 @@ val productItems = listOf(
 
 @Composable
 fun PaymentScreen(
-    item: ProductItem,
+    item: Item,
     navController: NavController,
     onPaymentComplete: () -> Unit
 ) {
@@ -228,20 +229,20 @@ fun sectionSubContentStyle() = TextStyle(
     color = Color.Gray
 )
 
-@Preview(showBackground = true)
-@Composable
-fun PaymentScreenPreview() {
-    PaymentScreen(
-        item = ProductItem(
-            name = "he",
-            quantity = 10,
-            price = "he",
-            imageId = R.drawable.ic_launcher_foreground
-        ),
-        navController = rememberNavController(),
-        onPaymentComplete = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PaymentScreenPreview() {
+//    PaymentScreen(
+//        item = ProductItem(
+//            name = "he",
+//            quantity = 10,
+//            price = "he",
+//            imageId = R.drawable.ic_launcher_foreground
+//        ),
+//        navController = rememberNavController(),
+//        onPaymentComplete = {}
+//    )
+//}
 
 // Composable SectionRow untuk bagian section dengan icon, judul, tombol aksi, dan konten
 @Composable

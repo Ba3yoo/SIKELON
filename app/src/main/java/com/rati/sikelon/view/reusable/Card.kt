@@ -1,5 +1,6 @@
 package com.rati.sikelon.view.reusable
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,33 +12,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.rati.sikelon.R
+import com.rati.sikelon.model.CartDetail
+import com.rati.sikelon.model.Item
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil.CoilImage
 
 // Data class to hold card data
 /*TODO add StoreID, image change from int to Link handler*/
-data class CardData(
-    val imageUrl: String,
-    val price: String,
-    val description: String,
-    val buttonText: String,
-    val iconUrl: String? = null
-)
-
-
+//data class CardData(
+//    val imageId: Int,
+//    val price: String,
+//    val description: String,
+//    val buttonText: String,
+//    val iconId: Int? = R.drawable.ic_launcher_foreground // Added iconId, default is null
+//)
 
 /**
  * A reusable card composable for displaying an image, text, and a button.
  */
 @Composable
 fun Card(
-    cardData: CardData,
+//    cardData: com.rati.sikelon.view.CardData,
+    cardData: Item,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -62,26 +70,25 @@ fun Card(
                     .height(100.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                AsyncImage(
-                    model = cardData.imageUrl,
-                    contentDescription = cardData.description,
+                CoilImage(
+                    imageModel = { cardData.img_link },
+                    imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+//                    contentScale = ContentScale.FillBounds,
                 )
-                cardData.iconUrl?.let {
-                    AsyncImage(
-                        model = it,
-                        contentDescription = "Icon",
-                        modifier = Modifier
-                            .size(32.dp)
-                            .align(Alignment.BottomEnd)
-                            .padding(8.dp)
-                    )
-                }
+//                cardData.img_link?.let {
+//                    CoilImage(
+//                        imageModel = { cardData.img_link },
+//                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+//                        modifier = Modifier
+//                            .size(32.dp)
+//                            .align(Alignment.BottomEnd)
+//                            .padding(8.dp),
+//                    )
+//                }
             }
-
             Text(
-                text = cardData.price,
+                text = "Rp. " + cardData.price,
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
@@ -91,7 +98,7 @@ fun Card(
                 textAlign = TextAlign.Start
             )
             Text(
-                text = cardData.description,
+                text = cardData.item_name,
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = Color.Black
@@ -108,13 +115,11 @@ fun Card(
 @Preview(showBackground = true)
 @Composable
 fun ReusableCardPreview() {
-    val sampleData = CardData(
-        imageUrl = "https://via.placeholder.com/150",
-        price = "Rp4.900",
-        description = "Beng-Beng Maxx Cokelat 32 g",
-        buttonText = "Beli Cepat",
-        iconUrl = "https://via.placeholder.com/32"
+    val sampleData = Item(
+        item_id = 1,
+        item_name = "beng beng maxx",
+        price = 4900,
+        store_id = 1,
+        img_link = "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg"
     )
-
-    Card(cardData = sampleData)
 }

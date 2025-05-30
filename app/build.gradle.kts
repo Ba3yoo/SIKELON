@@ -78,5 +78,6 @@ dependencies {
     implementation (libs.ui)
     implementation (libs.androidx.foundation)
 
-    implementation ("androidx.compose.material:material:1.6.0")
+    implementation(libs.coil.compose)
+    implementation (libs.androidx.material)
 }

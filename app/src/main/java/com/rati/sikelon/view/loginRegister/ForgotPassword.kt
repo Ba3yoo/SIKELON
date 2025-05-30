@@ -18,10 +18,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun ForgetPasswordPage() {
+fun ForgetPasswordPage(navController: NavHostController) {
     // State variables to hold the password.
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -164,5 +166,5 @@ fun ForgetPasswordPage() {
 @Preview(showBackground = true)
 @Composable
 fun BuatPasswordBaruScreenPreview() {
-    ForgetPasswordPage()
+    ForgetPasswordPage(navController = rememberNavController())
 }

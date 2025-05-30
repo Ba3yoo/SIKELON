@@ -21,9 +21,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun VerifyCodeScreen() {
+fun VerifyCodeScreen(navController: NavHostController) {
     // State for the OTP code.  Using rememberSaveable to survive config changes.
     var otpCode by rememberSaveable { mutableStateOf("") }
     // State for managing focus.
@@ -31,7 +33,7 @@ fun VerifyCodeScreen() {
     // State to track if the resend code can be clicked
     var isResendEnabled by remember { mutableStateOf(false) }
     // State to hold the countdown time
-    var resendSeconds by remember { mutableStateOf(60) }
+    var resendSeconds by remember { mutableIntStateOf(60) }
 
     // Effect to start the countdown when the screen loads or resend is clicked
     LaunchedEffect(isResendEnabled) {
@@ -206,6 +208,6 @@ fun VerifyCodeScreen() {
 @Preview(showBackground = true)
 @Composable
 fun VerifyCodeScreenPreview() {
-    VerifyCodeScreen()
+    VerifyCodeScreen(navController = rememberNavController())
 }
 

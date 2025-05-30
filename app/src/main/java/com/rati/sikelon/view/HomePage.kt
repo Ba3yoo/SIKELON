@@ -71,20 +71,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
+import com.rati.sikelon.model.Item
 import com.rati.sikelon.navigate.NavItem
+import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
+import com.rati.sikelon.view.reusable.CardData
 import com.rati.sikelon.viewmodel.UserViewModel
 
-data class CardData(
-    val imageId: Int,
-    val price: String,
-    val description: String,
-    val iconId: Int? = null
-)
+fun Item.toCardData(): CardData {
+    return CardData(
+        imageUrl = "https://via.placeholder.com/150",
+        price = "Rp${price}",
+        description = item_name,
+        buttonText = "Beli Sekarang",
+        iconUrl = null
+    )
+}
 
 @Composable
 fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
@@ -93,17 +100,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
         viewModel.loadItems()
     }
     Log.d("item", frontItems.value.toString())
-    val flashSaleItems = listOf(
-//        CardData(R.drawable.sate, frontItems.value.elementAt(0).price.toString(), frontItems.value.elementAt(0).item_name, R.drawable.add_button),
-        CardData(R.drawable.sate, "Rp46.900", "Shinzu'i Sabun Mandi Refill 725 ml"),
-        CardData(R.drawable.sate, "Rp52.217", "Kopi Kapal Api 350 Gr")
-    )
 
-    val quickBuyItems = listOf(
-        CardData(R.drawable.sate, "Rp3.700", "Le Minerale Air Mineral Botol 600 ml"),
-        CardData(R.drawable.sate, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
-        CardData(R.drawable.sate, "Rp10.800", "Bear Brand Susu Steril 189 ml")
-    )
 
     Scaffold(
         bottomBar = {
@@ -169,7 +166,11 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
                             lineHeight = 24.sp
                         )
                         Button(
-                            onClick = { /* aksi promo */ },
+                            onClick = {
+                                navController.navigate(NavItem.DetailedPromo.route){
+//                                    DetailedPromo()
+                                }
+                            },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             shape = RoundedCornerShape(8.dp)
                         ) {
@@ -181,14 +182,14 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
 
             ProductSection(
                 title = "Flash Sale",
-                items = flashSaleItems,
+                items = frontItems.value.map { it.toCardData() },
                 navController = navController,
                 onSeeAllClick = { /* navigasi lihat semua flash sale */ }
             )
 
             ProductSection(
                 title = "Beli Cepat",
-                items = quickBuyItems,
+                items = frontItems.value.map { it.toCardData() },
                 navController = navController,
                 onSeeAllClick = { /* navigasi lihat semua quick buy */ }
             )
@@ -231,7 +232,7 @@ fun ProductSection(
             items(items) { item ->
                 Card(cardData = item, modifier = Modifier, onClick = {
                     val priceCleaned = item.price.replace("Rp", "").replace(".", "")
-                    val route = "${NavItem.Payment.route}/${item.description}/1/$priceCleaned/${item.imageId}"
+                    val route = "${NavItem.Payment.route}/${item.description}/1/$priceCleaned/${item.imageUrl}"
                     navController.navigate(route)
                 })
             }
@@ -366,7 +367,14 @@ val mockSalesTrendItems = listOf(
 )
 
 @Composable
-fun DashboardScreen(userName: String = "Kurnia") {
+fun DashboardScreen(userName: String = "Kurnia", navController: NavHostController) {
+    val points = listOf(0.5f, 0.8f, 0.6f, 0.2f, 0.5f)
+    val monthLabels = listOf("Jan", "Feb", "Mar", "Apr", "Mei")
+    val years = listOf("Tahun", "2024", "2023", "2022")
+    val mockSalesTrendItems = listOf<SalesTrendItem>() // Ganti dengan data nyata
+    var selectedYear by remember { mutableStateOf("Tahun") }
+    var expanded by remember { mutableStateOf(false) }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -374,263 +382,209 @@ fun DashboardScreen(userName: String = "Kurnia") {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { WelcomeHeader(userName = userName) }
-        item { TotalRevenueCard(revenue = "Rp4.384.000,00") }
-        item { SalesStatisticsSection() }
-        item { SalesTrendSection(items = mockSalesTrendItems) }
-    }
-}
-
-@Composable
-fun WelcomeHeader(userName: String) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Selamat Datang,",
-            fontSize = 18.sp,
-            color = Color.Black
-        )
-        Text(
-            text = "$userName!",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-fun TotalRevenueCard(revenue: String) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(colorResource(id = R.color.purple_500)),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)
-        ) {
-            Text(
-                text = "Jumlah Pendapatan",
-                fontSize = 16.sp,
-                color = Color.White.copy(alpha = 0.8f)
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = revenue,
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
+        // Welcome
+        item {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text("Selamat Datang,", fontSize = 18.sp, color = Color.Black)
+                Text("$userName!", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+            }
         }
-    }
-}
 
-@Composable
-fun SalesStatisticsSection() {
-    var selectedYear by remember { mutableStateOf("Tahun") }
-    var expanded by remember { mutableStateOf(false) }
-    val years = listOf("Tahun", "2024", "2023", "2022")
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.white), RoundedCornerShape(12.dp))
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Statistik Penjualan",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            )
-            Box {
-                Button(
-                    onClick = { expanded = true },
-                    shape = RoundedCornerShape(8.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.purple_500),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(selectedYear, fontSize = 14.sp)
-                    Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
+        // Revenue
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(colorResource(id = R.color.purple_500)),
+                elevation = CardDefaults.cardElevation(0.dp)
+            ) {
+                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)) {
+                    Text("Jumlah Pendapatan", fontSize = 16.sp, color = Color.White.copy(alpha = 0.8f))
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text("Rp4.384.000,00", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    years.forEach { year ->
-                        DropdownMenuItem(
-                            text = { Text(year) },
-                            onClick = {
-                                selectedYear = year
-                                expanded = false
+            }
+        }
+
+        // Sales Statistics
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(colorResource(id = R.color.white), RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Statistik Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Box {
+                        Button(
+                            onClick = { expanded = true },
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(id = R.color.purple_500),
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(selectedYear, fontSize = 14.sp)
+                            Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
+                        }
+                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                            years.forEach { year ->
+                                DropdownMenuItem(
+                                    text = { Text(year) },
+                                    onClick = {
+                                        selectedYear = year
+                                        expanded = false
+                                    }
+                                )
                             }
-                        )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                        .padding(12.dp)
+                ) {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        val path = Path()
+                        val stepX = size.width / (points.size - 1)
+                        val heightOffset = size.height * 0.8f
+                        val verticalOffset = size.height * 0.1f
+
+                        points.forEachIndexed { index, point ->
+                            val x = index * stepX
+                            val y = size.height - (point * heightOffset + verticalOffset)
+                            if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
+                            drawCircle(color = Color.Red, radius = 8f, center = Offset(x, y))
+                        }
+
+                        drawPath(path = path, color = Color.Black, style = Stroke(width = 5f))
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        monthLabels.forEach {
+                            Text(it, fontSize = 10.sp, color = Color.Gray, textAlign = TextAlign.Center)
+                        }
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        listOf("10", "8", "6", "4", "2", "0").forEach {
+                            Text(it, fontSize = 10.sp, color = Color.Gray)
+                        }
                     }
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        MockLineChart()
-    }
-}
 
-@Composable
-fun MockLineChart() {
-    val points = listOf(0.5f, 0.8f, 0.6f, 0.2f, 0.5f)
-    val monthLabels = listOf("Jan", "Feb", "Mar", "Apr", "Mei")
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-            .padding(12.dp)
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val path = Path()
-            val stepX = size.width / (points.size - 1)
-            val heightOffset = size.height * 0.8f
-            val verticalOffset = size.height * 0.1f
-
-            points.forEachIndexed { index, point ->
-                val x = index * stepX
-                val y = size.height - (point * heightOffset + verticalOffset)
-
-                if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
-
-                drawCircle(
-                    color = Color.Red,
-                    radius = 8f,
-                    center = Offset(x, y)
-                )
-            }
-
-            drawPath(
-                path = path,
-                color = Color.Black,
-                style = Stroke(width = 5f)
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            monthLabels.forEach {
-                Text(it, fontSize = 10.sp, color = Color.Gray, textAlign = TextAlign.Center)
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            listOf("10", "8", "6", "4", "2", "0").forEach {
-                Text(it, fontSize = 10.sp, color = Color.Gray)
-            }
-        }
-    }
-}
-
-@Composable
-fun SalesTrendSection(items: List<SalesTrendItem>) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(12.dp))
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Tren Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
-            TextButton(
-                onClick = { /* TODO */ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.purple_500),
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(20.dp)
-            ) {
-                Text(
-                    text = "Lihat Semua",
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        if (items.isEmpty()) {
-            Text(
-                "Belum ada tren penjualan.",
+        // Sales Trend
+        item {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 24.dp),
-                textAlign = TextAlign.Center,
-                color = Color.Gray
-            )
-        } else {
-            items.forEachIndexed { index, item ->
-                SalesTrendListItem(item)
-                if (index < items.lastIndex) {
-                    HorizontalDivider(thickness = 1.dp, color = Color.White)
+                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Tren Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    TextButton(
+                        onClick = {
+                            navController.navigate(NavItem.TrendSale.route)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.purple_500),
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(20.dp)
+                    ) {
+                        Text("Lihat Semua", fontWeight = FontWeight.Medium)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (mockSalesTrendItems.isEmpty()) {
+                    Text(
+                        "Belum ada tren penjualan.",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp),
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                } else {
+                    mockSalesTrendItems.forEachIndexed { index, item ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = item.imageUrl),
+                                contentDescription = item.name,
+                                modifier = Modifier
+                                    .size(56.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(colorResource(id = R.color.purple_300)),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = item.name,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.Black,
+                                    maxLines = 2
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Terjual: ${item.soldCount}",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.Black
+                            )
+                        }
+                        if (index < mockSalesTrendItems.lastIndex) {
+                            HorizontalDivider(thickness = 1.dp, color = Color.White)
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-@Composable
-fun SalesTrendListItem(item: SalesTrendItem) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(id = item.imageUrl),
-            contentDescription = item.name,
-            modifier = Modifier
-                .size(56.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(colorResource(id = R.color.purple_300)),
-            contentScale = ContentScale.Crop
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = item.name,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black,
-                maxLines = 2
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "Terjual: ${item.soldCount}",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.Black
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
 fun DashboardPreview() {
-    DashboardScreen(userName = "Kurnia")
+    DashboardScreen(navController = rememberNavController())
 }
 
 //@Preview(showBackground = true)

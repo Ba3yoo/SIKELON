@@ -1,6 +1,5 @@
 package com.rati.sikelon.view.reusable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,31 +11,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.style.TextAlign
+import coil.compose.AsyncImage
 import com.rati.sikelon.R
 
 // Data class to hold card data
 /*TODO add StoreID, image change from int to Link handler*/
 data class CardData(
-    val imageId: Int,
+    val imageUrl: String,
     val price: String,
     val description: String,
     val buttonText: String,
-    val iconId: Int? = R.drawable.ic_launcher_foreground // Added iconId, default is null
+    val iconUrl: String? = null
 )
+
+
 
 /**
  * A reusable card composable for displaying an image, text, and a button.
  */
 @Composable
 fun Card(
-    cardData: com.rati.sikelon.view.CardData,
+    cardData: CardData,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
@@ -61,23 +62,24 @@ fun Card(
                     .height(100.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Image(
-                    painter = painterResource(id = cardData.imageId),
+                AsyncImage(
+                    model = cardData.imageUrl,
                     contentDescription = cardData.description,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Crop
                 )
-                cardData.iconId?.let {
-                    Image(
-                        painter = painterResource(id = it),
+                cardData.iconUrl?.let {
+                    AsyncImage(
+                        model = it,
                         contentDescription = "Icon",
                         modifier = Modifier
                             .size(32.dp)
                             .align(Alignment.BottomEnd)
-                            .padding(8.dp),
+                            .padding(8.dp)
                     )
                 }
             }
+
             Text(
                 text = cardData.price,
                 style = TextStyle(
@@ -107,9 +109,12 @@ fun Card(
 @Composable
 fun ReusableCardPreview() {
     val sampleData = CardData(
-        imageId = R.drawable.ic_launcher_background,
+        imageUrl = "https://via.placeholder.com/150",
         price = "Rp4.900",
         description = "Beng-Beng Maxx Cokelat 32 g",
-        buttonText = "Beli Cepat"
+        buttonText = "Beli Cepat",
+        iconUrl = "https://via.placeholder.com/32"
     )
+
+    Card(cardData = sampleData)
 }

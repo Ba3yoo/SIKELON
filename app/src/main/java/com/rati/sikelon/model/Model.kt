@@ -36,3 +36,11 @@ data class CartDetail(
     val item_name: String,
     val price: Int
 )
+
+data class OrderItemModel(
+    val id: String,
+    val storeName: String,
+    val storeIconResId: Int,
+    val productInfo: String,
+    val totalPrice: String
+)

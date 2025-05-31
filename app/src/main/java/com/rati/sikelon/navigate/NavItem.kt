@@ -30,7 +30,10 @@ enum class State {
     PAYMENT_STATUS,
 
     // Profile
-    PROFILE,
+    EDIT_PROFILE,
+    PROFILE_HELPDESK,
+    PROFILE_PAYMENT_METHOD,
+    PROFILE_SETTINGS,
 
     // Search
     SEARCH,
@@ -82,6 +85,12 @@ sealed class NavItem(val route: String) {
     // Search
     object Search : NavItem(State.SEARCH.name)
     object SearchResult : NavItem(State.SEARCH_RESULT.name){fun withArgs(query: String): String = "$route/$query"}
+
+    // Profile
+    object EditProfile : NavItem(State.EDIT_PROFILE.name)
+    object ProfileHelpDesk : NavItem(State.PROFILE_HELPDESK.name)
+    object ProfilePaymentMethod : NavItem(State.PROFILE_PAYMENT_METHOD.name)
+    object ProfileSettings : NavItem(State.PROFILE_SETTINGS.name)
 
     // Main Tabs (Bottom Navigation)
     object MainHome : NavItem(State.MAIN_HOME.name), BottomNavAware {

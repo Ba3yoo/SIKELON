@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.layout.ContentScale
 import com.rati.sikelon.R // Import file R
 
 // Data class untuk item produk
@@ -29,7 +30,7 @@ data class OrderItem(val name: String, val quantity: Int, val price: String, val
 data class OrderStatus(val status: String, val time: String, val isCompleted: Boolean)
 
 @Composable
-fun TrackStatus() {
+fun TrackStatus(orderId: String) {
     // Contoh data item produk
     val orderItems = listOf(
         OrderItem(
@@ -132,7 +133,7 @@ fun TrackStatus() {
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "Perkiraan Sampai: 30 Mei 2025, pukul 20.00", // Ganti dengan data yang sesuai
+                    text = "Perkiraan Sampai: 30 Mei 2025, pukul 20.00",
                     style = TextStyle(
                         fontFamily = FontFamily.Default,
                         fontSize = 14.sp,
@@ -140,7 +141,7 @@ fun TrackStatus() {
                     )
                 )
                 Text(
-                    text = "Tracking ID: ABC1234DEF", // Ganti dengan data yang sesuai
+                    text = "Tracking ID: ABC1234DEF",
                     style = TextStyle(
                         fontFamily = FontFamily.Default,
                         fontSize = 14.sp,
@@ -194,12 +195,12 @@ fun OrderItemCard(item: OrderItem) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-                painter = painterResource(id = item.imageId), // Gunakan ID gambar dari data
+                painter = painterResource(id = item.imageId),
                 contentDescription = item.name,
                 modifier = Modifier
                     .size(56.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier
                 .padding(start = 16.dp)
@@ -289,5 +290,7 @@ fun OrderStatusItem(orderStatus: OrderStatus) {
 @Preview(showBackground = true)
 @Composable
 fun TrackStatusPagePreview() {
-    TrackStatus()
+    TrackStatus(
+        orderId = TODO()
+    )
 }

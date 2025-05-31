@@ -80,7 +80,7 @@ fun Cart(viewModel: UserViewModel) {
                     .fillMaxWidth()
                     .padding(vertical = 15.dp,)
             ){
-                items(cartDetails.value!!){
+                items(cartDetails.value){
                     cartDetail -> CartItem(cartDetail)
                 }
 //                Row(

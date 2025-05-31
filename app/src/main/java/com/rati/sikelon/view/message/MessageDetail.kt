@@ -58,7 +58,7 @@ data class StoreInfo(
 // SECTION: Main Chat Detail Screen Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatDetailScreen(
+fun MessageDetailScreen(
     navController: NavController,
     storeInfo: StoreInfo,
     initialMessages: List<Message>
@@ -335,7 +335,7 @@ fun MessageInputBar(
 @Composable
 fun PreviewChatDetailScreen() {
     SIKELONTheme  {
-        ChatDetailScreen(
+        MessageDetailScreen(
             navController = rememberNavController(),
             storeInfo = StoreInfo(
                 name = "Store K",

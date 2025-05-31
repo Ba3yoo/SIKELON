@@ -31,10 +31,6 @@ enum class State {
 
     // Profile
     PROFILE,
-    PROFILE_SETTINGS,
-    PROFILE_PAYMENT_METHOD,
-    PROFILE_HELPDESK,
-    EDIT_PROFILE,
 
     // Search
     SEARCH,
@@ -42,9 +38,15 @@ enum class State {
 
     // Main Tabs
     MAIN_HOME,
+    DETAILED_PROMO,
     MAIN_CART,
     MAIN_CHAT,
     MAIN_PROFILE,
+    DASHBOARD,
+
+    //Penjual
+    TREND_SALE
+
 }
 
 sealed class NavItem(val route: String) {
@@ -52,19 +54,21 @@ sealed class NavItem(val route: String) {
     // General Navigation
     object Onboarding : NavItem(State.ONBOARDING.name)
     object Home : NavItem(State.HOMEPAGE.name)
+    object Dashboard : NavItem(State.DASHBOARD.name)
 
     // Login/Register
-    object Login : NavItem(State.LOGIN.name)
+    object Login : NavItem("${State.LOGIN.name}/{userRole}") {
+        fun createRoute(userRole: String) = "${State.LOGIN.name}/$userRole"
+    }
     object Register : NavItem(State.REGISTER.name)
     object VerifyCode : NavItem(State.VERIFY_CODE.name)
     object NewPassword : NavItem(State.NEW_PASSWORD.name)
 
     // Cart
     object CartDetail : NavItem(State.CART_DETAIL.name)
-    object CartItem : NavItem(State.CART_ITEM.name)
-    object CartStatus : NavItem(State.CART_STATUS.name)
-    object Review : NavItem(State.REVIEW.name)
-    object TrackStatus : NavItem(State.TRACK_STATUS.name)
+    object CartItem : NavItem(State.CART_ITEM.name){fun withArgs(orderId: String): String = "$route/$orderId"}
+    object Review : NavItem(State.REVIEW.name){fun withArgs(orderId: String): String = "$route/$orderId"}
+    object TrackStatus : NavItem(State.TRACK_STATUS.name){fun withArgs(orderId: String): String = "$route/$orderId"}
 
     // Message
     object MessageList : NavItem(State.MESSAGE_LIST.name)
@@ -75,16 +79,9 @@ sealed class NavItem(val route: String) {
     object EditDetails : NavItem(State.EDIT_DETAILS_PAYMENT.name)
     object PaymentSuccess : NavItem(State.PAYMENT_STATUS.name)
 
-    // Profile
-    object Profile : NavItem(State.PROFILE.name)
-    object ProfileSettings : NavItem(State.PROFILE_SETTINGS.name)
-    object ProfilePaymentMethod : NavItem(State.PROFILE_PAYMENT_METHOD.name)
-    object ProfileHelpDesk : NavItem(State.PROFILE_HELPDESK.name)
-    object EditProfile : NavItem(State.EDIT_PROFILE.name)
-
     // Search
     object Search : NavItem(State.SEARCH.name)
-    object SearchResult : NavItem(State.SEARCH_RESULT.name)
+    object SearchResult : NavItem(State.SEARCH_RESULT.name){fun withArgs(query: String): String = "$route/$query"}
 
     // Main Tabs (Bottom Navigation)
     object MainHome : NavItem(State.MAIN_HOME.name), BottomNavAware {
@@ -121,6 +118,11 @@ sealed class NavItem(val route: String) {
             )
         }
     }
+
+    object  DetailedPromo : NavItem(State.DETAILED_PROMO.name)
+
+    //Penjual side
+    object TrendSale : NavItem(State.TREND_SALE.name)
 }
 
 interface BottomNavAware {
@@ -129,3 +131,5 @@ interface BottomNavAware {
     val unselectedIcon: Int
     val label: String
 }
+
+

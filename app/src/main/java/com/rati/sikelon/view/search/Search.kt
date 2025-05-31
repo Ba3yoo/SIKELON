@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 
 import androidx.navigation.NavController
+import com.rati.sikelon.navigate.NavItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,7 +113,7 @@ fun SearchPage(
                             }
                             keyboardController?.hide()
                             focusManager.clearFocus()
-                            // navController.navigate("hasil_pencarian/$searchText")
+                            navController.navigate("${NavItem.SearchResult.route}/$searchText")
                         }
                     }
                 )

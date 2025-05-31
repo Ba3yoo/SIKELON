@@ -14,4 +14,5 @@ object RetrofitInstance {
     }
 
     val shopService: ShopService by lazy { retrofit.create(ShopService::class.java) }
+    val loginService = retrofit.create(LoginService::class.java)
 }

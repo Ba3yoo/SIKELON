@@ -58,7 +58,8 @@ data class ProductToReview(
 @Composable
 fun ReviewPage(
     navController: NavController,
-    productsToReview: List<ProductToReview> = sampleProductsToReview // Bisa dari argumen navigasi/ViewModel
+    productsToReview: List<ProductToReview> = sampleProductsToReview, // Bisa dari argumen navigasi/ViewModel
+    orderId: String
 ) {
     var productQualityRating by remember { mutableIntStateOf(0) }
     var sellerServiceRating by remember { mutableIntStateOf(0) }
@@ -313,6 +314,10 @@ fun ReviewPagePreview() {
                 price = "Rp15.000"
             )
         )
-        ReviewPage(navController = rememberNavController(), productsToReview = dummyProducts)
+        ReviewPage(
+            navController = rememberNavController(),
+            productsToReview = TODO(),
+            orderId = TODO()
+        )
     }
 }

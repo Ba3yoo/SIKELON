@@ -18,10 +18,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun BuatPasswordBaruScreen() {
+fun ForgetPasswordPage(navController: NavHostController) {
     // State variables to hold the password.
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -78,26 +80,16 @@ fun BuatPasswordBaruScreen() {
 
         // TextField untuk Password
         TextField(
-            value = password, // Nilai TextField
-            onValueChange = { password = it }, // Fungsi yang dipanggil saat nilai berubah
-            label = { Text("Password") }, // Teks label
-            placeholder = { Text("masukkan password Anda disini") }, // Teks placeholder
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            placeholder = { Text("masukkan password Anda disini") },
             modifier = Modifier
-                .fillMaxWidth() // Mengisi lebar maksimum
-                .padding(bottom = 16.dp), // Memberikan padding bawah
-//            colors = TextFieldDefaults.colors(
-//                unfocusedContainerColor = Color.White,
-//                focusedContainerColor = Color.White,
-//                focusedIndicatorColor = Color(0xFF9F2BFF), // Set warna indikator saat fokus
-//                unfocusedIndicatorColor = Color.Gray, // Set warna indikator saat tidak fokus
-//                textColor = Color.Black,
-//                placeholderColor = Color.Gray,
-//                labelColor = Color.Black
-//            ),
-            shape = RoundedCornerShape(32.dp), // Bentuk sudut TextField
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            shape = RoundedCornerShape(32.dp),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(), // Transformasi visual untuk menyembunyikan/menampilkan password
             trailingIcon = {
-                // Tombol untuk menampilkan/menyembunyikan password
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
 //                    Icon(
 //                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff, // Ikon mata
@@ -174,5 +166,5 @@ fun BuatPasswordBaruScreen() {
 @Preview(showBackground = true)
 @Composable
 fun BuatPasswordBaruScreenPreview() {
-    BuatPasswordBaruScreen()
+    ForgetPasswordPage(navController = rememberNavController())
 }

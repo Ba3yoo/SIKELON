@@ -60,7 +60,7 @@ fun CartItem(detail: CartDetail) {
                     .weight(1f)
             ) {
                 CoilImage(
-                    imageModel = { "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/1pnkw3o8_expires_30_days.png" },
+                    imageModel = { detail.img_link },
                     imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                     modifier = Modifier
                         .padding(end = 8.dp)

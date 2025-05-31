@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.rati.sikelon.R
 import com.rati.sikelon.model.Item
+import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
@@ -150,9 +151,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
                         )
                         Button(
                             onClick = {
-                                navController.navigate(NavItem.DetailedPromo.route){
-//                                    DetailedPromo()
-                                }
+                                navController.navigate(NavItem.DetailedPromo.route)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             shape = RoundedCornerShape(8.dp)

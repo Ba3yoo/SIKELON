@@ -1,5 +1,7 @@
 package com.rati.sikelon.model
 
+import androidx.annotation.DrawableRes
+
 data class User(
     val user_id: Int,
     val username: String,
@@ -44,4 +46,13 @@ data class OrderItemModel(
     val storeIconResId: Int,
     val productInfo: String,
     val totalPrice: String
+)
+
+data class StoreSearchResult(
+    val storeId: String,
+    @DrawableRes val storeIconResId: Int,
+    val storeName: String,
+    val storeLocationHint: String,
+    val distance: String,
+    val products: List<Item>
 )

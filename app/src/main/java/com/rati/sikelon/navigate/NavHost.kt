@@ -12,6 +12,7 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.mvvm2.view.VerifyCodeScreen
 import com.rati.sikelon.model.Item
+import com.rati.sikelon.model.StoreSearchResult
 import com.rati.sikelon.view.*
 import com.rati.sikelon.view.cart.*
 import com.rati.sikelon.view.loginRegister.ForgetPasswordPage
@@ -22,6 +23,7 @@ import com.rati.sikelon.view.message.MessageDetailScreen
 import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.payment.*
 import com.rati.sikelon.view.profile.ProfilePage
+import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.view.search.SearchPage
 import com.rati.sikelon.viewmodel.BuyerAuthViewModel
 import com.rati.sikelon.viewmodel.SellerAuthViewModel
@@ -97,37 +99,17 @@ fun AppNavHost() {
             arguments = listOf(navArgument("userRole") { type = NavType.StringType })
         ) { backStackEntry ->
             val userRole = backStackEntry.arguments?.getString("userRole") ?: "pembeli"
-            val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
-            val application = LocalContext.current.applicationContext as Application
-
-            Log.d("LoginNav", "Navigated to login with userRole: $userRole")
-
-            // Contoh membuat ViewModel sesuai role (jika sudah punya repository):
-            // val viewModel = if (userRole == "pembeli") {
-            //     Log.d("LoginNav", "Creating BuyerAuthViewModel")
-            //     ViewModelProvider(viewModelStoreOwner, BuyerAuthViewModelFactory(repository, application))
-            //         .get(BuyerAuthViewModel::class.java)
-            // } else {
-            //     Log.d("LoginNav", "Creating SellerAuthViewModel")
-            //     ViewModelProvider(viewModelStoreOwner, SellerAuthViewModelFactory(repository, application))
-            //         .get(SellerAuthViewModel::class.java)
-            // }
+            val roleLog = "Navigated to LoginScreen with role: $userRole"
+            Log.d("LoginScreenRole", roleLog)
             when (userRole) {
-                "pembeli" -> LoginScreen(
-                    navController = navController,
-                    viewModel = buyerViewModel
-                )
-
-                "penjual" -> LoginScreenPenjual(
-                    navController = navController,
-                    viewModel = sellerViewModel
-                )
-
+                "pembeli" -> LoginScreen(navController = navController, viewModel = buyerViewModel)
+                "penjual" -> LoginScreenPenjual(navController = navController, viewModel = sellerViewModel)
                 else -> {
-                    // Bisa juga tampilkan screen error
+                    Log.e("LoginScreenRole", "Role tidak dikenali: $userRole")
                     Text("Role tidak dikenali.")
                 }
             }
+        }
 
             // REGISTER
             composable(NavItem.Register.route) {
@@ -174,6 +156,12 @@ fun AppNavHost() {
             // SEARCH
             composable(NavItem.Search.route) {
                 SearchPage(navController = navController, initialQuery = "")
+            }
+            composable(NavItem.DetailedPromo.route) {
+                DetailedPromo(
+                    navController = navController,
+                    viewModel = userViewModel
+                )
             }
 
             // ===== MESSAGE =====
@@ -254,4 +242,3 @@ fun AppNavHost() {
             }
         }
     }
-}

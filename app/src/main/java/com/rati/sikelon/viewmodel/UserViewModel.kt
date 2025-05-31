@@ -1,14 +1,16 @@
 package com.rati.sikelon.viewmodel
 
+import android.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rati.sikelon.data.UserRepository
 import com.rati.sikelon.model.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class UserViewModel() : ViewModel() {
+open class UserViewModel() : ViewModel() {
     private val repository = UserRepository()
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users: StateFlow<List<User>> = _users
@@ -29,6 +31,8 @@ class UserViewModel() : ViewModel() {
 
     private val _selectedStore = MutableStateFlow<Store?>(null)
     val selectedStore: StateFlow<Store?> = _selectedStore
+
+
 
     fun loadStores() = viewModelScope.launch {
         _stores.value = repository.getStores()
@@ -64,6 +68,24 @@ class UserViewModel() : ViewModel() {
 
     fun loadItemById(id: Int) = viewModelScope.launch {
         _selectedItem.value = repository.getItemById(id)
+    }
+
+    open class SearchViewModel : ViewModel() {
+
+        private val _stores = MutableStateFlow<List<StoreSearchResult>>(emptyList())
+        open val stores: StateFlow<List<StoreSearchResult>> = _stores
+
+        private val _items = MutableStateFlow<List<Item>>(emptyList())
+        val items: StateFlow<List<Item>> = _items
+
+        // Empty load functions - implement as needed
+        fun loadStores() = viewModelScope.launch {
+            // Implement repository call here to load stores and update _stores.value
+        }
+
+        fun loadItems() = viewModelScope.launch {
+            // Implement repository call here to load items and update _items.value
+        }
     }
 
     private val _cartDetails = MutableStateFlow<List<CartDetail>>(emptyList())

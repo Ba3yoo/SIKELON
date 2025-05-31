@@ -34,57 +34,28 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R // Update with actual package
+import com.rati.sikelon.model.Item
+import com.rati.sikelon.model.StoreSearchResult
+import com.rati.sikelon.viewmodel.UserViewModel
 import com.rati.sikelon.ui.theme.SIKELONTheme
+import com.rati.sikelon.viewmodel.UserViewModel.SearchViewModel
 
-data class ProductResult(
-    val id: String,
-    @DrawableRes val imageResId: Int,
-    val price: String,
-    val name: String
-)
-
-data class StoreSearchResult(
-    val storeId: String,
-    @DrawableRes val storeIconResId: Int,
-    val storeName: String,
-    val storeLocationHint: String,
-    val distance: String,
-    val products: List<ProductResult>
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchResultScreen(
     navController: NavController,
-    initialQuery: String = "Beng-beng"
+    viewModel: SearchViewModel
 ) {
-    var searchQuery by rememberSaveable { mutableStateOf(initialQuery) }
-    val focusManager = LocalFocusManager.current
+    var searchQuery by rememberSaveable { mutableStateOf("Beng-beng") }
 
-    val sampleSearchResults = remember {
-        listOf(
-            StoreSearchResult(
-                "s1", R.drawable.ic_launcher_foreground, "SRC Raya", "Sigura-Gura", "50m",
-                listOf(
-                    ProductResult("p1_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
-                )
-            ),
-            StoreSearchResult(
-                "s2", R.drawable.ic_launcher_foreground, "SRC Berkah Selalu", "Sigura-Gura", "150m",
-                listOf(
-                    ProductResult("p2_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
-                    ProductResult("p2_2", R.drawable.beng_beng_share, "Rp14.900", "Beng-beng Share It 10 x 8.5 g"),
-                    ProductResult("p2_3", R.drawable.beng_beng_wafer_rice, "Rp8.700", "Beng-Beng Wafer Rice Crispy Cokelat 3 x 20 g")
-                )
-            ),
-            StoreSearchResult(
-                "s3", R.drawable.ic_launcher_foreground, "Toko Kurnia", "Bend. Sutami", "200m",
-                listOf(
-                    ProductResult("p3_1", R.drawable.beng_beng_nuts, "Rp8.400", "Beng-Beng Nuts Karamel Almond 35 g"),
-                    ProductResult("p3_2", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
-                )
-            )
-        )
+    val stores by viewModel.stores.collectAsState()
+    val items by viewModel.items.collectAsState()
+
+    // Load data when composable is first shown
+    LaunchedEffect(Unit) {
+        viewModel.loadStores()
+        viewModel.loadItems()
     }
 
     val listState = rememberLazyListState()
@@ -94,17 +65,13 @@ fun SearchResultScreen(
             SearchResultTopAppBar(
                 searchQuery = searchQuery,
                 onQueryChange = { searchQuery = it },
-                onBackClick = { navController.popBackStack() },
+                onBackClick = { /* TODO: handle back */ },
                 onClearClick = { searchQuery = "" },
-                onSearchAction = {
-                    focusManager.clearFocus()
-                    println("Searching for: $searchQuery")
-                }
+                onSearchAction = { /* TODO: maybe filter or reload */ }
             )
         },
         containerColor = MaterialTheme.colorScheme.surface
     ) { paddingValues ->
-
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
@@ -119,41 +86,18 @@ fun SearchResultScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            items(sampleSearchResults, key = { it.storeId }) { storeResult ->
-                StoreResultRow(storeResult = storeResult, navController = navController)
+
+            items(stores, key = { it.storeId }) { store ->
+                // Filter items that belong to this store by storeId
+                val filteredItems = items.filter { it.store_id.toString() == store.storeId }
+                StoreResultRow(store.copy(products = filteredItems))
             }
         }
     }
 }
 
 @Composable
-fun LocationDisplay(
-    currentLocation: String,
-    onLocationClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onLocationClick)
-            .padding(horizontal = 32.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Filled.LocationOn,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text("Lokasi", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(currentLocation, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
-    }
-}
-
-
-@Composable
-fun StoreResultRow(storeResult: StoreSearchResult, navController: NavController) {
+fun StoreResultRow(storeResult: StoreSearchResult) {
     val rowState = rememberLazyListState()
 
     Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 26.dp)) {
@@ -168,7 +112,7 @@ fun StoreResultRow(storeResult: StoreSearchResult, navController: NavController)
                 contentDescription = "${storeResult.storeName} icon",
                 modifier = Modifier
                     .size(32.dp)
-                    .clip(CircleShape),
+                    .clip(MaterialTheme.shapes.small),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -193,63 +137,46 @@ fun StoreResultRow(storeResult: StoreSearchResult, navController: NavController)
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             state = rowState
         ) {
-            items(storeResult.products, key = { it.id }) { product ->
-                ProductResultCard(
-                    product = product,
-                    onProductClick = { /* TODO */ },
-                    onAddToCartClick = { /* TODO */ }
-                )
+            items(storeResult.products, key = { it.item_id }) { product ->
+                ProductResultCard(product)
             }
         }
     }
 }
 
 @Composable
-fun ProductResultCard(
-    product: ProductResult,
-    onProductClick: () -> Unit,
-    onAddToCartClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ProductResultCard(item: Item) {
     Card(
-        onClick = onProductClick,
-        modifier = modifier
-            .width(140.dp)
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(12.dp)
+        modifier = Modifier.size(width = 160.dp, height = 200.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
+            // Placeholder image, replace with Coil or similar for img_link
             Box(
                 modifier = Modifier
                     .height(100.dp)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(MaterialTheme.shapes.medium),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = product.imageResId),
-                    contentDescription = product.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .matchParentSize()
+                Text(
+                    text = "Image",
+                    color = Color.Gray
                 )
-                IconButton(
-                    onClick = onAddToCartClick,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(4.dp)
-                        .size(32.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.add_button),
-                        contentDescription = product.name,
-                        modifier = Modifier.matchParentSize()
-                    )
-                }
             }
-
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = item.item_name,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(product.price, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            Text(product.name, maxLines = 2, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
+            Text(
+                text = "Rp ${item.price}",
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }
@@ -261,81 +188,70 @@ fun SearchResultTopAppBar(
     onQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onClearClick: () -> Unit,
-    onSearchAction: () -> Unit
+    onSearchAction: () -> Unit,
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 32.dp) // Tambahan padding agar tidak full width
-            ) {
-                TextField(
-                    value = searchQuery,
-                    onValueChange = onQueryChange,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp)
-                        .height(40.dp), // 30% lebih kecil dari sebelumnya
-                    placeholder = {
-                        Text(
-                            "Cari lagi...",
-                            fontSize = 12.sp // perkecil teks
-                        )
-                    },
-                    textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
-                    singleLine = true,
-                    shape = RoundedCornerShape(16.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
-                    ),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = { onSearchAction() }),
-                    trailingIcon = {
-                        if (searchQuery.isNotEmpty()) {
-                            OutlinedButton(
-                                onClick = onClearClick,
-                                shape = RoundedCornerShape(6.dp),
-                                contentPadding = PaddingValues(2.dp),
-                                modifier = Modifier.size(28.dp) // lebih kecil
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = "Hapus teks",
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.size(16.dp) // perkecil ikon
-                                )
-                            }
+            TextField(
+                value = searchQuery,
+                onValueChange = onQueryChange,
+                singleLine = true,
+                placeholder = { Text("Search...") },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = onClearClick) {
+                            Icon(
+                                painter = painterResource(id = android.R.drawable.ic_menu_close_clear_cancel),
+                                contentDescription = "Clear"
+                            )
                         }
                     }
-                )
-            }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
         },
         navigationIcon = {
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .padding(start = 32.dp)
-                    .size(30.dp)
-                    .background(Color.Black, CircleShape)
-            ) {
+            IconButton(onClick = onBackClick) {
                 Icon(
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = "Kembali",
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
+                    painter = painterResource(id = android.R.drawable.ic_media_previous),
+                    contentDescription = "Back"
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        actions = {
+            IconButton(onClick = onSearchAction) {
+                Icon(
+                    painter = painterResource(id = android.R.drawable.ic_menu_search),
+                    contentDescription = "Search"
+                )
+            }
+        }
     )
 }
+
+@Composable
+fun LocationDisplay(
+    currentLocation: String,
+    onLocationClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 26.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = currentLocation,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(1f)
+        )
+        TextButton(onClick = onLocationClick) {
+            Text(text = "Change")
+        }
+    }
+}
+
 
 
 @Preview(showBackground = true)
@@ -345,6 +261,9 @@ fun PreviewSearchResultScreen() {
     SIKELONTheme  {
         // Buat NavController dummy untuk preview
         val navController = rememberNavController()
-        SearchResultScreen(navController = navController)
+        SearchResultScreen(
+            navController = navController,
+            viewModel = TODO()
+        )
     }
 }

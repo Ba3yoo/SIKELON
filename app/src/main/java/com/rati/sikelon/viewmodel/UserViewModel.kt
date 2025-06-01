@@ -1,11 +1,14 @@
 package com.rati.sikelon.viewmodel
 
-import android.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rati.sikelon.data.UserRepository
-import com.rati.sikelon.model.*
-import kotlinx.coroutines.delay
+import com.rati.sikelon.model.Cart
+import com.rati.sikelon.model.CartDetail
+import com.rati.sikelon.model.Item
+import com.rati.sikelon.model.Store
+import com.rati.sikelon.model.StoreSearchResult
+import com.rati.sikelon.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -16,7 +16,7 @@ interface LoginService {
     suspend fun loginBuyer(@Body request: LoginRequest): AuthResponse
 
     @POST("/auth/register/seller")
-    suspend fun registerSeller(@Body request: RegisterRequest): AuthResponse
+    suspend fun registerSeller(@Body request: RegisterRequest): SellerLogin
 
     @POST("/auth/login/seller")
     suspend fun loginSeller(@Body request: LoginRequest): SellerLogin

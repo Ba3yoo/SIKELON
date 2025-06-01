@@ -16,7 +16,7 @@ interface ShopService {
     suspend fun getStores(): List<Store>
 
     @GET("/func/store/{id}")
-    suspend fun getStoreById(@Path("id") id: Int): Store
+    suspend fun getStoreById(@Path("id") id: Int): List<Store>
 
     @GET("/func/cart")
     suspend fun getCartsByUserId(@Query("userId") userId: Int): List<Cart>

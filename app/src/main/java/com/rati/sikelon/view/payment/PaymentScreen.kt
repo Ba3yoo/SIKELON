@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.rati.sikelon.R
 import com.rati.sikelon.model.Item
 import com.rati.sikelon.navigate.DetailType
@@ -163,8 +164,8 @@ fun PaymentScreen(
                 modifier = Modifier.padding(16.dp),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                items(productItems) { item ->
-                    PaymentProductItem(item)
+                items(listOf(item)) { singleItem ->
+                    PaymentProductItem(singleItem)
                 }
             }
         }
@@ -193,16 +194,16 @@ fun PaymentScreen(
 }
 
 @Composable
-fun PaymentProductItem(item: ProductItem) {
+fun PaymentProductItem(item: Item) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Image(
-            painter = painterResource(id = item.imageId),
-            contentDescription = item.name,
+        AsyncImage(
+            model = item.img_link,
+            contentDescription = item.item_name,
             modifier = Modifier
                 .size(64.dp)
                 .clip(RoundedCornerShape(8.dp)),
@@ -210,9 +211,9 @@ fun PaymentProductItem(item: ProductItem) {
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = item.name, style = sectionContentStyle())
-            Text(text = "Jumlah: ${item.quantity}", style = sectionSubContentStyle())
-            Text(text = item.price, style = sectionContentStyle())
+            Text(text = item.item_name, style = sectionContentStyle())
+            Text(text = "Jumlah: 1", style = sectionSubContentStyle()) // Default 1
+            Text(text = "Rp${item.price}", style = sectionContentStyle())
         }
     }
 }

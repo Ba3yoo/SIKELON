@@ -166,14 +166,18 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
                 title = "Flash Sale",
                 items = frontItems.value.take(3),
                 navController = navController,
-                onSeeAllClick = { /* navigasi lihat semua flash sale */ }
+                onSeeAllClick = {
+                    navController.navigate(NavItem.DetailedPromo.route)
+                }
             )
 
             ProductSection(
                 title = "Beli Cepat",
                 items = frontItems.value.take(5),
                 navController = navController,
-                onSeeAllClick = { /* navigasi lihat semua quick buy */ }
+                onSeeAllClick = {
+                    navController.navigate(NavItem.DetailedPromo.route)
+                }
             )
         }
     }
@@ -213,7 +217,7 @@ fun ProductSection(
         ) {
             items(items) { item ->
                 Card(cardData = item, modifier = Modifier, onClick = {
-                    val route = "${NavItem.Payment.route}/${item.item_name}/1/$item.price/"
+                    val route = "${NavItem.Payment.route}/${item.item_id}"
                     navController.navigate(route)
                 })
             }

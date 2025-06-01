@@ -3,10 +3,16 @@ package com.rati.sikelon.navigate
 import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
@@ -54,7 +60,7 @@ fun AppNavHost() {
         startDestination = when {
             !isOnboardingShown -> "onboarding1"
             !isLoggedIn -> NavItem.Login.route
-            else -> NavItem.Home.route
+            else -> NavItem.MainHome.route
         }
     }
 
@@ -177,29 +183,17 @@ fun AppNavHost() {
             }
 
             // PAYMENT
-            composable(
-                "${NavItem.Payment.route}/{name}/{quantity}/{price}",
-                arguments = listOf(
-//                navArgument("name") { type = NavType.StringType },
-//                navArgument("quantity") { type = NavType.IntType },
-//                navArgument("price") { type = NavType.StringType },
-//                navArgument("imageId") { type = NavType.IntType }
-                )
-            ) { backStackEntry ->
-                val id = backStackEntry.arguments?.getInt("item_id") ?: 0
-                val name = backStackEntry.arguments?.getString("item_name") ?: ""
-                val quantity = backStackEntry.arguments?.getInt("quantity") ?: 0
-                val price = backStackEntry.arguments?.getInt("price") ?: 0
-                val store_id = backStackEntry.arguments?.getInt("store_id") ?: 0
-                val image = backStackEntry.arguments?.getString("img_link") ?: ""
-                val product = Item(
-                    item_id = id,
-                    item_name = name,
-                    price = price,
-                    store_id = store_id,
-                    img_link = image
-                )
+        composable(
+            route = "${NavItem.Payment.route}/{item_id}",
+            arguments = listOf(navArgument("item_id") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getInt("item_id") ?: 0
+            val viewModel: UserViewModel = viewModel()
+            val items by viewModel.items.collectAsState()
 
+            val product = items.find { it.item_id == itemId }
+
+            if (product != null) {
                 PaymentScreen(
                     item = product,
                     navController = navController,
@@ -207,7 +201,17 @@ fun AppNavHost() {
                         navController.navigate(NavItem.PaymentSuccess.route)
                     }
                 )
+            } else {
+                // Kamu bisa tampilkan loading atau error screen di sini
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
+        }
+
 
         composable(NavItem.PaymentSuccess.route) {
             PaymentSuccessScreen(

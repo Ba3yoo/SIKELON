@@ -39,7 +39,8 @@ open class UserViewModel() : ViewModel() {
     }
 
     fun loadStoreById(id: Int) = viewModelScope.launch {
-        _selectedStore.value = repository.getStoreById(id)
+        val storeList = repository.getStoreById(id)
+        _selectedStore.value = storeList.firstOrNull()
     }
 
     private val _userCarts = MutableStateFlow<List<Cart>>(emptyList())

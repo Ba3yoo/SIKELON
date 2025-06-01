@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.R
 import com.rati.sikelon.navigate.NavItem
 
@@ -56,6 +57,9 @@ fun MessageScreen(navController: NavController) {
                     Text("Pesan", fontWeight = FontWeight.SemiBold)
                 }
             )
+        },
+        bottomBar = {
+            AppBottomNavigationBar(navController = navController)
         }
     ) { padding ->
         LazyColumn(

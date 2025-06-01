@@ -2,6 +2,7 @@ package com.rati.sikelon.view.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -85,7 +86,7 @@ fun ProfilePage(navController: NavController) {
             message = "Apakah Anda yakin ingin keluar dari akun Anda sekarang?",
             onDismiss = { showLogOutDialog.value = false },
             onConfirm = {
-                showLogOutDialog.value = false
+                showLogOutDialog.value = true
                 navController.navigate(NavItem.Login.route) {
                     popUpTo(0) { inclusive = true }
                 }
@@ -103,7 +104,8 @@ fun ProfileOptionItem(text: String, onClick: () -> Unit) {
             .shadow(4.dp, RoundedCornerShape(32.dp)) // Tambahkan shadow di sini
             .clip(RoundedCornerShape(12.dp))         // Setelah shadow
             .background(Color.White)            // Warna latar
-            .padding(horizontal = 16.dp, vertical = 12.dp), // Padding dalam
+            .padding(horizontal = 16.dp, vertical = 12.dp) // Padding dalam
+            .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

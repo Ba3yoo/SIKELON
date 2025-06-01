@@ -19,7 +19,6 @@ import com.rati.sikelon.view.loginRegister.ForgetPasswordPage
 import com.rati.sikelon.view.loginRegister.LoginScreen
 import com.rati.sikelon.view.loginRegister.LoginScreenPenjual
 import com.rati.sikelon.view.loginRegister.RegisterScreen
-import com.rati.sikelon.view.loginRegister.SellerRegisterScreen
 import com.rati.sikelon.view.message.MessageDetailScreen
 import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.payment.*
@@ -132,16 +131,10 @@ fun AppNavHost() {
             }
 
             // REGISTER
-            composable(NavItem.BuyerRegister.route) {
+            composable(NavItem.Register.route) {
                 RegisterScreen(
                     navController = navController,
                     viewModel = buyerViewModel
-                )
-            }
-            composable(NavItem.SellerRegister.route) {
-                SellerRegisterScreen(
-                    navController = navController,
-                    viewModel = sellerViewModel
                 )
             }
             composable(NavItem.VerifyCode.route) {

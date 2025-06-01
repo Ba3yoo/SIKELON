@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.rati.sikelon.R
 
 @Composable
-fun HelpDesk() {
+fun ProfileHelpDesk() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -125,5 +125,5 @@ fun HelpDeskOptions(helpdesk: String, answer: String) {
 @Preview(showBackground = true)
 @Composable
 fun HelpDeskPreview() {
-    HelpDesk()
+    ProfileHelpDesk()
 }

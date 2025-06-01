@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.rati.sikelon.R
 
 @Composable
-fun PaymentMethod() {
+fun ProfilePaymentMethod() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,5 +104,5 @@ fun PaymentOptions(title: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PaymentMethodPreview() {
-    PaymentMethod()
+    ProfilePaymentMethod()
 }

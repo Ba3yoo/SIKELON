@@ -50,11 +50,11 @@ class SellerAuthViewModel() : ViewModel() {
     val sellerAuthState: StateFlow<SellerAuthState> = _sellerAuthState
 
     fun registerSeller(request: RegisterRequest) {
-        _authState.value = AuthState.Loading
+        _sellerAuthState.value = SellerAuthState.Loading
         viewModelScope.launch {
             when (val result = repository.registerSeller(request)) {
-                is Result.Success -> _authState.value = AuthState.Success(result.value.message)
-                is Result.Failure -> _authState.value = AuthState.Error(result.exception.message ?: "Unknown Error")
+                is Result.Success -> _sellerAuthState.value = SellerAuthState.Success(message = result.value.message, seller = result.value.seller)
+                is Result.Failure -> _sellerAuthState.value = SellerAuthState.Error(result.exception.message ?: "Unknown Error")
                 else -> {}
             }
         }

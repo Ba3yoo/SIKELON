@@ -50,7 +50,7 @@ class AuthRepository() {
     }
 
     // Sama untuk seller dan driver...
-    suspend fun registerSeller(request: RegisterRequest): Result<AuthResponse> {
+    suspend fun registerSeller(request: RegisterRequest): Result<SellerLogin> {
         return safeApiCall { loginService.registerSeller(request) }
     }
 

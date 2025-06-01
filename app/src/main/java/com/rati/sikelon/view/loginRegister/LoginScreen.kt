@@ -44,6 +44,7 @@ import com.rati.sikelon.model.requestResponse.LoginRequest
 import com.rati.sikelon.navigate.NavItem
 import android.util.Log
 import androidx.compose.runtime.rememberCoroutineScope
+import com.rati.sikelon.data.SellerAuthState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -220,7 +221,7 @@ fun LoginScreenPenjual(
     viewModel: SellerAuthViewModel
 ) {
     val context = LocalContext.current
-    val authState = viewModel.authState.collectAsState()
+    val sellerAuthState = viewModel.sellerAuthState.collectAsState()
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
@@ -294,21 +295,23 @@ fun LoginScreenPenjual(
         Button(
             onClick = {
                 val request = LoginRequest(email, password)
+                Log.d("creds",email + password)
                 viewModel.loginSeller(request)
-                Log.d("state", (authState is AuthState.Success).toString())
+                Log.d("state", (sellerAuthState is SellerAuthState.Success).toString())
 
                 coroutineScope.launch {
                     delay(300)
-                    when (val state = viewModel.authState.value) {
-                        is AuthState.Success -> {
+                    when (val state = viewModel.sellerAuthState.value) {
+                        is SellerAuthState.Success -> {
                             LoginPreferences.setLoggedIn(context, true)
                             Toast.makeText(context, "Login berhasil!", Toast.LENGTH_SHORT).show()
-                            navController.navigate(NavItem.Home.route) {
-                                popUpTo("login/pembeli") { inclusive = true }
+                            navController.currentBackStackEntry?.savedStateHandle?.set("seller", state.seller)
+                            navController.navigate(NavItem.Dashboard.route) {
+                                popUpTo("login/penjual") { inclusive = true }
                             }
                         }
 
-                        is AuthState.Error -> {
+                        is SellerAuthState.Error -> {
                             Toast.makeText(context, "Login gagal: ${state.error}", Toast.LENGTH_LONG).show()
                         }
 
@@ -368,7 +371,7 @@ fun LoginScreenPenjual(
                 fontSize = 14.sp,
                 color = Color(0xFF9F2BFF),
                 modifier = Modifier.clickable {
-                    navController.navigate(NavItem.Register.route)
+                    navController.navigate(NavItem.SellerRegister.route)
                 }
             )
         }

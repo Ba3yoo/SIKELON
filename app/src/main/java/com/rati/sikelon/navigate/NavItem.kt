@@ -10,6 +10,7 @@ enum class State {
     // Login/Register
     LOGIN,
     REGISTER,
+    SELLER_REGISTER,
     VERIFY_CODE,
     NEW_PASSWORD,
 
@@ -64,6 +65,7 @@ sealed class NavItem(val route: String) {
         fun createRoute(userRole: String) = "${State.LOGIN.name}/$userRole"
     }
     object Register : NavItem(State.REGISTER.name)
+    object SellerRegister : NavItem(State.SELLER_REGISTER.name)
     object VerifyCode : NavItem(State.VERIFY_CODE.name)
     object NewPassword : NavItem(State.NEW_PASSWORD.name)
 

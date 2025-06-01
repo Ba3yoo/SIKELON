@@ -42,11 +42,17 @@ import com.rati.sikelon.view.loginRegister.ForgetPasswordPage
 import com.rati.sikelon.view.loginRegister.LoginScreen
 import com.rati.sikelon.view.loginRegister.LoginScreenPenjual
 import com.rati.sikelon.view.loginRegister.RegisterScreen
+import com.rati.sikelon.view.loginRegister.SellerRegisterScreen
 import com.rati.sikelon.view.message.MessageDetailScreen
 import com.rati.sikelon.view.message.MessageScreen
 import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
+import com.rati.sikelon.view.profile.EditProfile
+import com.rati.sikelon.view.profile.ProfileHelpDesk
+import com.rati.sikelon.view.profile.ProfileOptionItem
 import com.rati.sikelon.view.profile.ProfilePage
+import com.rati.sikelon.view.profile.ProfilePaymentMethod
+import com.rati.sikelon.view.profile.ProfileSettings
 import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.view.search.SearchPage
 import com.rati.sikelon.viewmodel.BuyerAuthViewModel
@@ -127,7 +133,11 @@ fun AppNavHost() {
             Log.d("LoginScreenRole", roleLog)
             when (userRole) {
                 "pembeli" -> LoginScreen(navController = navController, viewModel = buyerViewModel)
-                "penjual" -> LoginScreenPenjual(navController = navController, viewModel = sellerViewModel)
+                "penjual" -> LoginScreenPenjual(
+                    navController = navController,
+                    viewModel = sellerViewModel
+                )
+
                 else -> {
                     Log.e("LoginScreenRole", "Role tidak dikenali: $userRole")
                     Text("Role tidak dikenali.")
@@ -135,75 +145,86 @@ fun AppNavHost() {
             }
         }
 
-            // REGISTER
-            composable(NavItem.Register.route) {
-                RegisterScreen(
+        // REGISTER
+        composable(NavItem.Register.route) {
+            RegisterScreen(
+                navController = navController,
+                viewModel = buyerViewModel
+            )
+        }
+        composable(NavItem.SellerRegister.route) {
+            SellerRegisterScreen(
+                navController = navController,
+                viewModel = sellerViewModel
+            )
+        }
+        composable(NavItem.VerifyCode.route) {
+            VerifyCodeScreen(navController = navController)
+        }
+        composable(NavItem.NewPassword.route) {
+            ForgetPasswordPage(navController = navController)
+        }
+
+
+        // ===== HOME & DASHBOARD =====
+        composable(NavItem.Home.route) {
+            HomePage(navController = navController, viewModel = userViewModel)
+        }
+        composable(NavItem.Dashboard.route) {
+            val sellerObject: User? =
+                navController.previousBackStackEntry?.savedStateHandle?.get("seller") // new
+            if (sellerObject != null) {
+                DashboardScreen(
                     navController = navController,
-                    viewModel = buyerViewModel
+                    viewModel = userViewModel,
+                    user = sellerObject
                 )
             }
-            composable(NavItem.VerifyCode.route) {
-                VerifyCodeScreen(navController = navController)
-            }
-            composable(NavItem.NewPassword.route) {
-                ForgetPasswordPage(navController = navController)
-            }
+        }
 
+        // ===== CART =====
+        composable(NavItem.CartDetail.route) {
+            CartStatusScreen(navController = navController)
+        }
+        composable(
+            "${NavItem.Review.route}/{orderId}",
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            ReviewPage(navController = navController, orderId = orderId)
+        }
+        composable(
+            "${NavItem.TrackStatus.route}/{orderId}",
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            TrackStatus(orderId = orderId)
+        }
 
-            // ===== HOME & DASHBOARD =====
-            composable(NavItem.Home.route) {
-                HomePage(navController = navController, viewModel = userViewModel)
-            }
-            composable(NavItem.Dashboard.route) {
-                val sellerObject: User? = navController.previousBackStackEntry?.savedStateHandle?.get("seller") // new
-                if (sellerObject != null) {
-                    DashboardScreen(navController = navController, viewModel = userViewModel, user = sellerObject)
-                }
-            }
+        // SEARCH
+        composable(NavItem.Search.route) {
+            SearchPage(navController = navController, initialQuery = "")
+        }
+        composable(NavItem.DetailedPromo.route) {
+            DetailedPromo(
+                navController = navController,
+                viewModel = userViewModel
+            )
+        }
 
-            // ===== CART =====
-            composable(NavItem.CartDetail.route) {
-                CartStatusScreen(navController = navController)
-            }
-            composable(
-                "${NavItem.Review.route}/{orderId}",
-                arguments = listOf(navArgument("orderId") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
-                ReviewPage(navController = navController, orderId = orderId)
-            }
-            composable(
-                "${NavItem.TrackStatus.route}/{orderId}",
-                arguments = listOf(navArgument("orderId") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
-                TrackStatus(orderId = orderId)
-            }
+        // ===== MESSAGE =====
+        composable(NavItem.MessageList.route) {
+            MessageScreen(navController = navController)
+        }
+        composable(NavItem.MessageDetail.route) {
+            MessageDetailScreen(
+                navController = navController,
+                storeInfo = TODO(),
+                initialMessages = TODO()
+            )
+        }
 
-            // SEARCH
-            composable(NavItem.Search.route) {
-                SearchPage(navController = navController, initialQuery = "")
-            }
-            composable(NavItem.DetailedPromo.route) {
-                DetailedPromo(
-                    navController = navController,
-                    viewModel = userViewModel
-                )
-            }
-
-            // ===== MESSAGE =====
-            composable(NavItem.MessageList.route) {
-                MessageScreen(navController = navController)
-            }
-            composable(NavItem.MessageDetail.route) {
-                MessageDetailScreen(
-                    navController = navController,
-                    storeInfo = TODO(),
-                    initialMessages = TODO()
-                )
-            }
-
-            // PAYMENT
+        // PAYMENT
         composable(
             route = "${NavItem.Payment.route}/{item_id}",
             arguments = listOf(navArgument("item_id") { type = NavType.IntType })
@@ -243,27 +264,46 @@ fun AppNavHost() {
             )
         }
 
-            // BOTTOM NAVIGATION
-            composable(NavItem.MainHome.route) {
-                HomePage(navController = navController, viewModel = userViewModel)
-            }
+        // BOTTOM NAVIGATION
+        composable(NavItem.MainHome.route) {
+            HomePage(navController = navController, viewModel = userViewModel)
+        }
 
-            composable(NavItem.MainCart.route) {
-                CartStatusScreen(navController = navController)
-            }
+        composable(NavItem.MainCart.route) {
+            CartStatusScreen(navController = navController)
+        }
 
-            composable(NavItem.MainChat.route) {
-                MessageScreen(navController = navController)
-            }
+        composable(NavItem.MainChat.route) {
+            MessageScreen(navController = navController)
+        }
 
-            composable(NavItem.MainProfile.route) {
-                ProfilePage(navController = navController)
-            }
+        composable(NavItem.MainProfile.route) {
+            ProfilePage(navController = navController)
+        }
 
-            composable(NavItem.TrendSale.route){
-                TrendDetailScreen(
-                    navController = navController
-                )
+        composable(NavItem.TrendSale.route) {
+            TrendDetailScreen(
+                navController = navController
+            )
+        }
+
+        composable(NavItem.EditProfile.route){
+            EditProfile(
+                onBackClick = TODO(),
+                onEditClick = TODO()
+            )
+        }
+        composable(NavItem.ProfileSettings.route){
+            ProfileSettings {
+
             }
         }
+        composable(NavItem.ProfilePaymentMethod.route){
+            ProfilePaymentMethod()
+        }
+        composable(NavItem.ProfileHelpDesk.route){
+            ProfileHelpDesk()
+        }
     }
+
+}

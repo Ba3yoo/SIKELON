@@ -1,5 +1,6 @@
 package com.rati.sikelon.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rati.sikelon.data.AuthRepository
@@ -8,6 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.rati.sikelon.data.Result
+import com.rati.sikelon.data.SellerAuthState
+import com.rati.sikelon.data.UserRepository
+import com.rati.sikelon.model.User
 import com.rati.sikelon.model.requestResponse.*
 
 class BuyerAuthViewModel() : ViewModel() {
@@ -42,6 +46,8 @@ class SellerAuthViewModel() : ViewModel() {
     private val repository = AuthRepository()
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
+    private val _sellerAuthState = MutableStateFlow<SellerAuthState>(SellerAuthState.Idle)
+    val sellerAuthState: StateFlow<SellerAuthState> = _sellerAuthState
 
     fun registerSeller(request: RegisterRequest) {
         _authState.value = AuthState.Loading
@@ -54,12 +60,16 @@ class SellerAuthViewModel() : ViewModel() {
         }
     }
 
+//    private val _selectedSeller = MutableStateFlow<SellerLogin?>(null)
+//    val selectedSeller: StateFlow<SellerLogin?> = _selectedSeller
+
     fun loginSeller(request: LoginRequest) {
-        _authState.value = AuthState.Loading
+        _sellerAuthState.value = SellerAuthState.Loading
+        Log.d("stat", _sellerAuthState.value.toString())
         viewModelScope.launch {
             when (val result = repository.loginSeller(request)) {
-                is Result.Success -> _authState.value = AuthState.Success(token = result.value.token)
-                is Result.Failure -> _authState.value = AuthState.Error(result.exception.message ?: "Unknown Error")
+                is Result.Success -> _sellerAuthState.value = SellerAuthState.Success(token = result.value.token, seller = result.value.seller)
+                is Result.Failure -> _sellerAuthState.value = SellerAuthState.Error(result.exception.message ?: "Unknown Error")
                 else -> {}
             }
         }

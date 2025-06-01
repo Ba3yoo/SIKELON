@@ -303,7 +303,7 @@ fun LoginScreenPenjual(
                         is AuthState.Success -> {
                             LoginPreferences.setLoggedIn(context, true)
                             Toast.makeText(context, "Login berhasil!", Toast.LENGTH_SHORT).show()
-                            navController.navigate(NavItem.Dashboard.route) {
+                            navController.navigate(NavItem.Home.route) {
                                 popUpTo("login/pembeli") { inclusive = true }
                             }
                         }

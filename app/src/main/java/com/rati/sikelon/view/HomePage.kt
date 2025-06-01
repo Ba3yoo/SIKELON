@@ -65,6 +65,7 @@ import androidx.navigation.NavHostController
 import com.rati.sikelon.R
 import com.rati.sikelon.model.Item
 import com.rati.sikelon.view.search.DetailedPromo
+import com.rati.sikelon.model.User
 import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
@@ -352,7 +353,7 @@ val mockSalesTrendItems = listOf(
 )
 
 @Composable
-fun DashboardScreen(userName: String = "Kurnia", navController: NavHostController) {
+fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel, user: User) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -364,7 +365,7 @@ fun DashboardScreen(userName: String = "Kurnia", navController: NavHostControlle
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text("Selamat Datang,", fontSize = 18.sp, color = Color.Black)
-                Text("$userName!", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                Text("${user.username}!", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
             }
         }
 

@@ -8,6 +8,7 @@ import com.rati.sikelon.model.User
 import com.rati.sikelon.model.requestResponse.AuthResponse
 import com.rati.sikelon.model.requestResponse.LoginRequest
 import com.rati.sikelon.model.requestResponse.RegisterRequest
+import com.rati.sikelon.model.requestResponse.SellerLogin
 import com.rati.sikelon.service.LoginService
 import com.rati.sikelon.service.RetrofitInstance
 import com.rati.sikelon.service.ShopService
@@ -53,7 +54,7 @@ class AuthRepository() {
         return safeApiCall { loginService.registerSeller(request) }
     }
 
-    suspend fun loginSeller(request: LoginRequest): Result<AuthResponse> {
+    suspend fun loginSeller(request: LoginRequest): Result<SellerLogin> {
         return safeApiCall { loginService.loginSeller(request) }
     }
 
@@ -86,4 +87,11 @@ sealed class AuthState {
     object Loading : AuthState()
     data class Success(val message: String? = null, val token: String? = null) : AuthState()
     data class Error(val error: String) : AuthState()
+}
+
+sealed class SellerAuthState {
+    object Idle : SellerAuthState()
+    object Loading : SellerAuthState()
+    data class Success(val message: String? = null, val token: String? = null, val seller: User? = null) : SellerAuthState()
+    data class Error(val error: String) : SellerAuthState()
 }

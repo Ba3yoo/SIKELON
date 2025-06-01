@@ -62,16 +62,20 @@ const loginSeller = (req,res) => {
 
         if(results.length == 0) return res.status(401).json({ message: "Invalid email or password"});
 
-        const user = results[0];
-        const isMatch = await bcrypt.compare(password, user.password);
+        const seller = results[0];
+        const isMatch = await bcrypt.compare(password, seller.password);
 
         if (!isMatch) return res.status(401).json({ message: "Invalid email or password"});
-
-        const token = jwt.sign({ id: user.id, email: user.email},
+        
+        const token = jwt.sign({ id: seller.id, email: seller.email},
             process.env.JWT_SECRET, {
                 expiresIn: "1h",
             });
-        res.json({token});
+        console.log(seller);
+        res.json({
+            token,
+            seller
+        });
     });
 }
 

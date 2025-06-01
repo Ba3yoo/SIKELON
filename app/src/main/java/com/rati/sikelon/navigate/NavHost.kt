@@ -12,6 +12,7 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.mvvm2.view.VerifyCodeScreen
 import com.rati.sikelon.model.Item
+import com.rati.sikelon.model.User
 import com.rati.sikelon.view.*
 import com.rati.sikelon.view.cart.*
 import com.rati.sikelon.view.loginRegister.ForgetPasswordPage
@@ -149,7 +150,10 @@ fun AppNavHost() {
                 HomePage(navController = navController, viewModel = userViewModel)
             }
             composable(NavItem.Dashboard.route) {
-                DashboardScreen(navController = navController)
+                val sellerObject: User? = navController.previousBackStackEntry?.savedStateHandle?.get("seller") // new
+                if (sellerObject != null) {
+                    DashboardScreen(navController = navController, viewModel = userViewModel, user = sellerObject)
+                }
             }
 
             // ===== CART =====

@@ -2,8 +2,11 @@ package com.rati.sikelon.model
 
 data class User(
     val user_id: Int,
+    val email: String,
+    val role: String,
     val username: String,
     val name: String,
+    val password: String,
     val join_date: String
 )
 
@@ -46,3 +49,5 @@ data class OrderItemModel(
     val productInfo: String,
     val totalPrice: String
 )
+
+

@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
 import com.rati.sikelon.view.reusable.Card
-import com.rati.sikelon.view.reusable.CardData
+//import com.rati.sikelon.view.reusable.CardData
 import com.rati.sikelon.viewmodel.UserViewModel
 
 @Composable
@@ -118,16 +118,16 @@ fun SectionPromo(storeResult: StoreSearchResult, navController: NavController) {
             state = rowState
         ) {
             items(storeResult.products.take(3), key = { it.id }) { product ->
-                Card(
-                    cardData = CardData(
-                        imageUrl = "https://via.placeholder.com/150",
-                        price = product.price,
-                        description = product.name,
-                        buttonText = "Beli"
-                    ),
-                    modifier = Modifier.width(150.dp),
-                    onClick = {}
-                )
+//                Card(
+//                    cardData = CardData(
+//                        imageUrl = "https://via.placeholder.com/150",
+//                        price = product.price,
+//                        description = product.name,
+//                        buttonText = "Beli"
+//                    ),
+//                    modifier = Modifier.width(150.dp),
+//                    onClick = {}
+//                )
             }
         }
     }

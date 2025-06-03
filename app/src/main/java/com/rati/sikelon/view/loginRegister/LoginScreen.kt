@@ -373,7 +373,7 @@ fun LoginScreenPenjual(
                 fontSize = 14.sp,
                 color = Color(0xFF9F2BFF),
                 modifier = Modifier.clickable {
-                    navController.navigate(NavItem.Register.route)
+                    navController.navigate(NavItem.SellerRegister.route)
                 }
             )
         }

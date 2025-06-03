@@ -10,6 +10,7 @@ enum class State {
     // Login/Register
     LOGIN,
     REGISTER,
+    SELLER_REGISTER,
     VERIFY_CODE,
     NEW_PASSWORD,
 
@@ -64,12 +65,15 @@ sealed class NavItem(val route: String) {
         fun createRoute(userRole: String) = "${State.LOGIN.name}/$userRole"
     }
     object Register : NavItem(State.REGISTER.name)
+    object SellerRegister : NavItem(State.SELLER_REGISTER.name)
     object VerifyCode : NavItem(State.VERIFY_CODE.name)
     object NewPassword : NavItem(State.NEW_PASSWORD.name)
 
     // Cart
     object CartDetail : NavItem(State.CART_DETAIL.name)
-    object CartItem : NavItem(State.CART_ITEM.name){fun withArgs(orderId: String): String = "$route/$orderId"}
+    object CartItem : NavItem("cartitem") {
+        fun withArgs(orderId: String): String = "$route/$orderId"
+    }
     object Review : NavItem(State.REVIEW.name){fun withArgs(orderId: String): String = "$route/$orderId"}
     object TrackStatus : NavItem(State.TRACK_STATUS.name){fun withArgs(orderId: String): String = "$route/$orderId"}
 

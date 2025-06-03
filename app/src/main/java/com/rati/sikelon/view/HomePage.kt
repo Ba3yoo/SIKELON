@@ -48,7 +48,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,12 +62,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.rati.sikelon.R
 import com.rati.sikelon.model.Item
+import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.model.User
 import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
@@ -114,7 +117,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
                     .clickable {
-                        navController.navigate("payment/PromoSpecial/1/11000/111")
+                        navController.navigate(NavItem.DetailedPromo.route)
                     },
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -152,9 +155,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
                         )
                         Button(
                             onClick = {
-                                navController.navigate(NavItem.DetailedPromo.route){
-//                                    DetailedPromo()
-                                }
+                                navController.navigate(NavItem.DetailedPromo.route)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             shape = RoundedCornerShape(8.dp)
@@ -169,14 +170,18 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
                 title = "Flash Sale",
                 items = frontItems.value.take(3),
                 navController = navController,
-                onSeeAllClick = { /* navigasi lihat semua flash sale */ }
+                onSeeAllClick = {
+                    navController.navigate(NavItem.DetailedPromo.route)
+                }
             )
 
             ProductSection(
                 title = "Beli Cepat",
                 items = frontItems.value.take(5),
                 navController = navController,
-                onSeeAllClick = { /* navigasi lihat semua quick buy */ }
+                onSeeAllClick = {
+                    navController.navigate(NavItem.DetailedPromo.route)
+                }
             )
         }
     }
@@ -216,7 +221,7 @@ fun ProductSection(
         ) {
             items(items) { item ->
                 Card(cardData = item, modifier = Modifier, onClick = {
-                    val route = "${NavItem.Payment.route}/${item.item_name}/1/$item.price/"
+                    val route = "${NavItem.Payment.route}/${item.item_id}"
                     navController.navigate(route)
                 })
             }
@@ -345,14 +350,28 @@ data class SalesTrendItem(
 val mockSalesTrendItems = listOf(
     SalesTrendItem(1, "Le Minerale Air Mineral Botol 600 ml", R.drawable.sate, 109),
     SalesTrendItem(2, "Indomie Goreng Special Mie Instan 85gram", R.drawable.sate, 80),
-    SalesTrendItem(3, "Nuvo Family Sabun Mandi Batang Anti Bakteri Total Protect 100 g", R.drawable.sate, 35),
+    SalesTrendItem(
+        3,
+        "Nuvo Family Sabun Mandi Batang Anti Bakteri Total Protect 100 g",
+        R.drawable.sate,
+        35
+    ),
     SalesTrendItem(4, "TONG TJI Teh Celup Melati 25 Kantung Celup", R.drawable.sate, 25),
-    SalesTrendItem(5, "Sunlight Anti Bau Sabun Cuci Piring Lime & Mint Refill 600 ml", R.drawable.sate, 20)
+    SalesTrendItem(
+        5,
+        "Sunlight Anti Bau Sabun Cuci Piring Lime & Mint Refill 600 ml",
+        R.drawable.sate,
+        20
+    )
 )
 
 @Composable
 fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) {
     val user = navController.previousBackStackEntry?.savedStateHandle?.get<User>("seller")
+    val years = listOf("2023", "2024", "2025")
+    var selectedYear by remember { mutableStateOf(years.last()) }
+    var expanded by remember { mutableStateOf(false) }
+
     Log.d("dashseller", user?.name ?: "no")
     LazyColumn(
         modifier = Modifier
@@ -364,8 +383,13 @@ fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) 
         // Welcome
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text("Selamat Datang,", fontSize = 18.sp, color = Color.Black)
-                Text("${user?.username}!", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                Text(user?.name ?: "", fontSize = 18.sp, color = Color.Black)
+                Text(
+                    "${user?.username}!",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
             }
         }
 
@@ -378,9 +402,18 @@ fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) 
                 elevation = CardDefaults.cardElevation(0.dp)
             ) {
                 Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)) {
-                    Text("Jumlah Pendapatan", fontSize = 16.sp, color = Color.White.copy(alpha = 0.8f))
+                    Text(
+                        "Jumlah Pendapatan",
+                        fontSize = 16.sp,
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("Rp4.384.000,00", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(
+                        "Rp4.384.000,00",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
             }
         }
@@ -398,35 +431,44 @@ fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) 
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Statistik Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
-//                    Box {
-//                        Button(
-//                            onClick = {
-//                                expanded = true
-//                                      },
-//                            shape = RoundedCornerShape(8.dp),
-//                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-//                            colors = ButtonDefaults.buttonColors(
-//                                containerColor = colorResource(id = R.color.purple_500),
-//                                contentColor = Color.White
-//                            )
-//                        ) {
-//                            Text(selectedYear, fontSize = 14.sp)
-//                            Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
-//                        }
-//                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-//                            years.forEach { year ->
-//                                DropdownMenuItem(
-//                                    text = { Text(year) },
-//                                    onClick = {
-//                                        selectedYear = year
-//                                        expanded = false
-//                                    }
-//                                )
-//                            }
-//                        }
-//                    }
+                    Text(
+                        "Statistik Penjualan",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
+
+                    Box {
+                        Button(
+                            onClick = { expanded = true },
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(selectedYear, fontSize = 14.sp)
+                            Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            years.forEach { year ->
+                                DropdownMenuItem(
+                                    text = { Text(year) },
+                                    onClick = {
+                                        selectedYear = year
+                                        expanded = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
@@ -436,33 +478,7 @@ fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) 
                         .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                         .padding(12.dp)
                 ) {
-                    Canvas(modifier = Modifier.fillMaxSize()) {
-//                        val path = Path()
-//                        val stepX = size.width / (points.size - 1)
-//                        val heightOffset = size.height * 0.8f
-//                        val verticalOffset = size.height * 0.1f
-//
-//                        points.forEachIndexed { index, point ->
-//                            val x = index * stepX
-//                            val y = size.height - (point * heightOffset + verticalOffset)
-//                            if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
-//                            drawCircle(color = Color.Red, radius = 8f, center = Offset(x, y))
-//                        }
-//
-//                        drawPath(path = path, color = Color.Black, style = Stroke(width = 5f))
-//                    }
-//
-//                    Row(
-//                        modifier = Modifier
-//                            .align(Alignment.BottomCenter)
-//                            .fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.SpaceAround
-//                    ) {
-//                        monthLabels.forEach {
-//                            Text(it, fontSize = 10.sp, color = Color.Gray, textAlign = TextAlign.Center)
-//                        }
-                    }
-
+                    // Placeholder for chart
                     Column(
                         modifier = Modifier
                             .align(Alignment.CenterStart)
@@ -490,10 +506,15 @@ fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) 
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Tren Penjualan", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                    Text(
+                        "Tren Penjualan",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
                     TextButton(
                         onClick = {
-//                            navController.navigate(NavItem.TrendSale.route)
+                            navController.navigate(NavItem.TrendSale.route)
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(id = R.color.purple_500),

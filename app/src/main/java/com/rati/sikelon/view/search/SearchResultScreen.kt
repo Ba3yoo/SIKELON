@@ -1,20 +1,22 @@
 package com.rati.sikelon.view.search
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -23,237 +25,315 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.rati.sikelon.R // Update with actual package
-import com.rati.sikelon.ui.theme.SIKELONTheme
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.rati.sikelon.R
+import com.rati.sikelon.model.Item
+import com.rati.sikelon.model.StoreSearchResult
+import com.rati.sikelon.viewmodel.UserViewModel.SearchViewModel
 
-data class ProductResult(
-    val id: String,
-    @DrawableRes val imageResId: Int,
-    val price: String,
-    val name: String
+
+private val mockStores = listOf(
+    StoreSearchResult(
+        storeId = "1",
+        storeIconResId = R.drawable.toko_kurnia, // pastikan ini ada di res/drawable
+        storeName = "Toko Sumber Rejeki",
+        storeLocationHint = "Jl. Merdeka No. 10",
+        distance = "1.2 km",
+        products = listOf(
+            Item(
+                item_id = 101,
+                item_name = "Beras Pandan Wangi 5kg",
+                price = 65000,
+                store_id = 1,
+                img_link = "https://example.com/images/beras.jpg"
+            ),
+            Item(
+                item_id = 102,
+                item_name = "Minyak Goreng 2L",
+                price = 28000,
+                store_id = 1,
+                img_link = "https://example.com/images/minyak.jpg"
+            )
+        )
+    ),
+    StoreSearchResult(
+        storeId = "2",
+        storeIconResId = R.drawable.toko_kurnia,
+        storeName = "Warung Makmur",
+        storeLocationHint = "Jl. Sudirman No. 25",
+        distance = "2.5 km",
+        products = listOf(
+            Item(
+                item_id = 201,
+                item_name = "Gula Pasir 1kg",
+                price = 12000,
+                store_id = 2,
+                img_link = "https://example.com/images/gula.jpg"
+            ),
+            Item(
+                item_id = 202,
+                item_name = "Teh Celup 50s",
+                price = 15000,
+                store_id = 2,
+                img_link = "https://example.com/images/teh.jpg"
+            )
+        )
+    )
 )
 
-data class StoreSearchResult(
-    val storeId: String,
-    @DrawableRes val storeIconResId: Int,
-    val storeName: String,
-    val storeLocationHint: String,
-    val distance: String,
-    val products: List<ProductResult>
-)
 
+/**
+ * Menampilkan seluruh halaman hasil pencarian.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchResultScreen(
     navController: NavController,
-    initialQuery: String = "Beng-beng"
+    viewModel: SearchViewModel,
+    initialQuery: String = ""
 ) {
     var searchQuery by rememberSaveable { mutableStateOf(initialQuery) }
     val focusManager = LocalFocusManager.current
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
 
-    val sampleSearchResults = remember {
-        listOf(
-            StoreSearchResult(
-                "s1", R.drawable.ic_launcher_foreground, "SRC Raya", "Sigura-Gura", "50m",
-                listOf(
-                    ProductResult("p1_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
-                )
-            ),
-            StoreSearchResult(
-                "s2", R.drawable.ic_launcher_foreground, "SRC Berkah Selalu", "Sigura-Gura", "150m",
-                listOf(
-                    ProductResult("p2_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
-                    ProductResult("p2_2", R.drawable.beng_beng_share, "Rp14.900", "Beng-beng Share It 10 x 8.5 g"),
-                    ProductResult("p2_3", R.drawable.beng_beng_wafer_rice, "Rp8.700", "Beng-Beng Wafer Rice Crispy Cokelat 3 x 20 g")
-                )
-            ),
-            StoreSearchResult(
-                "s3", R.drawable.ic_launcher_foreground, "Toko Kurnia", "Bend. Sutami", "200m",
-                listOf(
-                    ProductResult("p3_1", R.drawable.beng_beng_nuts, "Rp8.400", "Beng-Beng Nuts Karamel Almond 35 g"),
-                    ProductResult("p3_2", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
-                )
-            )
-        )
+
+
+    val allStores by viewModel.stores.collectAsState()
+    val allItems by viewModel.items.collectAsState()
+
+    val storesWithProducts = remember(allStores, allItems) {
+        if (allStores.isNotEmpty() && allItems.isNotEmpty()) {
+            allStores.map { store ->
+                val storeProducts = allItems.filter { item ->
+                    item.store_id.toString() == store.storeId
+                }
+                store.copy(products = storeProducts)
+            }
+        } else {
+            mockStores
+        }
     }
 
-    val listState = rememberLazyListState()
+    // Filter stores and products based on search query
+    val filteredStores = remember(storesWithProducts, searchQuery) {
+        if (searchQuery.isBlank()) {
+            storesWithProducts
+        } else {
+            storesWithProducts.mapNotNull { store ->
+                val filteredProducts = store.products.filter { product ->
+                    product.item_name.contains(searchQuery, ignoreCase = true)
+                }
+
+                val storeNameMatches = store.storeName.contains(searchQuery, ignoreCase = true)
+
+                if (filteredProducts.isNotEmpty() || storeNameMatches) {
+                    store.copy(products = if (storeNameMatches) store.products else filteredProducts)
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
+    // Initialize search query on first composition
+    LaunchedEffect(initialQuery) {
+        if (initialQuery.isNotBlank() && searchQuery != initialQuery) {
+            searchQuery = initialQuery
+        }
+    }
+
+    LaunchedEffect(storesWithProducts) {
+        Log.d("SearchResultScreen", "Combined stores with products: ${storesWithProducts.size} stores")
+        storesWithProducts.forEach { store ->
+            Log.d("SearchResultScreen", "Store: ${store.storeName} with ${store.products.size} products")
+        }
+    }
+
+    LaunchedEffect(filteredStores) {
+        Log.d("SearchResultScreen", "Filtered results for query '$searchQuery': ${filteredStores.size} stores")
+        filteredStores.forEach { store ->
+            Log.d("SearchResultScreen", "Store: ${store.storeName} with ${store.products.size} products")
+            store.products.forEach { product ->
+                Log.d("SearchResultScreen", "- ${product.item_name}: Rp${product.price}")
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             SearchResultTopAppBar(
                 searchQuery = searchQuery,
-                onQueryChange = { searchQuery = it },
+                onQueryChange = { newQuery ->
+                    searchQuery = newQuery
+                    Log.d("SearchResultScreen", "Search query changed to: $newQuery")
+                },
                 onBackClick = { navController.popBackStack() },
-                onClearClick = { searchQuery = "" },
+                onClearClick = {
+                    searchQuery = ""
+                    Log.d("SearchResultScreen", "Search query cleared")
+                },
                 onSearchAction = {
                     focusManager.clearFocus()
-                    println("Searching for: $searchQuery")
+                    Log.d("SearchResultScreen", "Search action performed with query: $searchQuery")
                 }
             )
         },
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 16.dp),
-            state = listState
-        ) {
-            item {
-                LocationDisplay(
-                    currentLocation = "Jl. Veteran No 8",
-                    onLocationClick = { /* TODO */ }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+        // Show error message if there's an error
+        error?.let { errorMessage ->
+            LaunchedEffect(errorMessage) {
+                // You can show a snackbar or handle error display here
+                Log.e("SearchResultScreen", "Error: $errorMessage")
             }
-            items(sampleSearchResults, key = { it.storeId }) { storeResult ->
-                StoreResultRow(storeResult = storeResult, navController = navController)
+        }
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                item {
+                    LocationDisplay(currentLocation = "Jl. Veteran No 8")
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+
+                // Show search results summary
+                if (searchQuery.isNotBlank()) {
+                    item {
+                        SearchResultSummary(
+                            query = searchQuery,
+                            storeCount = filteredStores.size,
+                            productCount = filteredStores.sumOf { it.products.size }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+
+                filteredStores.forEach { store ->
+                    item {
+                        StoreHeader(
+                            storeName = store.storeName,
+                            storeLocationHint = store.storeLocationHint,
+                            distance = store.distance,
+                            storeIconResId = store.storeIconResId
+                        )
+                    }
+                    item {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(store.products, key = { it.item_id }) { product ->
+                                ProductResultCard(
+                                    product = product,
+                                    searchQuery = searchQuery,
+                                    onAddToCartClick = {
+                                        Log.d("SearchResultScreen", "Add to cart clicked for: ${product.item_name}")
+                                        // TODO: Implement add-to-cart action
+                                    }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+
+                if (filteredStores.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = if (searchQuery.isBlank()) {
+                                        "Mulai pencarian untuk melihat hasil"
+                                    } else {
+                                        "Tidak ada hasil untuk \"$searchQuery\""
+                                    },
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                if (searchQuery.isNotBlank()) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = "Coba kata kunci yang berbeda",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
+/**
+ * Menampilkan ringkasan hasil pencarian
+ */
 @Composable
-fun LocationDisplay(
-    currentLocation: String,
-    onLocationClick: () -> Unit
+fun SearchResultSummary(
+    query: String,
+    storeCount: Int,
+    productCount: Int
 ) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onLocationClick)
-            .padding(horizontal = 32.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+        ),
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Icon(
-            imageVector = Icons.Filled.LocationOn,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text("Lokasi", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(currentLocation, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
-    }
-}
-
-
-@Composable
-fun StoreResultRow(storeResult: StoreSearchResult, navController: NavController) {
-    val rowState = rememberLazyListState()
-
-    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 26.dp)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(12.dp)
         ) {
-            Image(
-                painter = painterResource(id = storeResult.storeIconResId),
-                contentDescription = "${storeResult.storeName} icon",
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "${storeResult.storeName}, ${storeResult.storeLocationHint}",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                text = "Hasil pencarian untuk \"$query\"",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = storeResult.distance,
+                text = "Ditemukan $productCount produk dari $storeCount toko",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            state = rowState
-        ) {
-            items(storeResult.products, key = { it.id }) { product ->
-                ProductResultCard(
-                    product = product,
-                    onProductClick = { /* TODO */ },
-                    onAddToCartClick = { /* TODO */ }
-                )
-            }
-        }
     }
 }
 
-@Composable
-fun ProductResultCard(
-    product: ProductResult,
-    onProductClick: () -> Unit,
-    onAddToCartClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        onClick = onProductClick,
-        modifier = modifier
-            .width(140.dp)
-            .wrapContentHeight(),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Box(
-                modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-            ) {
-                Image(
-                    painter = painterResource(id = product.imageResId),
-                    contentDescription = product.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .matchParentSize()
-                )
-                IconButton(
-                    onClick = onAddToCartClick,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(4.dp)
-                        .size(32.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.add_button),
-                        contentDescription = product.name,
-                        modifier = Modifier.matchParentSize()
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(product.price, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-            Text(product.name, maxLines = 2, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
-        }
-    }
-}
-
+/**
+ * AppBar dengan field pencarian.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchResultTopAppBar(
@@ -261,90 +341,200 @@ fun SearchResultTopAppBar(
     onQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onClearClick: () -> Unit,
-    onSearchAction: () -> Unit
+    onSearchAction: () -> Unit,
 ) {
     TopAppBar(
         title = {
-            Box(
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onQueryChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 32.dp) // Tambahan padding agar tidak full width
-            ) {
-                TextField(
-                    value = searchQuery,
-                    onValueChange = onQueryChange,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 12.dp)
-                        .height(40.dp), // 30% lebih kecil dari sebelumnya
-                    placeholder = {
-                        Text(
-                            "Cari lagi...",
-                            fontSize = 12.sp // perkecil teks
-                        )
-                    },
-                    textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
-                    singleLine = true,
-                    shape = RoundedCornerShape(16.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
-                    ),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = { onSearchAction() }),
-                    trailingIcon = {
-                        if (searchQuery.isNotEmpty()) {
-                            OutlinedButton(
-                                onClick = onClearClick,
-                                shape = RoundedCornerShape(6.dp),
-                                contentPadding = PaddingValues(2.dp),
-                                modifier = Modifier.size(28.dp) // lebih kecil
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = "Hapus teks",
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.size(16.dp) // perkecil ikon
-                                )
-                            }
+                    .height(42.dp)
+                    .padding(end = 8.dp),
+                textStyle = MaterialTheme.typography.bodyMedium,
+                placeholder = {
+                    Text(
+                        text = if (searchQuery.isEmpty()) "Cari produk atau toko..." else searchQuery,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(16.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { onSearchAction() }),
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = onClearClick) {
+                            Icon(Icons.Filled.Close, contentDescription = "Clear search")
                         }
                     }
-                )
-            }
+                }
+            )
         },
         navigationIcon = {
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .padding(start = 32.dp)
-                    .size(30.dp)
-                    .background(Color.Black, CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = "Kembali",
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
-                )
+            IconButton(onClick = onBackClick) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
     )
 }
 
-
-@Preview(showBackground = true)
+/**
+ * Menampilkan lokasi pengguna.
+ */
 @Composable
-fun PreviewSearchResultScreen() {
-    // Gunakan tema aplikasi Anda
-    SIKELONTheme  {
-        // Buat NavController dummy untuk preview
-        val navController = rememberNavController()
-        SearchResultScreen(navController = navController)
+fun LocationDisplay(currentLocation: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = "Lokasi",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = R.drawable.back_sikelon),
+                contentDescription = "Location Icon",
+                modifier = Modifier.size(18.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = currentLocation,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+/**
+ * Header informasi toko.
+ */
+@Composable
+fun StoreHeader(
+    storeName: String,
+    storeLocationHint: String,
+    distance: String,
+    @DrawableRes storeIconResId: Int
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = storeIconResId),
+            contentDescription = "$storeName icon",
+            modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = storeName,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = storeLocationHint,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = distance,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+/**
+ * Kartu produk individual dengan highlight pencarian.
+ */
+@Composable
+fun ProductResultCard(
+    product: Item,
+    searchQuery: String = "",
+    onAddToCartClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .width(130.dp)
+            .height(190.dp),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column {
+                val context = LocalContext.current
+
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(product.img_link)
+                        .crossfade(true)
+                        .placeholder(R.drawable.stock_beng_beng)
+                        .error(R.drawable.stock_beng_beng)
+                        .build(),
+                    contentDescription = product.item_name,
+                    modifier = Modifier
+                        .height(90.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+                    contentScale = ContentScale.Crop,
+                    fallback = painterResource(id = R.drawable.stock_beng_beng)
+                )
+
+                Column(modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp)) {
+                    Text(
+                        text = product.item_name,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Normal,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        minLines = 2
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Rp${product.price}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            IconButton(
+                onClick = onAddToCartClick,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(4.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))
+                    .size(30.dp)
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Add to cart",
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+        }
     }
 }

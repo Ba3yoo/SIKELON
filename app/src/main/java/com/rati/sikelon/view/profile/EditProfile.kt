@@ -1,5 +1,8 @@
 package com.rati.sikelon.view.profile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,16 +38,28 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.rati.sikelon.R
 
 @Composable
-fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
+fun EditProfile(
+    navController: NavController
+) {
     var user by remember { mutableStateOf("User") }
     var displayed by remember { mutableStateOf("User") }
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var telephone by remember { mutableStateOf("") }
 
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        selectedImageUri = uri
+    }
     LaunchedEffect(user) {
         displayed = user.ifEmpty { "User" }
     }
@@ -67,7 +82,7 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
                 fontWeight = FontWeight.Bold
             )
             IconButton(
-                onClick = onBackClick,
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Image(
@@ -80,10 +95,10 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
         Spacer(modifier = Modifier.height(32.dp))
 
         Image(
-            painter = painterResource(R.drawable.avatar_image),
+            painter = selectedImageUri?.let { rememberAsyncImagePainter(it) }
+                ?: painterResource(R.drawable.avatar_image),
             contentDescription = "Edit Profile",
-            modifier = Modifier
-                .size(90.dp)
+            modifier = Modifier.size(90.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -100,7 +115,9 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
                 color = Color.Black
             )
             IconButton(
-                onClick = onEditClick
+                onClick = {
+                    imagePickerLauncher.launch("image/*")
+                }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.edit_profile),
@@ -122,7 +139,7 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            placeholder = { Text("Masukkan nama Anda di sini", color = Color(0xFF7E60BF))},
+            placeholder = { Text("Masukkan nama Anda di sini", color = Color.Black)},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             shape = RoundedCornerShape(50),
             colors = OutlinedTextFieldDefaults.colors(
@@ -146,7 +163,7 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            placeholder = { Text("Masukkan email Anda di sini", color = Color(0xFF7E60BF))},
+            placeholder = { Text("Masukkan email Anda di sini", color = Color.Black)},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             shape = RoundedCornerShape(50),
             colors = OutlinedTextFieldDefaults.colors(
@@ -170,7 +187,7 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
         OutlinedTextField(
             value = telephone,
             onValueChange = { telephone = it },
-            placeholder = { Text("Masukkan nomor telepon Anda di sini", color = Color(0xFF7E60BF))},
+            placeholder = { Text("Masukkan nomor telepon Anda di sini", color = Color.Black)},
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             shape = RoundedCornerShape(50),
             colors = OutlinedTextFieldDefaults.colors(
@@ -192,8 +209,8 @@ fun EditProfile(onBackClick: () -> Unit, onEditClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun EditProfilePreview() {
-    EditProfile(onBackClick = {}, onEditClick = {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun EditProfilePreview() {
+//    EditProfile(onBackClick = {}, onEditClick = {})
+//}

@@ -1,17 +1,33 @@
 package com.rati.sikelon.view.search
 
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,125 +35,166 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
-import com.rati.sikelon.view.reusable.Card
-//import com.rati.sikelon.view.reusable.CardData
+import com.rati.sikelon.model.Item
+import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.viewmodel.UserViewModel
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
 fun DetailedPromo(
     navController: NavController,
-    initialQuery: String = "Beng-beng",
-    CartItem: UserViewModel = viewModel()
+    viewModel: UserViewModel = viewModel()
 ) {
-    val cartDetails = CartItem.selectedCartDetail.collectAsState()
     LaunchedEffect(Unit) {
-        CartItem.loadCartDetailById(1)
-    }
-    val sampleSearchResults = remember {
-        listOf(
-            StoreSearchResult(
-                "s1", R.drawable.ic_launcher_foreground, "SRC Raya", "Sigura-Gura", "50m",
-                listOf(
-                    ProductResult("p1_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
-                )
-            ),
-            StoreSearchResult(
-                "s2", R.drawable.ic_launcher_foreground, "SRC Berkah Selalu", "Sigura-Gura", "150m",
-                listOf(
-                    ProductResult("p2_1", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g"),
-                    ProductResult("p2_2", R.drawable.beng_beng_share, "Rp14.900", "Beng-beng Share It 10 x 8.5 g"),
-                    ProductResult("p2_3", R.drawable.beng_beng_wafer_rice, "Rp8.700", "Beng-Beng Wafer Rice Crispy Cokelat 3 x 20 g")
-                )
-            ),
-            StoreSearchResult(
-                "s3", R.drawable.ic_launcher_foreground, "Toko Kurnia", "Bend. Sutami", "200m",
-                listOf(
-                    ProductResult("p3_1", R.drawable.beng_beng_nuts, "Rp8.400", "Beng-Beng Nuts Karamel Almond 35 g"),
-                    ProductResult("p3_2", R.drawable.beng_beng_max, "Rp4.900", "Beng-Beng Maxx Cokelat 32 g")
-                )
-            )
-        )
+        Log.d("DetailedPromo", "Trigger load stores")
+        viewModel.loadStores()
     }
 
-    LazyColumn(
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(sampleSearchResults) { storeResult ->
-            SectionPromo(storeResult = storeResult, navController = navController)
+    val stores by viewModel.stores.collectAsState()
+    val items by viewModel.items.collectAsState()
+
+    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
+        if (stores.isEmpty()) {
+            Text(
+                text = "Tidak ada toko yang tersedia.",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(16.dp)
+            )
+        } else {
+            stores.forEach { store ->
+                StoreSection(
+                    storeName = store.store_name,
+                    storeAddress = store.address,
+                    products = items.filter { it.store_id == store.store_id },
+                    onItemClick = { product ->
+                        val route = "${NavItem.Payment.route}/${product.item_id}"
+                        Log.d("DetailedPromo", "Navigating to: $route")
+                        navController.navigate(route)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
 
 @Composable
-fun SectionPromo(storeResult: StoreSearchResult, navController: NavController) {
-    val rowState = rememberLazyListState()
-
-    Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 26.dp)) {
+fun StoreSection(
+    storeName: String,
+    storeAddress: String,
+    products: List<Item>,
+    onItemClick: (Item) -> Unit
+) {
+    Column {
         Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 10.dp, vertical = 4.dp)
         ) {
-            Image(
-                painter = painterResource(id = storeResult.storeIconResId),
-                contentDescription = "${storeResult.storeName} icon",
+            Icon(
+                imageVector = Icons.Filled.Store,
+                contentDescription = "Store Icon",
                 modifier = Modifier
                     .size(32.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+                    .clip(CircleShape)
             )
+
             Spacer(modifier = Modifier.width(8.dp))
+
             Text(
-                text = "${storeResult.storeName}, ${storeResult.storeLocationHint}",
+                text = "$storeName, $storeAddress",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.weight(1f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = storeResult.distance,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
 
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            state = rowState
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(storeResult.products.take(3), key = { it.id }) { product ->
-//                Card(
-//                    cardData = CardData(
-//                        imageUrl = "https://via.placeholder.com/150",
-//                        price = product.price,
-//                        description = product.name,
-//                        buttonText = "Beli"
-//                    ),
-//                    modifier = Modifier.width(150.dp),
-//                    onClick = {}
-//                )
+            items(products, key = { it.item_id }) { item ->
+                ProductCard(item = item) {
+                    onItemClick(item)
+                }
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun Previewdetailed(){
-    DetailedPromo(
-        navController = rememberNavController(),
-        initialQuery = "ikan"
-    )
+fun ProductCard(item: Item, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .width(300.dp)
+            .height(100.dp),
+        shape = RoundedCornerShape(12.dp),
+        onClick = onClick
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            CoilImage(
+                imageModel = { item.img_link },
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.Crop
+                ),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(8.dp)),
+                loading = {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                },
+                failure = {
+                    Image(
+                        painter = painterResource(id = R.drawable.sate),
+                        contentDescription = "Failed to load image",
+                        modifier = Modifier.size(84.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = item.item_name,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "Rp ${item.price}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
 }

@@ -32,10 +32,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.rati.sikelon.R
 
 @Composable
-fun ProfileSettings(onBackClick: () -> Unit) {
+fun ProfileSettings(navController: NavController) {
     var password by remember { mutableStateOf("") }
     var new by remember { mutableStateOf("") }
     var confirm by remember { mutableStateOf("") }
@@ -61,7 +62,7 @@ fun ProfileSettings(onBackClick: () -> Unit) {
                 fontWeight = FontWeight.Bold
             )
             IconButton(
-                onClick = onBackClick,
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Image(
@@ -84,7 +85,7 @@ fun ProfileSettings(onBackClick: () -> Unit) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = { Text("Masukkan password Anda di sini", color = Color(0xFF7E60BF))},
+            placeholder = { Text("Masukkan password Anda di sini", color = Color.Gray)},
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -119,7 +120,7 @@ fun ProfileSettings(onBackClick: () -> Unit) {
         OutlinedTextField(
             value = new,
             onValueChange = { new = it },
-            placeholder = { Text("Masukkan password baru Anda", color = Color(0xFF7E60BF))},
+            placeholder = { Text("Masukkan password baru Anda", color = Color.Gray)},
             visualTransformation = if (newVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -154,7 +155,7 @@ fun ProfileSettings(onBackClick: () -> Unit) {
         OutlinedTextField(
             value = confirm,
             onValueChange = { confirm = it },
-            placeholder = { Text("Konfirmasi password baru Anda", color = Color(0xFF7E60BF))},
+            placeholder = { Text("Konfirmasi password baru Anda", color = Color.Gray)},
             visualTransformation = if (confirmVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             trailingIcon = {
@@ -185,10 +186,4 @@ fun ProfileSettings(onBackClick: () -> Unit) {
             Text(text = "Ubah")
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewProfileSettings() {
-    ProfileSettings(onBackClick = {})
 }

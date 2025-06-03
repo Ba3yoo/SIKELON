@@ -21,7 +21,7 @@ class UserRepository {
     suspend fun getUserById(id: Int): User = apiService.getUserById(id)
 
     suspend fun getStores(): List<Store> = apiService.getStores()
-    suspend fun getStoreById(id: Int): Store = apiService.getStoreById(id)
+    suspend fun getStoreById(id: Int): List<Store> = apiService.getStoreById(id)
 
     suspend fun getCartsByUserId(userId: Int): List<Cart> = apiService.getCartsByUserId(userId)
     suspend fun getCartById(id: Int): Cart = apiService.getCartById(id)

@@ -31,12 +31,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.rati.sikelon.R
 
 @Composable
-fun HelpDesk() {
+fun ProfileHelpDesk(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,16 +118,12 @@ fun HelpDeskOptions(helpdesk: String, answer: String) {
             Text(
                 text = answer,
                 modifier = Modifier
-                    .padding(top = 12.dp),
-                color = Color.DarkGray,
-                style = MaterialTheme.typography.bodyMedium
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, start = 34.dp, bottom = 10.dp),
+                color = Color.Black,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Start
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HelpDeskPreview() {
-    HelpDesk()
 }

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.rati.sikelon.R  
+import com.rati.sikelon.view.reusable.AppBottomNavigationBar
+import com.rati.sikelon.R
+import com.rati.sikelon.navigate.NavItem
 
 data class ChatItemData(
     val id: String,
@@ -41,7 +44,7 @@ data class ChatItemData(
 @Composable
 fun MessageScreen(navController: NavController) {
     val chatList = remember {
-        listOf(
+        mutableStateListOf(
             ChatItemData("1", "Toko Kurnia", "Apakah produk ini masih tersedia?", R.drawable.toko_kurnia, false),
             ChatItemData("2", "Toko Sumber Makmur 2", "Stoknya masih banyak, Kak!", R.drawable.ic_launcher_foreground, true)
         )
@@ -54,6 +57,9 @@ fun MessageScreen(navController: NavController) {
                     Text("Pesan", fontWeight = FontWeight.SemiBold)
                 }
             )
+        },
+        bottomBar = {
+            AppBottomNavigationBar(navController = navController)
         }
     ) { padding ->
         LazyColumn(
@@ -82,10 +88,10 @@ fun MessageScreen(navController: NavController) {
                     ChatItemRow(
                         chatItem = chatItem,
                         onClick = {
-                            // TODO: Navigate to detail
+                            navController.navigate(NavItem.MessageDetail.route)
                         },
                         onDelete = {
-                            // TODO: Handle delete
+                            chatList.remove(chatItem)
                         }
                     )
                     Divider(

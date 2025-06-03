@@ -90,7 +90,7 @@ const loginSeller = (req, res) => {
 
     if (results.length == 0)
       return res.status(401).json({ message: "Invalid email or password" });
-
+    console.log(results[0])
     const seller = results[0];
     const isMatch = await bcrypt.compare(password, seller.password);
 

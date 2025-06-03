@@ -48,6 +48,9 @@ interface ShopService {
     @POST("/func/search/item")
     suspend fun searchItem(@Body request: String): Item
 
+    @POST("/func/addcart/{id}")
+    suspend fun addCart(@Body item_id: Int, store_id: Int): CartDetail
+
     @DELETE("/func/cartdetail/{id}")
     suspend fun deleteCartDetail(
         @Path("id") cartDetailId: Int

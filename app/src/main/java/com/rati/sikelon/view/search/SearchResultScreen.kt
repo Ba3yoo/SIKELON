@@ -250,7 +250,7 @@ fun SearchResultScreen(
                                     searchQuery = searchQuery,
                                     onAddToCartClick = {
                                         Log.d("SearchResultScreen", "Add to cart clicked for: ${product.item_name}")
-                                        // TODO: Implement add-to-cart action
+//                                        viewModel.addToCart()
                                     }
                                 )
                             }

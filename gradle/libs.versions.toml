@@ -2,7 +2,7 @@
 # Core & UI Libraries
 agp = "8.8.0"
 coil = "2.4.0"
-coilCompose = "2.0.0-rc01"
+coilCompose = "2.5.0"
 datastorePreferences = "1.1.7"
 foundation = "<compose_version>"
 kotlin = "2.0.0"
@@ -36,7 +36,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 
 # Image Loading
-landscapistCoil = "2.4.7"
+landscapistCoil = "2.2.0"
 ui = "<compose_version>"
 
 [libraries]

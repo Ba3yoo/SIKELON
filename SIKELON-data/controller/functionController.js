@@ -69,6 +69,28 @@ const getCartDetail = async (req, res) => {
   );
 };
 
+const addCartDetail = async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  conn.con.query(
+    "SELECT * from cart where user_id = ?",
+    req.params.id,
+    function (err1, result, fields) {
+      if (err1) throw err1;
+      console.log(result[0]);
+      const id = result[0].cart_id;
+      console.log(id);
+      conn.con.query(
+        "INSERT INTO cartdetail (cart_id, store_id, item_id, quantity, status) VALUES (?,?,?,1,'in cart')", [id, req.body.store_id,req.body.item_id], function (err2, res2){
+          if (err2) throw err2;
+          console.log(res2);
+          res.end(JSON.stringify(res2));
+        }
+      )
+    }
+  );
+};
+
+
 const updateCartDetails = async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   console.log(req.body);
@@ -195,5 +217,6 @@ module.exports = {
   updateCartDetails,
   deleteCartDetail,
   searchItem,
-  searchStore
+  searchStore,
+  addCartDetail
 };

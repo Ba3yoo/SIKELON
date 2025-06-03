@@ -1,5 +1,6 @@
 package com.rati.sikelon.view.cart
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,6 +41,7 @@ fun CartItem(
     viewModel: UserViewModel = viewModel(),
     orderId: String
 ) {
+    Log.d("CartItem ID", orderId)
     val selectedDetails by viewModel.selectedCartDetail.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.loadCartDetailById(orderId.toInt())

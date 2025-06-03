@@ -144,6 +144,7 @@ fun CartStatusScreen(
                 completedOrderItems = completedOrderItems,
                 onActionClick = { orderId, actionType ->
                     try {
+                        Log.d("clickedId",orderId)
                         val route = when (actionType) {
                             "Beli" -> {
                                 val itemId = orderId.toString()
@@ -186,7 +187,7 @@ fun OrderItemCard(
         OrderTab.PROSES -> "Lacak"
         OrderTab.SELESAI -> "Nilai"
     }
-
+    Log.d("id", orderItem.id)
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -285,7 +286,7 @@ fun OrderTabContent(
 
                         val total = detail.price * detail.quantity
                         val orderItem = OrderItemModel(
-                            id = detail.item_id.toString(),
+                            id = detail.cartDetail_id.toString(),
                             storeIconResId = detail.img_link,
                             storeName = detail.store_name,
                             productInfo = "Jumlah: ${detail.quantity}",
@@ -327,7 +328,7 @@ fun OrderTabContent(
 
                         val total = detail.price * detail.quantity
                         val orderItem = OrderItemModel(
-                            id = detail.item_id.toString(),
+                            id = detail.cartDetail_id.toString(),
                             storeIconResId = detail.img_link,
                             storeName = detail.store_name,
                             productInfo = "Jumlah: ${detail.quantity}",

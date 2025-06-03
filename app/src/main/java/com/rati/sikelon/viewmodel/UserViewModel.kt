@@ -196,6 +196,9 @@ open class UserViewModel() : ViewModel() {
     private val _cartDetails = MutableStateFlow<List<CartDetail>>(emptyList())
     val cartDetails: StateFlow<List<CartDetail>> = _cartDetails
 
+    private val _paidDetails = MutableStateFlow<List<CartDetail>>(emptyList())
+    val paidDetails: StateFlow<List<CartDetail>> = _paidDetails
+
     private val _selectedCartDetail = MutableStateFlow<List<CartDetail>>(emptyList())
     open val selectedCartDetail: StateFlow<List<CartDetail>> = _selectedCartDetail
 
@@ -209,6 +212,10 @@ open class UserViewModel() : ViewModel() {
         Log.d("cartdetail", _cartDetails.toString())
         _cartDetails.value = repository.getCartDetails()
     }
+    fun loadPaidDetails() = viewModelScope.launch {
+        Log.d("paidcart", _cartDetails.toString())
+        _paidDetails.value = repository.getPaidDetails()
+    }
 
     fun loadCartDetailById(id: Int) = viewModelScope.launch {
         val result = repository.getCartDetailById(id)
@@ -220,8 +227,11 @@ open class UserViewModel() : ViewModel() {
         _updatedCartDetail.value = repository.updateCartDetail(cartDetailId, itemId, quantity)
     }
 
-    fun addToCart(storeId: Int, itemId: Int,) = viewModelScope.launch {
-        repository.addToCart(storeId, itemId)
+    fun addToCart(id: Int, storeId: Int, itemId: Int,) = viewModelScope.launch {
+        repository.addToCart(id, storeId, itemId)
+    }
+    fun updStatus(request: UserRepository.StatusUpdate) = viewModelScope.launch {
+        repository.updStatus(request)
     }
 
     fun deleteCartDetail(cartDetailId: Int) = viewModelScope.launch {

@@ -56,7 +56,7 @@ data class CartDetail(
 data class OrderItemModel(
     val id: String,
     val storeName: String,
-    val storeIconResId: Int,
+    val storeIconResId: String,
     val productInfo: String,
     val totalPrice: String
 )

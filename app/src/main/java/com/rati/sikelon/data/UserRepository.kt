@@ -9,7 +9,6 @@ import com.rati.sikelon.model.requestResponse.AuthResponse
 import com.rati.sikelon.model.requestResponse.LoginRequest
 import com.rati.sikelon.model.requestResponse.RegisterRequest
 import com.rati.sikelon.model.requestResponse.SellerLogin
-import com.rati.sikelon.service.LoginService
 import com.rati.sikelon.service.RetrofitInstance
 import com.rati.sikelon.service.ShopService
 
@@ -30,16 +29,29 @@ class UserRepository {
     suspend fun getItemById(id: Int): Item = apiService.getItemById(id)
 
     suspend fun getCartDetails(): List<CartDetail> = apiService.getCartDetails()
+    suspend fun getPaidDetails(): List<CartDetail> = apiService.getPaidDetails()
     suspend fun getCartDetailById(id: Int): List<CartDetail> = apiService.getCartDetailById(id)
 
     suspend fun updateCartDetail(cartDetailId: Int, itemId: Int, quantity: Int): CartDetail =
         apiService.updateCartDetail(cartDetailId, itemId, quantity)
 
-    suspend fun addToCart(storeId: Int, itemId: Int): CartDetail =
-        apiService.addCart(itemId, storeId)
+    suspend fun addToCart(id: Int, storeId: Int, itemId: Int): Boolean =
+        apiService.addCart(
+            id, itemId,
+            storeId
+        ).isSuccessful
+
+    suspend fun updStatus(request: StatusUpdate): Boolean {
+        return apiService.updStatus(request).isSuccessful
+    }
 
     suspend fun deleteCartDetail(cartDetailId: Int): Boolean =
         apiService.deleteCartDetail(cartDetailId).isSuccessful
+
+    data class StatusUpdate(
+        val id : Int,
+        val status: String
+    )
 }
 
 class AuthRepository() {

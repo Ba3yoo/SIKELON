@@ -220,6 +220,10 @@ open class UserViewModel() : ViewModel() {
         _updatedCartDetail.value = repository.updateCartDetail(cartDetailId, itemId, quantity)
     }
 
+    fun addToCart(storeId: Int, itemId: Int,) = viewModelScope.launch {
+        repository.addToCart(storeId, itemId)
+    }
+
     fun deleteCartDetail(cartDetailId: Int) = viewModelScope.launch {
         _cartDetailDeleted.value = repository.deleteCartDetail(cartDetailId)
         loadCartDetails()

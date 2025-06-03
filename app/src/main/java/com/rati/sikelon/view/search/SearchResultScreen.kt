@@ -250,6 +250,7 @@ fun SearchResultScreen(
                                     searchQuery = searchQuery,
                                     onAddToCartClick = {
                                         Log.d("SearchResultScreen", "Add to cart clicked for: ${product.item_name}")
+//                                        viewModel.addToCart()
                                         navController.navigate("${NavItem.Payment.route}/${product.item_id}")
                                     }
                                 )

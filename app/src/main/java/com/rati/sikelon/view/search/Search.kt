@@ -145,7 +145,7 @@ fun SearchPage(
                                 searchText = term
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
-                                // navController.navigate("hasil_pencarian/$term")
+                                navController.navigate("hasil_pencarian/$term")
                             },
                             onRemoveClick = { recentSearchesState.remove(term) }
                         )

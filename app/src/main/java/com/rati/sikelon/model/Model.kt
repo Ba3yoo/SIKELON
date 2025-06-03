@@ -2,6 +2,10 @@ package com.rati.sikelon.model
 
 import androidx.annotation.DrawableRes
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class User(
     val user_id: Int,
     val email: String,
@@ -10,7 +14,7 @@ data class User(
     val name: String,
     val password: String,
     val join_date: String
-)
+) : Parcelable
 
 data class Store(
     val store_id: Int,
@@ -51,10 +55,10 @@ data class CartDetail(
 
 data class OrderItemModel(
     val id: String,
-    val storeName: String ,
+    val storeName: String,
     val storeIconResId: Int,
     val productInfo: String,
-    val totalPrice: String,
+    val totalPrice: String
 )
 
 data class StoreSearchResult(

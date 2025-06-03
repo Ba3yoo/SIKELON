@@ -35,6 +35,9 @@ class UserRepository {
     suspend fun updateCartDetail(cartDetailId: Int, itemId: Int, quantity: Int): CartDetail =
         apiService.updateCartDetail(cartDetailId, itemId, quantity)
 
+    suspend fun addToCart(storeId: Int, itemId: Int): CartDetail =
+        apiService.addCart(itemId, storeId)
+
     suspend fun deleteCartDetail(cartDetailId: Int): Boolean =
         apiService.deleteCartDetail(cartDetailId).isSuccessful
 }

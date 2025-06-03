@@ -1,6 +1,8 @@
 package com.rati.sikelon.service
 
 import com.rati.sikelon.model.*
+import com.rati.sikelon.model.requestResponse.LoginRequest
+import com.rati.sikelon.model.requestResponse.SellerLogin
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -42,6 +44,12 @@ interface ShopService {
         @Query("itemId") itemId: Int,
         @Query("quantity") quantity: Int
     ): CartDetail
+
+    @POST("/func/search/item")
+    suspend fun searchItem(@Body request: String): Item
+
+    @POST("/func/addcart/{id}")
+    suspend fun addCart(@Body item_id: Int, store_id: Int): CartDetail
 
     @DELETE("/func/cartdetail/{id}")
     suspend fun deleteCartDetail(

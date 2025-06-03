@@ -2,7 +2,7 @@
 # Core & UI Libraries
 agp = "8.8.0"
 coil = "2.4.0"
-coilCompose = "2.0.0-rc01"
+coilCompose = "2.5.0"
 coilComposeVersion = "2.6.0"
 coilVersion = "2.6.0"
 datastorePreferences = "1.1.7"

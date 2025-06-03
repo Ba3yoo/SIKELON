@@ -362,11 +362,8 @@ val mockSalesTrendItems = listOf(
 )
 
 @Composable
-fun DashboardScreen(
-    navController: NavHostController,
-    viewModel: UserViewModel,
-    user: User
-) {
+fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) {
+    val user = navController.previousBackStackEntry?.savedStateHandle?.get<User>("seller")
     val years = listOf("2023", "2024", "2025")
     var selectedYear by remember { mutableStateOf(years.last()) }
     var expanded by remember { mutableStateOf(false) }
@@ -396,6 +393,7 @@ fun DashboardScreen(
                     )
                 }
             }
+    Log.d("dashseller", user?.name ?: "no")
 
             // Revenue
             item {

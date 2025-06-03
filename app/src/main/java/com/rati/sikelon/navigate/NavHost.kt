@@ -1,6 +1,7 @@
 package com.rati.sikelon.navigate
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -26,6 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mvvm2.view.VerifyCodeScreen
+import com.rati.sikelon.model.Item
 import com.rati.sikelon.model.User
 import com.rati.sikelon.view.DashboardScreen
 import com.rati.sikelon.view.HomePage
@@ -128,18 +131,39 @@ fun AppNavHost() {
             arguments = listOf(navArgument("userRole") { type = NavType.StringType })
         ) { backStackEntry ->
             val userRole = backStackEntry.arguments?.getString("userRole") ?: "pembeli"
-            val roleLog = "Navigated to LoginScreen with role: $userRole"
-            Log.d("LoginScreenRole", roleLog)
+            val viewModelStoreOwner = LocalViewModelStoreOwner.current!!
+            val application = LocalContext.current.applicationContext as Application
+
+            Log.d("LoginNav", "Navigated to login with userRole: $userRole")
+
+            // Contoh membuat ViewModel sesuai role (jika sudah punya repository):
+            // val viewModel = if (userRole == "pembeli") {
+            //     Log.d("LoginNav", "Creating BuyerAuthViewModel")
+            //     ViewModelProvider(viewModelStoreOwner, BuyerAuthViewModelFactory(repository, application))
+            //         .get(BuyerAuthViewModel::class.java)
+            // } else {
+            //     Log.d("LoginNav", "Creating SellerAuthViewModel")
+            //     ViewModelProvider(viewModelStoreOwner, SellerAuthViewModelFactory(repository, application))
+            //         .get(SellerAuthViewModel::class.java)
+            // }
             when (userRole) {
-                "pembeli" -> LoginScreen(navController = navController, viewModel = buyerViewModel)
+                "pembeli" -> LoginScreen(
+                    navController = navController,
+                    viewModel = buyerViewModel
+                )
+
                 "penjual" -> LoginScreenPenjual(
                     navController = navController,
                     viewModel = sellerViewModel
                 )
 
                 else -> {
-                    Log.e("LoginScreenRole", "Role tidak dikenali: $userRole")
-                    Text("Role tidak dikenali.")
+                    // Bisa juga tampilkan screen error
+                    OnboardingPage1(
+                        onNextClicked = {
+                            navController.navigate("onboarding2")
+                        }
+                    )
                 }
             }
         }
@@ -165,21 +189,17 @@ fun AppNavHost() {
         }
 
 
-        // ===== HOME & DASHBOARD =====
-        composable(NavItem.Home.route) {
-            HomePage(navController = navController, viewModel = userViewModel)
-        }
-        composable(NavItem.Dashboard.route) {
-            val sellerObject: User? =
-                navController.previousBackStackEntry?.savedStateHandle?.get("seller") // new
-            if (sellerObject != null) {
-                DashboardScreen(
-                    navController = navController,
-                    viewModel = userViewModel,
-                    user = sellerObject
-                )
+            // ===== HOME & DASHBOARD =====
+            composable(NavItem.Home.route) {
+                HomePage(navController = navController, viewModel = userViewModel)
             }
-        }
+            composable(NavItem.Dashboard.route) {
+//                val sellerObject = navController.previousBackStackEntry?.savedStateHandle?.get<User>("seller") // new
+//                Log.d("seller", sellerObject?.email ?: "none")
+//                if (sellerObject != null) {
+                    DashboardScreen(navController = navController, viewModel = userViewModel)
+//                }
+            }
 
         // ===== CART =====
         composable(NavItem.CartDetail.route) {

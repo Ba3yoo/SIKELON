@@ -9,6 +9,7 @@ router.get("/cart/:id", execs.getCart);
 router.get("/cartdetail", execs.getCartDetails);
 router.get("/cartdetail/:id", execs.getCartDetail);
 router.put("/cartdetail/:id", execs.updateCartDetails);
+router.post("/addcart/:id", execs.addCartDetail);
 router.delete("/cartdetail/:id", execs.deleteCartDetail);
 router.get("/item/", execs.getItems);
 router.get("/item/:id", execs.getItem);

@@ -48,6 +48,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -350,7 +351,9 @@ val mockSalesTrendItems = listOf(
 )
 
 @Composable
-fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel, user: User) {
+fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel) {
+    val user = navController.previousBackStackEntry?.savedStateHandle?.get<User>("seller")
+    Log.d("dashseller", user?.name ?: "no")
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -362,7 +365,7 @@ fun DashboardScreen(navController: NavHostController, viewModel: UserViewModel, 
         item {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text("Selamat Datang,", fontSize = 18.sp, color = Color.Black)
-                Text("${user.username}!", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                Text("${user?.username}!", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
             }
         }
 

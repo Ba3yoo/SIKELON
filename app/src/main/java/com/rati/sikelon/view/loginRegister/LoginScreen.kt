@@ -65,6 +65,7 @@ fun LoginScreen(
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    LoginPreferences.setLoggedIn(context, false)
 
     Column(
         modifier = Modifier
@@ -135,7 +136,7 @@ fun LoginScreen(
             onClick = {
                 val request = LoginRequest(email, password)
                 viewModel.loginBuyer(request)
-                Log.d("state", (authState is AuthState.Success).toString())
+                Log.d("state", (authState.value is AuthState.Success).toString())
 
                 coroutineScope.launch {
                     delay(300)
@@ -297,7 +298,7 @@ fun LoginScreenPenjual(
                 val request = LoginRequest(email, password)
                 Log.d("creds",email + password)
                 viewModel.loginSeller(request)
-                Log.d("state", (sellerAuthState is SellerAuthState.Success).toString())
+                Log.d("state", (sellerAuthState.value is SellerAuthState.Success).toString())
 
                 coroutineScope.launch {
                     delay(300)
@@ -305,9 +306,10 @@ fun LoginScreenPenjual(
                         is SellerAuthState.Success -> {
                             LoginPreferences.setLoggedIn(context, true)
                             Toast.makeText(context, "Login berhasil!", Toast.LENGTH_SHORT).show()
+                            Log.d("seller", state.seller?.name ?: "nope")
                             navController.currentBackStackEntry?.savedStateHandle?.set("seller", state.seller)
                             navController.navigate(NavItem.Dashboard.route) {
-                                popUpTo("login/penjual") { inclusive = true }
+//                                popUpTo("login/penjual") { inclusive = true }
                             }
                         }
 

@@ -1,5 +1,9 @@
 package com.rati.sikelon.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class User(
     val user_id: Int,
     val email: String,
@@ -8,7 +12,7 @@ data class User(
     val name: String,
     val password: String,
     val join_date: String
-)
+) : Parcelable
 
 data class Store(
     val store_id: Int,

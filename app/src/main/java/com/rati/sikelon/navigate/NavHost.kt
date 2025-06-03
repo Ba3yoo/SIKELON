@@ -126,9 +126,14 @@ fun AppNavHost() {
 
                 else -> {
                     // Bisa juga tampilkan screen error
-                    Text("Role tidak dikenali.")
+                    OnboardingPage1(
+                        onNextClicked = {
+                            navController.navigate("onboarding2")
+                        }
+                    )
                 }
             }
+        }
 
             // REGISTER
             composable(NavItem.Register.route) {
@@ -150,10 +155,11 @@ fun AppNavHost() {
                 HomePage(navController = navController, viewModel = userViewModel)
             }
             composable(NavItem.Dashboard.route) {
-                val sellerObject: User? = navController.previousBackStackEntry?.savedStateHandle?.get("seller") // new
-                if (sellerObject != null) {
-                    DashboardScreen(navController = navController, viewModel = userViewModel, user = sellerObject)
-                }
+//                val sellerObject = navController.previousBackStackEntry?.savedStateHandle?.get<User>("seller") // new
+//                Log.d("seller", sellerObject?.email ?: "none")
+//                if (sellerObject != null) {
+                    DashboardScreen(navController = navController, viewModel = userViewModel)
+//                }
             }
 
             // ===== CART =====
@@ -258,4 +264,3 @@ fun AppNavHost() {
             }
         }
     }
-}

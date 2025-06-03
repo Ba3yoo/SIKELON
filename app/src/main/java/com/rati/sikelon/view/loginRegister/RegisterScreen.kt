@@ -548,7 +548,7 @@ fun SellerRegisterScreen(
 
                 coroutineScope.launch {
                     delay(300)
-                    when (val state = viewModel.authState.value) {
+                    when (val state = viewModel.sellerAuthState.value) {
                         is SellerAuthState.Success -> {
                             LoginPreferences.setLoggedIn(context, true)
                             Toast.makeText(context, "Register berhasil!", Toast.LENGTH_SHORT).show()

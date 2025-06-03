@@ -28,10 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.rati.sikelon.R
 
 @Composable
-fun ProfilePaymentMethod() {
+fun ProfilePaymentMethod(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,10 +100,4 @@ fun PaymentOptions(title: String, onClick: () -> Unit) {
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PaymentMethodPreview() {
-    ProfilePaymentMethod()
 }

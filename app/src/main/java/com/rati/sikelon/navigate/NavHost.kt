@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,16 +26,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mvvm2.view.VerifyCodeScreen
-import com.rati.sikelon.model.Item
 import com.rati.sikelon.model.User
-import com.rati.sikelon.model.StoreSearchResult
-import com.rati.sikelon.view.*
-import com.rati.sikelon.view.cart.*
 import com.rati.sikelon.view.DashboardScreen
 import com.rati.sikelon.view.HomePage
 import com.rati.sikelon.view.OnboardingPage1
 import com.rati.sikelon.view.OnboardingPage2
 import com.rati.sikelon.view.TrendDetailScreen
+import com.rati.sikelon.view.cart.CartItem
 import com.rati.sikelon.view.cart.CartStatusScreen
 import com.rati.sikelon.view.cart.ReviewPage
 import com.rati.sikelon.view.cart.TrackStatus
@@ -49,15 +47,16 @@ import com.rati.sikelon.view.payment.PaymentScreen
 import com.rati.sikelon.view.payment.PaymentSuccessScreen
 import com.rati.sikelon.view.profile.EditProfile
 import com.rati.sikelon.view.profile.ProfileHelpDesk
-import com.rati.sikelon.view.profile.ProfileOptionItem
 import com.rati.sikelon.view.profile.ProfilePage
 import com.rati.sikelon.view.profile.ProfilePaymentMethod
 import com.rati.sikelon.view.profile.ProfileSettings
 import com.rati.sikelon.view.search.DetailedPromo
 import com.rati.sikelon.view.search.SearchPage
+import com.rati.sikelon.view.search.SearchResultScreen
 import com.rati.sikelon.viewmodel.BuyerAuthViewModel
 import com.rati.sikelon.viewmodel.SellerAuthViewModel
 import com.rati.sikelon.viewmodel.UserViewModel
+import com.rati.sikelon.viewmodel.UserViewModel.SearchViewModel
 import kotlinx.coroutines.launch
 
 enum class DetailType {
@@ -67,7 +66,7 @@ enum class DetailType {
 @SuppressLint("ViewModelConstructorInComposable", "ComposableDestinationInComposeScope")
 @Composable
 fun AppNavHost() {
-    val navController = rememberNavController()
+    var navController = rememberNavController()
     val context = LocalContext.current
     var startDestination by remember { mutableStateOf("onboarding1") }
     val buyerViewModel = BuyerAuthViewModel()
@@ -187,6 +186,14 @@ fun AppNavHost() {
             CartStatusScreen(navController = navController)
         }
         composable(
+            "${NavItem.CartItem.route}/{orderId}",
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            CartItem(viewModel = userViewModel, orderId = orderId)
+        }
+
+        composable(
             "${NavItem.Review.route}/{orderId}",
             arguments = listOf(navArgument("orderId") { type = NavType.StringType })
         ) { backStackEntry ->
@@ -209,6 +216,23 @@ fun AppNavHost() {
             DetailedPromo(
                 navController = navController,
                 viewModel = userViewModel
+            )
+        }
+        composable(
+            route = "${NavItem.SearchResult.route}/{query}",
+            arguments = listOf(navArgument("query") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val query = backStackEntry.arguments?.getString("query") ?: ""
+            val searchViewModel: SearchViewModel = viewModel()
+
+            LaunchedEffect(Unit) {
+                searchViewModel.loadAllData()
+            }
+
+            SearchResultScreen(
+                navController = navController,
+                viewModel = searchViewModel,
+                initialQuery = query
             )
         }
 
@@ -289,20 +313,23 @@ fun AppNavHost() {
 
         composable(NavItem.EditProfile.route){
             EditProfile(
-                onBackClick = TODO(),
-                onEditClick = TODO()
+                navController = navController
             )
         }
         composable(NavItem.ProfileSettings.route){
-            ProfileSettings {
-
-            }
+            ProfileSettings (
+                navController = navController
+            )
         }
         composable(NavItem.ProfilePaymentMethod.route){
-            ProfilePaymentMethod()
+            ProfilePaymentMethod(
+                navController = navController
+            )
         }
         composable(NavItem.ProfileHelpDesk.route){
-            ProfileHelpDesk()
+            ProfileHelpDesk(
+                navController = navController
+            )
         }
     }
 

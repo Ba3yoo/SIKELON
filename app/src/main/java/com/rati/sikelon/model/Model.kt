@@ -15,7 +15,10 @@ data class User(
 data class Store(
     val store_id: Int,
     val store_name: String,
-    val address: String
+    val address: String,
+    val store_location: String? = null,
+    val store_owner: String? = null,
+    val store_phone: String? = null
 )
 
 data class Item(
@@ -25,6 +28,8 @@ data class Item(
     val store_id: Int,
     val img_link: String
 )
+
+
 
 data class Cart(
     val cart_id: Int,
@@ -46,13 +51,11 @@ data class CartDetail(
 
 data class OrderItemModel(
     val id: String,
-    val storeName: String,
+    val storeName: String ,
     val storeIconResId: Int,
     val productInfo: String,
-    val totalPrice: String
+    val totalPrice: String,
 )
-
-
 
 data class StoreSearchResult(
     val storeId: String,

@@ -34,10 +34,24 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
-fun CartItem(detail: CartDetail) {
+fun CartItem(
+    viewModel: UserViewModel = viewModel(),
+    orderId: String
+) {
+    val selectedDetails by viewModel.selectedCartDetail.collectAsState()
+
+    val detail = selectedDetails.firstOrNull()
+
+    if (detail != null) {
+        // Tampilkan detail pembayaran
+        Text("Bayar untuk: ${detail.item_name} - Rp${detail.price * detail.quantity}")
+    } else {
+        Text("Data item tidak ditemukan")
+    }
+
     Column(
         modifier = Modifier
-            .padding(bottom = 51.dp, start = 35.dp, end = 35.dp)
+            .padding(bottom = 51.dp, start = 2.dp, end = 2.dp)
             .border(
                 width = 1.dp,
                 color = Color(0xFFDDE2E5),
@@ -60,7 +74,7 @@ fun CartItem(detail: CartDetail) {
                     .weight(1f)
             ) {
                 CoilImage(
-                    imageModel = { detail.img_link },
+                    imageModel = { detail?.img_link },
                     imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                     modifier = Modifier
                         .padding(end = 8.dp)
@@ -68,27 +82,31 @@ fun CartItem(detail: CartDetail) {
                         .height(60.dp)
                 )
                 Column {
+                    detail?.let {
+                        Text(
+                            it.item_name,
+                            color = Color(0xFF252525),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .width(113.dp)
+                        )
+                    }
                     Text(
-                        detail.item_name,
-                        color = Color(0xFF252525),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .width(113.dp)
-                    )
-                    Text(
-                        "x" + detail.quantity,
+                        "x" + detail?.quantity,
                         color = Color(0xFF252525),
                         fontSize = 10.sp,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    Text(
-                        "Rp. " + (detail.price * detail.quantity),
-                        color = Color(0xFF252525),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    detail?.let {
+                        Text(
+                            "Rp. " + (detail.price.times(it.quantity)),
+                            color = Color(0xFF252525),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
             CoilImage(
@@ -101,3 +119,22 @@ fun CartItem(detail: CartDetail) {
         }
     }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun CartItemPreview() {
+//    val dummyCartDetail = CartDetail(
+//        cartDetail_id = 1,
+//        cart_id = 1,
+//        store_id = 101,
+//        item_id = 1001,
+//        quantity = 2,
+//        store_name = "Toko Tani Sejahtera",
+//        address = "Jl. Pertanian No. 5",
+//        item_name = "Bibit Cabai Rawit",
+//        price = 15000,
+//        img_link = "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/image_dummy_bibit.png"
+//    )
+//
+//    CartItem(detail = dummyCartDetail)
+//}

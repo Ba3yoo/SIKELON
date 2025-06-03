@@ -1,5 +1,6 @@
 package com.rati.sikelon.view.cart
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.foundation.*
@@ -19,9 +20,12 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.tooling.preview.Preview
+import com.rati.sikelon.model.CartDetail
 import com.rati.sikelon.viewmodel.UserViewModel
 import com.skydoves.landscapist.*
 import com.skydoves.landscapist.coil.CoilImage
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun Cart(viewModel: UserViewModel) {
@@ -80,112 +84,12 @@ fun Cart(viewModel: UserViewModel) {
                     .fillMaxWidth()
                     .padding(vertical = 15.dp,)
             ){
-                items(cartDetails.value){
-                    cartDetail -> CartItem(cartDetail)
+                items(cartDetails.value) {
+                    CartItem(
+                        viewModel,
+                        orderId = "1"
+                    )
                 }
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    modifier = Modifier
-//                        .padding(bottom = 15.dp,start = 15.dp,end = 15.dp,)
-//                        .fillMaxWidth()
-//                ){
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        modifier = Modifier
-//                            .padding(end = 12.dp,)
-//                            .weight(1f)
-//                    ){
-//                        CoilImage(
-//                            imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/1pnkw3o8_expires_30_days.png"},
-//                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-//                            modifier = Modifier
-//                                .padding(end = 8.dp,)
-//                                .width(60.dp)
-//                                .height(60.dp)
-//                        )
-//                        Column(
-//                        ){
-//                            Text("Beng-Beng Maxx  Cokelat 32 g",
-//                                color = Color(0xFF252525),
-//                                fontSize = 18.sp,
-//                                fontWeight = FontWeight.Bold,
-//                                modifier = Modifier
-//                                    .padding(bottom = 8.dp,)
-//                                    .width(113.dp)
-//                            )
-//                            Text("x 5",
-//                                color = Color(0xFF252525),
-//                                fontSize = 10.sp,
-//                                modifier = Modifier
-//                                    .padding(bottom = 8.dp,)
-//                            )
-//                            Text("Rp24.500",
-//                                color = Color(0xFF252525),
-//                                fontSize = 12.sp,
-//                                fontWeight = FontWeight.Bold,
-//                            )
-//                        }
-//                    }
-//
-//                    CoilImage(
-//                        imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/9j3fkp2h_expires_30_days.png"},
-//                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-//                        modifier = Modifier
-//                            .width(77.dp)
-//                            .height(30.dp)
-//                    )
-//                }
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    modifier = Modifier
-//                        .padding(horizontal = 15.dp,)
-//                        .fillMaxWidth()
-//                ){
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        modifier = Modifier
-//                            .padding(end = 12.dp,)
-//                            .weight(1f)
-//                    ){
-//                        CoilImage(
-//                            imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/tmwwt1d9_expires_30_days.png"},
-//                            imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-//                            modifier = Modifier
-//                                .padding(end = 8.dp,)
-//                                .width(60.dp)
-//                                .height(60.dp)
-//                        )
-//                        Column(
-//                        ){
-//                            Text("Beng-Beng Nuts Karamel Almond 35 g ",
-//                                color = Color(0xFF252525),
-//                                fontSize = 18.sp,
-//                                fontWeight = FontWeight.Bold,
-//                                modifier = Modifier
-//                                    .padding(bottom = 8.dp,)
-//                                    .width(108.dp)
-//                            )
-//                            Text("x 3",
-//                                color = Color(0xFF252525),
-//                                fontSize = 10.sp,
-//                                modifier = Modifier
-//                                    .padding(bottom = 8.dp,)
-//                            )
-//                            Text("Rp25.200",
-//                                color = Color(0xFF252525),
-//                                fontSize = 12.sp,
-//                                fontWeight = FontWeight.Bold,
-//                            )
-//                        }
-//                    }
-//                    CoilImage(
-//                        imageModel = {"https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/vnzt4qlu_expires_30_days.png"},
-//                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
-//                        modifier = Modifier
-//                            .width(77.dp)
-//                            .height(30.dp)
-//                    )
-//                }
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -389,4 +293,30 @@ fun Cart(viewModel: UserViewModel) {
             }
         }
     }
+}
+
+@Composable
+fun CartPreviewOnly() {
+    val textField1 = remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        // ...copy bagian dalam `Cart` sesuai kebutuhan, kecuali pemanggilan `viewModel`
+        // Misalnya bagian judul, promo kode, total harga, tombol, dsb.
+
+        // Tidak usah panggil `LazyColumn` atau `cartDetails` di sini.
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CartPreview() {
+    val fakeViewModel = object : UserViewModel() {
+        override val selectedCartDetail = MutableStateFlow(emptyList<CartDetail>())
+    }
+
+    Cart(viewModel = fakeViewModel)
 }

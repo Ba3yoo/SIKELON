@@ -1,54 +1,27 @@
 package com.rati.sikelon.view.cart
 
+import android.R.attr.padding
+import android.R.attr.spacing
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +34,7 @@ import com.rati.sikelon.model.CartDetail
 import com.rati.sikelon.model.OrderItemModel
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.viewmodel.UserViewModel
+import java.util.UUID
 
 enum class OrderTab(val title: String) {
     KERANJANG("Keranjang"),
@@ -74,13 +48,15 @@ fun CartStatusScreen(
     navController: NavController,
     CartItem: UserViewModel = viewModel(),
 ) {
-    val cartDetails = CartItem.selectedCartDetail.collectAsState()
     LaunchedEffect(Unit) {
-        CartItem.loadCartDetailById(1)
+        CartItem.loadCartDetails()
     }
-    Log.d("det", cartDetails.value.toString())
+
+    // Ambil data dari StateFlow
+    val cartDetails by CartItem.cartDetails.collectAsState()
+
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = OrderTab.values()
+    val tabs = OrderTab.entries.toTypedArray()
 
     val processingOrderItems = remember {
         listOf(
@@ -154,55 +130,41 @@ fun CartStatusScreen(
                     )
                 }
             }
+            val context = LocalContext.current
+            OrderTabContent(
+                selectedTab = tabs[selectedTabIndex],
+                cartDetails = cartDetails,
+                processingOrderItems = processingOrderItems,
+                completedOrderItems = completedOrderItems,
+                onActionClick = { orderId, actionType ->
+                    try {
+                        val route = when (actionType) {
+                            "Beli" -> {
+                                val itemId = orderId.toString()
+                                if (true) {
+                                    "CartItem/$itemId"
+                                } else {
+                                    Log.e("NavigationError", "ID tidak valid untuk pembayaran: $orderId")
+                                    Toast.makeText(context, "ID item tidak valid", Toast.LENGTH_SHORT).show()
+                                    return@OrderTabContent
+                                }
+                            }
+                            "Lacak" -> "trackStatus/$orderId"
+                            "Nilai" -> "review/$orderId"
+                            else -> {
+                                Log.e("NavigationError", "Aksi tidak dikenal: $actionType")
+                                Toast.makeText(context, "Aksi tidak dikenali", Toast.LENGTH_SHORT).show()
+                                return@OrderTabContent
+                            }
+                        }
 
-//            OrderTabContent(
-//                selectedTab = tabs[selectedTabIndex],
-//                cartDetails = cartDetails.value,
-//                processingOrderItems = processingOrderItems, /*TODO add the VM*/
-//                completedOrderItems = completedOrderItems,
-//                onActionClick = { orderId, actionType ->
-//                    navController.navigate(
-//                        when (actionType) {
-//                            "Beli" -> "checkout/$orderId" /*TODO add a UX floating cart tracker or add to cart itself*/
-//                            "Lacak" -> "${NavItem.TrackStatus.route}/$orderId"
-//                            "Nilai" -> "${NavItem.Review.route}/$orderId"
-//                            else -> return@OrderTabContent
-//                        }
-//                    )
-//                }
-//            )
-        }
-    }
-}
-
-@Composable
-fun OrderListContent(
-    items: List<OrderItemModel>,
-    currentTab: OrderTab,
-    onActionClick: (orderId: String, actionType: String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    if (items.isEmpty()) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(
-                "Tidak ada pesanan di tab '${currentTab.title}'.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        navController.navigate(route)
+                    } catch (e: Exception) {
+                        Log.e("NavigationError", "Terjadi error saat navigasi ke $actionType dengan ID: $orderId", e)
+                        Toast.makeText(context, "Terjadi error tidak terduga", Toast.LENGTH_SHORT).show()
+                    }
+                }
             )
-        }
-    } else {
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(items, key = { it.id }) { orderItem ->
-                OrderItemCard(
-                    orderItem = orderItem,
-                    currentTab = currentTab,
-                    onActionClick = onActionClick
-                )
-            }
         }
     }
 }
@@ -296,22 +258,42 @@ fun OrderTabContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Keranjang masih kosong.",
+                        text = "Tidak ada pesanan yang sedang diproses.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             } else {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    cartDetails.forEach { detail ->
-                        CartItem(detail)
+                    items(
+                        items = cartDetails,
+                        key = { it.item_id }
+                    ) { detail ->
+                        // Log detail item
+                        Log.d("OrderTabContent", "Menampilkan cartDetail: id=${detail.item_id}, name=${detail.item_name}, qty=${detail.quantity}, price=${detail.price}")
+
+                        val total = detail.price * detail.quantity
+                        val orderItem = OrderItemModel(
+                            id = detail.item_id.toString(),
+                            storeIconResId = R.drawable.toko_kurnia,
+                            storeName = "Toko kurnia",
+                            productInfo = "Jumlah: ${detail.quantity}",
+                            totalPrice = "Rp${total}"
+                        )
+                        OrderItemCard(
+                            orderItem = orderItem,
+                            currentTab = OrderTab.KERANJANG,
+                            onActionClick = onActionClick
+                        )
                     }
                 }
             }
         }
+
 
         OrderTab.PROSES -> {
             if (processingOrderItems.isEmpty()) {
@@ -372,11 +354,3 @@ fun OrderTabContent(
         }
     }
 }
-
-//@Preview(showBackground = true, device = "spec:width=411dp,height=891dp")
-//@Composable
-//fun CartStatusScreenPreview() {
-//    MaterialTheme {
-//        CartStatusScreen(navController = rememberNavController()
-//    }
-//}

@@ -39,13 +39,14 @@ import coil.request.ImageRequest
 import com.rati.sikelon.R
 import com.rati.sikelon.model.Item
 import com.rati.sikelon.model.StoreSearchResult
+import com.rati.sikelon.navigate.NavItem
 import com.rati.sikelon.viewmodel.UserViewModel.SearchViewModel
 
 
 private val mockStores = listOf(
     StoreSearchResult(
         storeId = "1",
-        storeIconResId = R.drawable.toko_kurnia, // pastikan ini ada di res/drawable
+        storeIconResId = R.drawable.toko_kurnia,
         storeName = "Toko Sumber Rejeki",
         storeLocationHint = "Jl. Merdeka No. 10",
         distance = "1.2 km",
@@ -194,7 +195,6 @@ fun SearchResultScreen(
         // Show error message if there's an error
         error?.let { errorMessage ->
             LaunchedEffect(errorMessage) {
-                // You can show a snackbar or handle error display here
                 Log.e("SearchResultScreen", "Error: $errorMessage")
             }
         }
@@ -250,7 +250,7 @@ fun SearchResultScreen(
                                     searchQuery = searchQuery,
                                     onAddToCartClick = {
                                         Log.d("SearchResultScreen", "Add to cart clicked for: ${product.item_name}")
-                                        // TODO: Implement add-to-cart action
+                                        navController.navigate("${NavItem.Payment.route}/${product.item_id}")
                                     }
                                 )
                             }
@@ -497,7 +497,6 @@ fun ProductResultCard(
                         .height(90.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
-                    contentScale = ContentScale.Crop,
                     fallback = painterResource(id = R.drawable.stock_beng_beng)
                 )
 
@@ -522,7 +521,7 @@ fun ProductResultCard(
             IconButton(
                 onClick = onAddToCartClick,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
+                    .align(Alignment.BottomEnd)
                     .padding(4.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))

@@ -200,6 +200,5 @@ fun ProductTrendItem(product: TrendProduct) {
 @Preview(showBackground = true)
 @Composable
 fun TrendDetailScreenPreview() {
-    // For preview, we pass a dummy NavController
     TrendDetailScreen(navController = rememberNavController())
 }

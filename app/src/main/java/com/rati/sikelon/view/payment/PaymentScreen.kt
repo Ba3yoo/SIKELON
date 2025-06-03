@@ -102,7 +102,7 @@ fun PaymentScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column {
-                // SectionRow: Bagian alamat dengan ikon, judul, dan tombol "Ubah"
+                // SectionRow: Bagian alamat
                 SectionRow(
                     icon = {
                         Icon(
@@ -125,7 +125,7 @@ fun PaymentScreen(
 
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                // SectionRow: Bagian pengiriman dengan ikon, judul, dan tombol "Ubah"
+                // SectionRow: Bagian pengiriman
                 SectionRow(
                     icon = {
                         Icon(
@@ -145,7 +145,7 @@ fun PaymentScreen(
 
                 Divider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                // SectionRow: Bagian pembayaran dengan ikon, judul, dan tombol "Ubah"
+                // SectionRow: Bagian pembayaran
                 SectionRow(
                     icon = {
                         Icon(
@@ -166,7 +166,7 @@ fun PaymentScreen(
         }
 
 
-        // Card berisi daftar produk yang diorder, menggunakan LazyColumn agar scrollable
+        // Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,7 +185,7 @@ fun PaymentScreen(
             }
         }
 
-        // Tombol Bayar di bawah layar, dengan warna utama dan bentuk rounded
+        // Tombol Bayar
         Button(
             onClick = { onPaymentComplete() },
             modifier = Modifier
@@ -227,7 +227,7 @@ fun PaymentProductItem(item: Item) {
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(text = item.item_name, style = sectionContentStyle())
-            Text(text = "Jumlah: 1", style = sectionSubContentStyle()) // Default 1
+            Text(text = "Jumlah: 1", style = sectionSubContentStyle())
             Text(text = "Rp${item.price}", style = sectionContentStyle())
         }
     }
@@ -260,7 +260,7 @@ fun sectionSubContentStyle() = TextStyle(
 //    )
 //}
 
-// Composable SectionRow untuk bagian section dengan icon, judul, tombol aksi, dan konten
+// Composable SectionRow
 @Composable
 fun SectionRow(
     icon: @Composable () -> Unit,
@@ -281,7 +281,6 @@ fun SectionRow(
         Spacer(modifier = Modifier.width(8.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            // Baris judul dan tombol "Ubah" di sebelah kanan
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -293,7 +292,6 @@ fun SectionRow(
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
-                // Tombol OutlinedButton dengan border dan warna khusus untuk aksi "Ubah"
                 OutlinedButton(
                     onClick = onActionClick,
                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),

@@ -79,6 +79,7 @@ dependencies {
     implementation (libs.androidx.foundation)
     implementation(libs.coil)
     implementation(libs.coil.compose)
-
+    implementation(libs.coil.compose.v260)
+    implementation(libs.coil.v260)
     implementation (libs.androidx.material)
 }

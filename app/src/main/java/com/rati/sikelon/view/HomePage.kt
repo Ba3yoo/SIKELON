@@ -77,13 +77,6 @@ import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.view.reusable.Card
 import com.rati.sikelon.viewmodel.UserViewModel
 
-//data class CardData(
-//    val imageId: Int,
-//    val price: String,
-//    val description: String,
-//    val iconId: Int? = null
-//)
-
 @Composable
 fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
     val frontItems = viewModel.items.collectAsState()
@@ -110,7 +103,7 @@ fun HomePage(navController: NavHostController, viewModel: UserViewModel) {
             TopSearchAndFilterBar(
                 navController = navController,
                 onFilterClick = {
-                    // Aksi klik filter (opsional)
+                    // Aksi klik filter (belum)
                 }
             )
 
@@ -378,207 +371,221 @@ fun DashboardScreen(
     var selectedYear by remember { mutableStateOf(years.last()) }
     var expanded by remember { mutableStateOf(false) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.white))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Welcome
-        item {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(user.name, fontSize = 18.sp, color = Color.Black)
-                Text(
-                    "${user.username}!",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
-                )
-            }
-        }
-
-        // Revenue
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(colorResource(id = R.color.purple_500)),
-                elevation = CardDefaults.cardElevation(0.dp)
-            ) {
-                Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)) {
+    Scaffold(
+        bottomBar = {
+            AppBottomNavigationBar(navController = navController)
+        },
+        containerColor = colorResource(id = R.color.white)
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Welcome
+            item {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(user.name, fontSize = 18.sp, color = Color.Black)
                     Text(
-                        "Jumlah Pendapatan",
-                        fontSize = 16.sp,
-                        color = Color.White.copy(alpha = 0.8f)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        "Rp4.384.000,00",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            }
-        }
-
-        // Sales Statistics
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(colorResource(id = R.color.white), RoundedCornerShape(12.dp))
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "Statistik Penjualan",
-                        fontSize = 18.sp,
+                        "${user.username}!",
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
                     )
+                }
+            }
 
-                    Box {
-                        Button(
-                            onClick = { expanded = true },
-                            shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(selectedYear, fontSize = 14.sp)
-                            Icon(Icons.Default.ArrowDropDown, contentDescription = "Pilih Tahun")
-                        }
-
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            years.forEach { year ->
-                                DropdownMenuItem(
-                                    text = { Text(year) },
-                                    onClick = {
-                                        selectedYear = year
-                                        expanded = false
-                                    }
-                                )
-                            }
-                        }
+            // Revenue
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(colorResource(id = R.color.purple_500)),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)) {
+                        Text(
+                            "Jumlah Pendapatan",
+                            fontSize = 16.sp,
+                            color = Color.White.copy(alpha = 0.8f)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            "Rp4.384.000,00",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
                     }
                 }
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Box(
+            // Sales Statistics
+            item {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
-                        .border(1.dp, Color.LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                        .padding(12.dp)
+                        .background(colorResource(id = R.color.white), RoundedCornerShape(12.dp))
+                        .padding(16.dp)
                 ) {
-                    // Placeholder for chart
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .fillMaxHeight(),
-                        verticalArrangement = Arrangement.SpaceBetween
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        listOf("10", "8", "6", "4", "2", "0").forEach {
-                            Text(it, fontSize = 10.sp, color = Color.Gray)
+                        Text(
+                            "Statistik Penjualan",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black
+                        )
+
+                        Box {
+                            Button(
+                                onClick = { expanded = true },
+                                shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    contentColor = Color.White
+                                )
+                            ) {
+                                Text(selectedYear, fontSize = 14.sp)
+                                Icon(
+                                    Icons.Default.ArrowDropDown,
+                                    contentDescription = "Pilih Tahun"
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                years.forEach { year ->
+                                    DropdownMenuItem(
+                                        text = { Text(year) },
+                                        onClick = {
+                                            selectedYear = year
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .border(
+                                1.dp,
+                                Color.LightGray.copy(alpha = 0.5f),
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(12.dp)
+                    ) {
+                        // Placeholder for chart
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            listOf("10", "8", "6", "4", "2", "0").forEach {
+                                Text(it, fontSize = 10.sp, color = Color.Gray)
+                            }
                         }
                     }
                 }
             }
-        }
 
-        // Sales Trend
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(12.dp))
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+            // Sales Trend
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White, RoundedCornerShape(12.dp))
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        "Tren Penjualan",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
-                    )
-                    TextButton(
-                        onClick = {
-                            navController.navigate(NavItem.TrendSale.route)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(id = R.color.purple_500),
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(20.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Lihat Semua", fontWeight = FontWeight.Medium)
+                        Text(
+                            "Tren Penjualan",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Black
+                        )
+                        TextButton(
+                            onClick = {
+                                navController.navigate(NavItem.TrendSale.route)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(id = R.color.purple_500),
+                                contentColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        ) {
+                            Text("Lihat Semua", fontWeight = FontWeight.Medium)
+                        }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                if (mockSalesTrendItems.isEmpty()) {
-                    Text(
-                        "Belum ada tren penjualan.",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp),
-                        textAlign = TextAlign.Center,
-                        color = Color.Gray
-                    )
-                } else {
-                    mockSalesTrendItems.forEachIndexed { index, item ->
-                        Row(
+                    if (mockSalesTrendItems.isEmpty()) {
+                        Text(
+                            "Belum ada tren penjualan.",
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                painter = painterResource(id = item.imageUrl),
-                                contentDescription = item.name,
+                                .padding(vertical = 24.dp),
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray
+                        )
+                    } else {
+                        mockSalesTrendItems.forEachIndexed { index, item ->
+                            Row(
                                 modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(colorResource(id = R.color.purple_300)),
-                                contentScale = ContentScale.Crop
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column(modifier = Modifier.weight(1f)) {
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(id = item.imageUrl),
+                                    contentDescription = item.name,
+                                    modifier = Modifier
+                                        .size(56.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(colorResource(id = R.color.purple_300)),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = item.name,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color.Black,
+                                        maxLines = 2
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = item.name,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    color = Color.Black,
-                                    maxLines = 2
+                                    text = "Terjual: ${item.soldCount}",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color.Black
                                 )
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Terjual: ${item.soldCount}",
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color.Black
-                            )
-                        }
-                        if (index < mockSalesTrendItems.lastIndex) {
-                            HorizontalDivider(thickness = 1.dp, color = Color.White)
+                            if (index < mockSalesTrendItems.lastIndex) {
+                                HorizontalDivider(thickness = 1.dp, color = Color.White)
+                            }
                         }
                     }
                 }

@@ -3,6 +3,8 @@
 agp = "8.8.0"
 coil = "2.4.0"
 coilCompose = "2.0.0-rc01"
+coilComposeVersion = "2.6.0"
+coilVersion = "2.6.0"
 datastorePreferences = "1.1.7"
 foundation = "<compose_version>"
 kotlin = "2.0.0"
@@ -50,6 +52,8 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose-v260 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
+coil-v260 = { module = "io.coil-kt:coil", version.ref = "coilVersion" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }

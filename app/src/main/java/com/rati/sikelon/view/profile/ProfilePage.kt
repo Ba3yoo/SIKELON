@@ -101,10 +101,10 @@ fun ProfileOptionItem(text: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .shadow(4.dp, RoundedCornerShape(32.dp)) // Tambahkan shadow di sini
-            .clip(RoundedCornerShape(12.dp))         // Setelah shadow
-            .background(Color.White)            // Warna latar
-            .padding(horizontal = 16.dp, vertical = 12.dp) // Padding dalam
+            .shadow(4.dp, RoundedCornerShape(32.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.White)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -118,7 +118,7 @@ fun ProfileOptionItem(text: String, onClick: () -> Unit) {
             )
         )
         Image(
-            painter = painterResource(id = R.drawable.enter), // Ganti dengan icon arrow kanan kamu
+            painter = painterResource(id = R.drawable.enter),
             contentDescription = "Right Arrow",
             modifier = Modifier.size(24.dp)
         )

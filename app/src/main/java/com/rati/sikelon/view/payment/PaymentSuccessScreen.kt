@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.rati.sikelon.R// Import file R
+import com.rati.sikelon.R
 
 @Composable
 fun PaymentSuccessScreen(
@@ -36,9 +36,9 @@ fun PaymentSuccessScreen(
     ) {
         // Centered Image (Success Icon)
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with your success icon
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = "Pembayaran Berhasil",
-            modifier = Modifier.size(100.dp) // Adjust size as needed
+            modifier = Modifier.size(100.dp)
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -50,7 +50,7 @@ fun PaymentSuccessScreen(
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = Color(0xFF008000) // Green color for success
+                color = Color(0xFF008000)
             ),
             textAlign = TextAlign.Center
         )
@@ -76,7 +76,7 @@ fun PaymentSuccessScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9F2BFF)), // Purple color
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9F2BFF)),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
@@ -98,7 +98,7 @@ fun PaymentSuccessScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9F2BFF)), // Purple color
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9F2BFF)),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(

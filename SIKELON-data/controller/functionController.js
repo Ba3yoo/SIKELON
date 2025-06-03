@@ -49,7 +49,16 @@ const getCart = async (req, res) => {
 
 const getCartDetails = async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  conn.con.query("SELECT * FROM cartdetail", function (err, result, fields) {
+  conn.con.query("SELECT * FROM cartdetail join store on cartdetail.store_id = store.store_id join item on cartdetail.item_id = item.item_id join cart on cartdetail.cart_id = cart.cart_id where status= 'in cart'", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    res.end(JSON.stringify(result));
+  });
+};
+
+const getPaidCart = async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  conn.con.query("SELECT * FROM cartdetail join store on cartdetail.store_id = store.store_id join item on cartdetail.item_id = item.item_id join cart on cartdetail.cart_id = cart.cart_id where status= 'paid'", function (err, result, fields) {
     if (err) throw err;
     console.log(result);
     res.end(JSON.stringify(result));
@@ -97,6 +106,20 @@ const updateCartDetails = async (req, res) => {
   conn.con.query(
     "UPDATE cartdetail SET item_id = ?, quantity = ? WHERE cartDetail_id = ?",
     [req.body.itemId, req.body.quantity, req.params.id],
+    function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+      res.end(JSON.stringify(result));
+    }
+  );
+};
+
+const updateStatus = async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  console.log(req.body);
+  conn.con.query(
+    "UPDATE cartdetail SET status = ? WHERE cartDetail_id = ?",
+    [req.body.status, req.body.id],
     function (err, result, fields) {
       if (err) throw err;
       console.log(result);
@@ -218,5 +241,7 @@ module.exports = {
   deleteCartDetail,
   searchItem,
   searchStore,
-  addCartDetail
+  addCartDetail,
+  updateStatus,
+  getPaidCart
 };

@@ -34,6 +34,8 @@ import com.rati.sikelon.model.CartDetail
 import com.rati.sikelon.model.OrderItemModel
 import com.rati.sikelon.view.reusable.AppBottomNavigationBar
 import com.rati.sikelon.viewmodel.UserViewModel
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.coil.CoilImage
 import java.util.UUID
 
 enum class OrderTab(val title: String) {
@@ -50,23 +52,27 @@ fun CartStatusScreen(
 ) {
     LaunchedEffect(Unit) {
         CartItem.loadCartDetails()
+        CartItem.loadPaidDetails()
     }
 
     // Ambil data dari StateFlow
     val cartDetails by CartItem.cartDetails.collectAsState()
+    val paidDetails by CartItem.paidDetails.collectAsState()
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val tabs = OrderTab.entries.toTypedArray()
 
     val processingOrderItems = remember {
         listOf(
-            OrderItemModel("101", "Toko Maju Jaya", R.drawable.sate, "Pesanan sedang dikemas", "Rp150.000")
+            OrderItemModel("101", "Toko Maju Jaya", "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg", "Pesanan sedang dikemas", "Rp150.000")
         )
     }
+
+
     val completedOrderItems = remember {
         listOf(
-            OrderItemModel("201", "Toko Berkah Selalu", R.drawable.sate, "Pesanan telah diterima", "Rp75.000"),
-            OrderItemModel("202", "Toko Kurnia", R.drawable.sate, "Beng-Beng Maxx Cokelat 32 g...", "Rp162.000")
+            OrderItemModel("201", "Toko Berkah Selalu", "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg", "Pesanan telah diterima", "Rp75.000"),
+            OrderItemModel("202", "Toko Kurnia", "https://c.alfagift.id/product/1/1_A7071790001084_20211123141700452_base.jpg", "Beng-Beng Maxx Cokelat 32 g...", "Rp162.000")
         )
     }
 
@@ -134,7 +140,7 @@ fun CartStatusScreen(
             OrderTabContent(
                 selectedTab = tabs[selectedTabIndex],
                 cartDetails = cartDetails,
-                processingOrderItems = processingOrderItems,
+                processingOrderItems = paidDetails,
                 completedOrderItems = completedOrderItems,
                 onActionClick = { orderId, actionType ->
                     try {
@@ -193,15 +199,16 @@ fun OrderItemCard(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.Top
         ) {
-            Image(
-                painter = painterResource(id = orderItem.storeIconResId),
-                contentDescription = "Ikon ${orderItem.storeName}",
+            CoilImage(
+                imageModel = { orderItem.storeIconResId },
+//                contentDescription = "Ikon ${orderItem.storeName}",
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant),
-                contentScale = ContentScale.Crop
-            )
+                imageOptions = ImageOptions(
+                    contentScale = ContentScale.Crop
+                ),            )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -246,7 +253,7 @@ fun OrderItemCard(
 fun OrderTabContent(
     selectedTab: OrderTab,
     cartDetails: List<CartDetail>,
-    processingOrderItems: List<OrderItemModel>,
+    processingOrderItems: List<CartDetail>,
     completedOrderItems: List<OrderItemModel>,
     onActionClick: (orderId: String, actionType: String) -> Unit
 ) {
@@ -271,16 +278,16 @@ fun OrderTabContent(
                 ) {
                     items(
                         items = cartDetails,
-                        key = { it.item_id }
+                        key = { it.cartDetail_id }
                     ) { detail ->
                         // Log detail item
-                        Log.d("OrderTabContent", "Menampilkan cartDetail: id=${detail.item_id}, name=${detail.item_name}, qty=${detail.quantity}, price=${detail.price}")
+                        Log.d("OrderTabContent", "Menampilkan cartDetail: id=${detail.cartDetail_id}, name=${detail.item_name}, qty=${detail.quantity}, price=${detail.price}")
 
                         val total = detail.price * detail.quantity
                         val orderItem = OrderItemModel(
                             id = detail.item_id.toString(),
-                            storeIconResId = R.drawable.toko_kurnia,
-                            storeName = "Toko kurnia",
+                            storeIconResId = detail.img_link,
+                            storeName = detail.store_name,
                             productInfo = "Jumlah: ${detail.quantity}",
                             totalPrice = "Rp${total}"
                         )
@@ -313,10 +320,22 @@ fun OrderTabContent(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(processingOrderItems) { orderItem ->
+                    items(processingOrderItems) {
+                        detail ->
+                        // Log detail item
+                        Log.d("OrderTabContent", "Menampilkan cartDetail: id=${detail.cartDetail_id}, name=${detail.item_name}, qty=${detail.quantity}, price=${detail.price}")
+
+                        val total = detail.price * detail.quantity
+                        val orderItem = OrderItemModel(
+                            id = detail.item_id.toString(),
+                            storeIconResId = detail.img_link,
+                            storeName = detail.store_name,
+                            productInfo = "Jumlah: ${detail.quantity}",
+                            totalPrice = "Rp${total}"
+                        )
                         OrderItemCard(
                             orderItem = orderItem,
-                            currentTab = OrderTab.PROSES,
+                            currentTab = OrderTab.KERANJANG,
                             onActionClick = onActionClick
                         )
                     }

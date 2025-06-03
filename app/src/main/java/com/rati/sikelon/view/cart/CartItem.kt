@@ -3,6 +3,7 @@ package com.rati.sikelon.view.cart
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.rati.sikelon.R
+import com.rati.sikelon.data.UserRepository
 import com.rati.sikelon.model.CartDetail
 import com.rati.sikelon.viewmodel.UserViewModel
 import com.skydoves.landscapist.ImageOptions
@@ -39,6 +41,9 @@ fun CartItem(
     orderId: String
 ) {
     val selectedDetails by viewModel.selectedCartDetail.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.loadCartDetailById(orderId.toInt())
+    }
 
     val detail = selectedDetails.firstOrNull()
 
@@ -110,11 +115,15 @@ fun CartItem(
                 }
             }
             CoilImage(
-                imageModel = { "https://storage.googleapis.com/tagjs-prod.appspot.com/v1/cgc6UUl9Ff/9j3fkp2h_expires_30_days.png" },
+                imageModel = { "https://cdn.discordapp.com/attachments/1007173535749382167/1379324294999314442/image.png?ex=683fd35a&is=683e81da&hm=cc4550a4819af9dc27fa491d2b237ebebc017cba876497477f12ca23a5cca28a&" },
                 imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                 modifier = Modifier
                     .width(77.dp)
                     .height(30.dp)
+                    .clickable {
+                        val request = UserRepository.StatusUpdate(detail?.cartDetail_id ?: 1, "paid")
+                        viewModel.updStatus(request)
+                    }
             )
         }
     }

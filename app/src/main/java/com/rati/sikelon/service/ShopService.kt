@@ -1,8 +1,7 @@
 package com.rati.sikelon.service
 
+import com.rati.sikelon.data.UserRepository
 import com.rati.sikelon.model.*
-import com.rati.sikelon.model.requestResponse.LoginRequest
-import com.rati.sikelon.model.requestResponse.SellerLogin
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -35,6 +34,9 @@ interface ShopService {
     @GET("/func/cartdetail")
     suspend fun getCartDetails(): List<CartDetail>
 
+     @GET("/func/paidcart")
+    suspend fun getPaidDetails(): List<CartDetail>
+
     @GET("/func/cartdetail/{id}")
     suspend fun getCartDetailById(@Path("id") id: Int): List<CartDetail>
 
@@ -49,7 +51,12 @@ interface ShopService {
     suspend fun searchItem(@Body request: String): Item
 
     @POST("/func/addcart/{id}")
-    suspend fun addCart(@Body item_id: Int, store_id: Int): CartDetail
+    suspend fun addCart(
+        @Path("id") id: Int,
+        @Body item_id: Int, store_id: Int): Response<Unit>
+
+    @POST("/func/updatestatus")
+    suspend fun updStatus(@Body request: UserRepository.StatusUpdate): Response<Unit>
 
     @DELETE("/func/cartdetail/{id}")
     suspend fun deleteCartDetail(

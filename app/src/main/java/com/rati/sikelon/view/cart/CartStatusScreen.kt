@@ -335,7 +335,7 @@ fun OrderTabContent(
                         )
                         OrderItemCard(
                             orderItem = orderItem,
-                            currentTab = OrderTab.KERANJANG,
+                            currentTab = OrderTab.PROSES,
                             onActionClick = onActionClick
                         )
                     }
